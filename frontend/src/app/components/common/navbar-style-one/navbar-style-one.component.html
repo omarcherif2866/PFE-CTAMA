@@ -1,0 +1,118 @@
+<div
+    class="navbar-area"
+    [ngClass]="{'sticky': isSticky}"
+>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" [class.active]="classApplied">
+            <a class="navbar-brand" routerLink="/"><img src="assets/img/ctama.png" alt="logo" style="width: 38%;"></a>
+            <button class="navbar-toggler" type="button" (click)="toggleClass()">
+                <span class="burger-menu">
+                    <span class="top-bar"></span>
+                    <span class="middle-bar"></span>
+                    <span class="bottom-bar"></span>
+                </span>
+            </button>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a href="javascript:void(0)" class="nav-link dropdown-toggle" routerLink="/">Acceuil </a>
+
+                    </li>
+                    <li class="nav-item"><a href="javascript:void(0)" class="nav-link dropdown-toggle" routerLink="/a_propos">A propos </a>
+                    </li>
+
+                    <li class="nav-item"><a href="javascript:void(0)" class="nav-link dropdown-toggle" routerLink="/actualites">Actualités </a>
+
+                    </li>
+                    <li class="nav-item"><a href="javascript:void(0)" class="nav-link dropdown-toggle" routerLink="/agence">Agences </a>
+
+                    </li>
+                    <li class="nav-item"><a href="javascript:void(0)" class="nav-link dropdown-toggle" routerLink="/products">FAQ </a>
+
+                    </li>
+
+                    <li class="nav-item"><a routerLink="/contact" routerLinkActive="active"[routerLinkActiveOptions]="{exact: true}" class="nav-link">Contact</a></li>
+                </ul>
+                
+                <div class="others-option" *ngIf="!isLoggedIn">
+
+                    <a (click)="openSigninDialog()" class="btn-icon">
+                        <i class="fa fa-user"></i>
+                    </a>
+                    
+                </div>
+
+                <div class="others-option" *ngIf="isLoggedIn">
+                    <ul class="navbar-nav ms-auto">
+                      <li class="nav-item">
+                        <a class="btn-icon" href="javascript:void(0)">
+                          <div class="icon-wrapper">
+                            <i class="fas fa-bars"></i>
+                            <i-feather name="chevron-down"></i-feather>
+                          </div>
+                        </a>
+                        <ul class="dropdown-menu">
+                          <li class="nav-item">
+                            <a  class="nav-link" routerLinkActive="active"[routerLinkActiveOptions]="{exact: true}" [routerLink]="'/profil/' + getUserId()">
+                              <i class="fas fa-user-circle"></i>
+                              Profile</a>
+                          </li>
+                          <li class="nav-item">
+                            <a routerLink="/dashboard" class="nav-link" routerLinkActive="active"[routerLinkActiveOptions]="{exact: true}">
+                              <i class="fas fa-chart-line"></i>
+                              Tableau de bord</a>
+                          </li>
+                          <li class="nav-item">
+                            <a  class="nav-link" routerLinkActive="active"[routerLinkActiveOptions]="{exact: true}" (click)="logout()">
+                              <i class="fas fa-sign-out-alt"></i>
+                              Se déconnecter</a>
+                          </li>
+                          
+                        </ul>
+                      </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+
+
+<p-dialog [(visible)]="displaySigninDialog" [modal]="true" [closable]="true" [style]="{width: '50%'}" [responsive]="true" class="signin">
+  <ng-template pTemplate="content">
+    <div class="shape-container">
+      <div class="shape1"><img src="assets/img/shape11.png" alt="shape"></div>
+      <div class="shape2 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+      <div class="shape3"><img src="assets/img/shape3.png" alt="shape"></div>
+      <div class="shape4"><img src="assets/img/shape4.png" alt="shape"></div>
+      <div class="shape5"><img src="assets/img/shape5.png" alt="shape"></div>
+      <div class="shape6 rotateme"><img src="assets/img/shape4.png" alt="shape"></div>
+      <div class="shape7"><img src="assets/img/shape4.png" alt="shape"></div>
+      <div class="shape8 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+    </div>
+    <app-signin 
+      (switchToSignup)="openSignupDialog()"
+      (signInSuccess)="onSignInSuccess()" 
+    ></app-signin>
+  </ng-template>
+</p-dialog>
+
+  <p-dialog [(visible)]="displaySignupDialog" [modal]="true" [closable]="true" [style]="{width: '400px'}" [responsive]="true" class="signin">
+    <ng-template pTemplate="content">
+      <div class="shape-container">
+        <div class="shape1"><img src="assets/img/shape11.png" alt="shape"></div>
+        <div class="shape2 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+        <div class="shape3"><img src="assets/img/shape3.png" alt="shape"></div>
+        <div class="shape4"><img src="assets/img/shape4.png" alt="shape"></div>
+        <div class="shape5"><img src="assets/img/shape5.png" alt="shape"></div>
+        <div class="shape6 rotateme"><img src="assets/img/shape4.png" alt="shape"></div>
+        <div class="shape7"><img src="assets/img/shape4.png" alt="shape"></div>
+        <div class="shape8 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+      </div>
+      <app-signup 
+      (switchToSignin)="openSigninDialog()"
+      (signUpSuccess)="onSignUpSuccess()" 
+
+      ></app-signup> 
+    </ng-template>
+  </p-dialog>
+  

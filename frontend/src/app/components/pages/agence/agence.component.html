@@ -1,0 +1,52 @@
+<app-navbar-style-one></app-navbar-style-one>
+
+<div class="page-title-area">
+    <div class="d-table">
+        <div class="d-table-cell">
+                <div class="section-title">
+                    <h2>Nos Agences</h2>
+                    <p class="bar"></p>
+
+                </div>
+        </div>
+    </div>
+    <div class="shape1"><img src="assets/img/shape11.png" alt="shape"></div>
+    <div class="shape2 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+    <div class="shape3"><img src="assets/img/shape3.png" alt="shape"></div>
+    <div class="shape4"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape5"><img src="assets/img/shape5.png" alt="shape"></div>
+    <div class="shape6 rotateme"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape7"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape8 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+</div>
+
+
+<div>
+    <label for="gouvernoratSelect">Sélectionner un gouvernorat :</label>
+    <select id="gouvernoratSelect" (change)="onGouvernoratChange($event)">
+        <option *ngFor="let gov of gouvernorats" [value]="gov">{{ gov }}</option>
+      </select>
+      
+  </div>
+  
+  <!-- Liste des agences trouvées -->
+<!-- Liste des agences trouvées -->
+<div *ngIf="agences.length > 0">
+    <h3>Agences trouvées :</h3>
+    <ul>
+      <li *ngFor="let agence of agences">
+        <strong>{{ agence.Nom }}</strong> - {{ agence.Adresse }}
+      </li>
+    </ul>
+  </div>
+  
+  <div *ngIf="agences.length === 0">
+    Aucune agence trouvée pour ce gouvernorat.
+  </div>
+  
+  
+  <!-- La carte -->
+  <div #mapContainer id="map" style="height: 500px;"></div>
+  
+  
+  

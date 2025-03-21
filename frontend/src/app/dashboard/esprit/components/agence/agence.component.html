@@ -1,0 +1,126 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4" >
+                <ng-template pTemplate="left">
+                    <div class="my-2" >
+                        <button pButton pRipple label="Ajouter un agence" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
+            <div class="table-container">
+                <p-table #dt [value]="agences" [columns]="cols" responsiveLayout="scroll" [rows]="5" [globalFilterFields]="['nom']" [paginator]="true" [rowsPerPageOptions]="[5,10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} entrées" [(selection)]="selectedAgences" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                    <ng-template pTemplate="caption">
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                            <h5 class="m-0">Manage agences</h5>
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
+                            </span>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="nom">Nom <p-sortIcon field="nom"></p-sortIcon></th>
+                            <th pSortableColumn="chefAgence">Chef d'agence <p-sortIcon field="chefAgence"></p-sortIcon></th>
+                            <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
+                            <th pSortableColumn="numero">Numero <p-sortIcon field="numero"></p-sortIcon></th>
+                            <th pSortableColumn="adresse">Adresse<p-sortIcon field="adresse"></p-sortIcon></th>
+                            <th pSortableColumn="gouvernorat">Gouvernorat<p-sortIcon field="gouvernorat"></p-sortIcon></th>
+                            <th>Action</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-agence>
+                        <tr>
+                            <td>{{agence.nom}}</td>
+                            <td>{{agence.chefAgence}}</td>
+                            <td>{{agence.email}}</td>
+                            <td>{{agence.numero}}</td>
+                            <td>{{agence.adresse}}</td>
+                            <td>{{agence.gouvernorat}}</td>
+                            <td >
+                                <div class="flex" >
+                                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editAgence(agence)"></button>
+                                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteAgence(agence)"></button>
+                                </div>
+
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+
+        <p-dialog [(visible)]="agenceDialog" [style]="{width: '450px'}" header="Détails de l'agence" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="header">
+                <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
+                    <i class="flaticon-skyline" style="font-size: 2.5rem; margin-right: 8px; color: var(--orangeColor);"></i>
+                </div>
+            </ng-template>
+            
+            <ng-template pTemplate="content">
+                <div class="field" >
+                    <label for="nom">Nom</label>
+                    <input type="text" pInputText id="nom" [(ngModel)]="agence.Nom" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !agence.Nom}"/>
+                </div>
+                <div class="field">
+                    <label for="ChefAgence">Chef d'agence</label>
+                    <input type="text" pInputText id="ChefAgence" [(ngModel)]="agence.ChefAgence" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !agence.ChefAgence}"/>
+                </div>
+                
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input type="text" pInputText id="email" [(ngModel)]="agence.Email" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !agence.Email}"/>
+                </div>
+
+
+                <div class="field">
+                    <label for="numero">Numero</label>
+                    <input type="text" pInputText id="numero" [(ngModel)]="agence.Numero" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !agence.Numero}"/>
+                </div>
+                         
+                <div class="field">
+                    <label for="adresse">Adresse</label>
+                    <input type="text" pInputText id="adresse" [(ngModel)]="agence.Adresse" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !agence.Adresse}"/>
+                </div>    
+                
+                <div class="field">
+                    <label for="gouvernorat">Gouvernorat</label>
+                    <p-dropdown 
+                        id="gouvernorat"
+                        [options]="gouvernoratOptions"
+                        [(ngModel)]="agence.Gouvernorat"
+                        placeholder="Sélectionner un gouvernorat"
+                        [showClear]="true"
+                        [filter]="true">
+                    </p-dropdown>
+                </div>
+                
+                
+            </ng-template>
+            
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button  pButton pRipple [label]="actionLabel" icon="pi pi-check" class="p-button-text" (click)="saveAgence()"></button>
+            </ng-template>
+        </p-dialog>
+          
+          
+          <p-dialog [(visible)]="deleteAgenceDialog" header="Confirmation" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+              <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+              <span *ngIf="agence">Voulez-vous supprimer cette agence ?</span>
+            </div>
+            <ng-template pTemplate="footer">
+              <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Non" (click)="deleteAgenceDialog = false"></button>
+              <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Oui" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+
+    
+        
+    </div>
+</div>

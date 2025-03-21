@@ -1,0 +1,182 @@
+
+
+.footer-area {
+    position: relative;
+    padding-top: 20px; /* Réduit la marge supérieure */
+    padding-bottom: 20px; /* Réduit la marge inférieure */
+    z-index: 1;
+
+    .map {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: -1;
+        opacity: .7;
+        margin: 0 auto;
+        text-align: center;
+        position: absolute;
+        width: 80%;  /* Changez cette valeur pour ajuster la largeur */
+        height: 150px; /* Réduit la hauteur de la carte */
+        object-fit: cover; /* Assure que l'image couvre l'espace tout en préservant ses proportions */
+    }
+}
+
+.single-footer-widget {
+    .logo {
+        margin-bottom: 10px; /* Réduit la marge sous le logo */
+
+        a {
+            display: block;
+        }
+    }
+
+    h3 {
+        font-size: 14px; /* Réduit la taille des titres pour moins d'espace */
+        margin-bottom: 15px; /* Réduit l'espace sous les titres */
+    }
+
+    ul {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+
+        &.list {
+            li {
+                margin-bottom: 5px; /* Réduit la marge entre les éléments de la liste */
+
+                a {
+                    color: var(--paragraphColor);
+                    
+                    &:hover {
+                        color: var(--mainColor);
+                        padding-left: 5px; /* Réduit l'espace au survol */
+                    }
+                }
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        &.footer-contact-info {
+            margin-bottom: 10px; /* Réduit l'espace sous les informations de contact */
+
+            li {
+                color: var(--paragraphColor);
+                position: relative;
+                margin-bottom: 4px; /* Réduit la marge sous chaque élément */
+                padding-left: 20px; /* Réduit l'espace à gauche des éléments */
+                
+                i-feather {
+                    position: absolute;
+                    width: 12px; /* Réduit la taille des icônes */
+                    left: 0;
+                    top: 0;
+                }
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+                a {
+                    color: var(--paragraphColor);
+
+                    &:hover {
+                        color: var(--mainColor);
+                    }
+                }
+            }
+        }
+
+        &.social-links {
+            li {
+                display: inline-block;
+                margin-right: 4px; /* Réduit l'espace entre les icônes sociales */
+
+                a {
+                    width: 28px; /* Réduit la taille des icônes */
+                    height: 28px;
+                    line-height: 26px; /* Ajuste le centrage du texte */
+                    text-align: center;
+                    border-radius: 50%;
+                    color: var(--mainColor);
+                    border: 1px solid var(--mainColor);
+                    
+                    i-feather {
+                        width: 14px; /* Réduit la taille des icônes */
+                    }
+
+                    &:hover {
+                        background: var(--mainColor);
+                        color: var(--whiteColor);
+                    }
+                }
+            }
+        }
+    }
+}
+
+.copyright-area {
+    margin-top: 20px; /* Réduit la marge supérieure */
+    border-top: 1px solid #d8ebfd;
+    text-align: center;
+    padding: 10px 0; /* Réduit l'espace interne */
+    
+    p {
+        font-size: 12px; /* Réduit la taille de la police */
+        strong {
+            color: var(--blackColor);
+        }
+        a {
+            font-weight: 600;
+        }
+    }
+}
+
+
+@media only screen and (max-width: 767px) {
+    
+    .footer-area {
+        padding-top: 50px;
+    }
+    .single-footer-widget {
+        padding: 0 !important;
+        margin-bottom: 30px;
+
+        h3 {
+            font-size: 17px;
+            margin-bottom: 20px;
+        }
+    }
+    .copyright-area {
+        margin-top: 20px;
+        padding: {
+            top: 20px;
+            bottom: 20px;
+        };
+    }
+
+}
+
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .single-footer-widget {
+        margin-bottom: 30px;
+    }
+    .copyright-area {
+        margin-top: 50px;
+    }
+
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+
+}
+
+@media only screen and (min-width: 1550px) {
+
+}

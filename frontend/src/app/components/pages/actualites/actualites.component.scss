@@ -1,0 +1,115 @@
+
+
+
+.single-services-box-item {
+    background-color: var(--whiteColor);
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    transition: var(--transition);
+    padding: 90px 35px 70px;
+    -webkit-clip-path: polygon(0 10%, 100% 0, 100% 90%, 0% 100%);
+    clip-path: polygon(0 10%, 100% 0, 100% 90%, 0% 100%);
+
+    .icon {
+        width: 90px;
+        height: 90px;
+        text-align: center;
+        position: relative;
+        background-color: #80c54d;
+        border-radius: 5px;
+        text-align: center;
+        margin-bottom: 25px;
+
+        img {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            margin: auto;
+        }
+    }
+    h3 {
+        margin-bottom: 12px;
+        font: {
+            size: 20px;
+            weight: 600;
+        };
+        a {
+            display: inline-block;
+        }
+    }
+    .shape {
+        position: absolute;
+        left: 0;
+        top: -15px;
+        z-index: -1;
+    }
+    .learn-more-btn {
+        color: var(--mainColor);
+        font-weight: 500;
+        display: inline-block;
+        margin-top: 5px;
+        position: relative;
+        padding-right: 28px;
+
+        i-feather {
+            position: absolute;
+            right: 0;
+            top: -2px;
+            transition: var(--transition);
+        }
+        &:hover {
+            color: var(--blackColor);
+            padding: {
+                right: 0;
+                left: 5px;
+            };
+            i-feather {
+                right: 100%;
+                color: var(--mainColor);
+            }
+        }
+    }
+    &:hover {
+        transform: translateY(-10px);
+    }
+}
+.col-lg-4 {
+    &:nth-child(2) {
+        .single-services-box-item {
+            .icon {
+                background-color: #4267d1;
+            }
+        }
+    }
+    &:nth-child(3) {
+        .single-services-box-item {
+            .icon {
+                background-color: #ca8220;
+            }
+        }
+    }
+    &:nth-child(4) {
+        .single-services-box-item {
+            .icon {
+                background-color: #b92fb1;
+            }
+        }
+    }
+    &:nth-child(5) {
+        .single-services-box-item {
+            .icon {
+                background-color: #de6742;
+            }
+        }
+    }
+    &:nth-child(6) {
+        .single-services-box-item {
+            .icon {
+                background-color: #59eed0;
+            }
+        }
+    }
+}

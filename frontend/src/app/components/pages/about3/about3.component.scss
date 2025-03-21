@@ -1,0 +1,260 @@
+.page-title-area {
+    height: 10px; /* Diminue l'espacement vertical */
+    text-align: center;
+    position: relative;
+}
+
+
+.d-table-cell {
+    .section-title {
+        .bar {
+            &::before {
+                background: var(--gradientColor);
+            }
+        }
+    }
+    &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 37%;
+        width: 100%;
+        z-index: -1;
+    }
+}
+
+
+
+.btn-primary {
+    background: var(--gradientColor);
+    border: none; /* Supprimez la bordure si nécessaire */
+    color: white; /* Couleur du texte */
+    text-transform: uppercase; /* Met le texte en majuscules */
+    text-align: center;
+    display: inline-block;
+    border-radius: 5px; /* Ajustez le radius selon vos besoins */
+    transition: background 0.3s ease; /* Transition douce pour le hover */
+}
+
+
+.imageText {
+    padding-left: 200px; /* Décale le contenu vers la droite sans changer la largeur */
+}
+
+
+.responsive-image {
+    width: 100%;
+    height: auto;
+    max-width: 500px; /* Limite la largeur maximale de l'image sur les écrans plus grands */
+}
+
+.about-content {
+    
+    .sub-title {
+        text-transform: uppercase;
+        color: var(--mainColor);
+        display: block;
+        font: {
+            size: 15px;
+            weight: 400;
+        };
+    }
+    h2 {
+        font: {
+            size: 24px;
+            weight: 600;
+        };
+        margin: {
+            top: 10px;
+            bottom: 10px;
+        };
+    }
+    ul {
+        padding: 0;
+        display: flex;
+        list-style-type: none;
+        margin: 0;
+        gap: 15px; /* Espace entre les éléments */
+    }
+    li {
+        flex: 1; /* Prend toute la place disponible */
+        max-width: 45%; /* Ajuste la largeur à 45% pour 2 éléments par ligne */
+        color: var(--paragraphColor);
+        position: relative;
+        padding: 10px;
+        box-shadow: 0 2px 48px 0 rgba(0, 0, 0, 0.08);
+        transition: var(--transition);
+        border-radius: 3px;
+        
+        span {
+            display: flex;
+            flex-direction: column; /* Permet de placer les éléments l'un en dessous de l'autre */
+            align-items: center; /* Centre les éléments horizontalement */
+            text-align: center; /* Centre le texte */
+            z-index: 1;
+            padding: 10px;
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        &::before {
+            content: '';
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            background: var(--gradientColor);
+            opacity: 0;
+            visibility: hidden;
+            position: absolute;
+            border-radius: 3px;
+            z-index: -1;
+            transition: var(--transition);
+        }
+        &:hover, &:focus {
+            color: var(--whiteColor);
+            transform: translateY(-5px);
+
+            &::before {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        }
+    }
+}
+
+
+.timeline-container {
+    padding: 50px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.timeline {
+    position: relative;
+    width: 60%;
+    padding-left: 20px;
+    border-left: 3px solid var(--blueColor);
+}
+
+.timeline-item {
+    margin-bottom: 30px;
+    position: relative;
+}
+
+/* Icon */
+.timeline-icon {
+    position: absolute;
+    top: 0;
+    left: -30px;
+    width: 50px;
+    height: 50px;
+    background-color: var(--blueColor);
+    color: var(--orangeColor);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px; /* Ajout d'espace en bas de l'icône */
+
+}
+
+/* Content */
+.timeline-content {
+    margin-left: 20px; /* Assure que le contenu est aligné après l'icône */
+    padding-top: 20px; /* Ajoute un espace entre l'icône et le contenu */
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.timeline-content h3 {
+    margin: 0 0 15px; /* Ajout d'une marge en bas du titre */
+    font-size: 18px;
+    color: var(--blueColor);
+}
+
+.timeline-content p {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+}
+
+
+
+
+
+
+
+
+@media (max-width: 768px) {
+    .agency-about-area {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .agency-about-img {
+        width: 100%; /* Image prend toute la largeur */
+    }
+
+    .responsive-image {
+        width: 100%;
+        height: auto; /* Ajuste automatiquement la hauteur pour garder les proportions */
+        max-height: 400px; /* Limite la hauteur pour éviter qu'elle soit trop grande */
+        object-fit: cover; /* Garde une apparence bien cadrée */
+    }
+
+    .imageText {
+        width: 90%;
+        padding: 20px;
+    }
+
+    .timeline-container {
+        width: 90%;
+    }
+
+    .timeline {
+        width: 100%;
+    }
+
+
+    .about-content {
+        margin-bottom: 40px;
+
+        .sub-title {
+            font-size: 14px;
+        }
+        h2 {
+            font-size: 20px;
+        }
+        ul {
+            display: block; /* S'assure que les éléments à l'intérieur soient en colonne */
+            
+            li {
+                flex: 0 0 100%; /* Prend 100% de la largeur */
+                max-width: 100%; /* Limite la largeur à 100% */
+                margin-top: 15px; /* Espace entre chaque élément */
+                background: var(--gradientColor); /* Appliquez le dégradé en arrière-plan */
+                padding: 10px; /* Ajustez le padding pour rendre le texte plus lisible */
+                border-radius: 5px; /* Arrondit les coins pour un rendu plus esthétique */
+                color: var(--whiteColor); /* Change la couleur du texte pour un meilleur contraste */
+                display: flex; /* Centrer le contenu */
+                align-items: center; /* Aligne verticalement les éléments */
+            }
+    
+            li span {
+                display: flex;
+                align-items: center; /* Pour centrer l'icône et le texte */
+            }
+    
+
+        }
+    }
+}

@@ -1,0 +1,47 @@
+<app-navbar-style-one></app-navbar-style-one>
+
+<!-- Page Title -->
+<div class="page-title-area">
+    <div class="d-table">
+        <div class="d-table-cell">
+            <div class="section-title">
+                <h2>Actualite Details</h2>
+                <p class="bar"></p>
+            </div>
+        </div>
+    </div>
+    <div class="shape1"><img src="assets/img/shape11.png" alt="shape"></div>
+    <div class="shape2 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+    <div class="shape3"><img src="assets/img/shape3.png" alt="shape"></div>
+    <div class="shape4"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape5"><img src="assets/img/shape5.png" alt="shape"></div>
+    <div class="shape6 rotateme"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape7"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape8 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+</div>
+
+<div class="services-details-area ptb-80">
+    <div class="container">
+      <div class="service-path">
+        <a routerLink="/" class="service-link">Acceuil</a> / <span class="service-name">{{ actualite?.Nom }}</span>
+      </div>
+      
+      <br><br>
+      <div class="row align-items-center">
+        <div [ngClass]="{'col-lg-6': true, 'order-lg-1': !isImageOnLeft}" class="services-details">
+          <div class="services-details-desc">
+            <h3>{{ actualite?.Nom }}</h3>
+            <p>{{ actualite?.Description }}</p>
+          </div>
+          <br><br>
+        </div>
+        <div [ngClass]="{'col-lg-6': true, 'order-lg-0': isImageOnLeft}" class="services-details-image">
+          <img [src]="getImageUrl(actualite?.Image)" class="animate__animated animate__fadeInUp" alt="image">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+

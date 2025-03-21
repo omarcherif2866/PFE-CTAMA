@@ -1,0 +1,173 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Ajouter un expert" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+                    </div>
+                </ng-template>
+
+            </p-toolbar>
+
+
+
+
+            <p-table #dt [value]="experts" [columns]="cols" responsiveLayout="scroll" [rows]="5" [globalFilterFields]="['nom']" [paginator]="true" [rowsPerPageOptions]="[5,10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedExpert" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Manage experts</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Image</th>
+                        <th pSortableColumn="nom">Nom <p-sortIcon field="nom"></p-sortIcon></th>
+                        <th pSortableColumn="prenom">Prenom <p-sortIcon field="prenom"></p-sortIcon></th>
+                        <th pSortableColumn="description">Email <p-sortIcon field="email"></p-sortIcon></th>
+                        <th pSortableColumn="phoneNumber">Numero de Telephone <p-sortIcon field="phoneNumber"></p-sortIcon></th>
+                        <th pSortableColumn="region">Region <p-sortIcon field="region"></p-sortIcon></th>
+                        <th pSortableColumn="taux">Taux <p-sortIcon field="taux"></p-sortIcon></th>
+
+                        <th>Action</th>
+
+                        <th></th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-expert>
+                    <tr>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Image</span>
+                            <img [src]="getImageUrl(expert.image)" [alt]="expert.image" width="100" class="shadow-4" />
+                          </td>          
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">nom</span>
+                            {{expert.nom}}
+                        </td>         
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">prenom</span>
+                            {{expert.prenom}}
+                        </td>      
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">email</span>
+                            {{expert.email}}
+                        </td>    
+                        <td style="width:14%; min-width:8rem;">
+                            <span class="p-column-title">phoneNumber</span>
+                            {{expert.phoneNumber}}
+                        </td>
+                        <td style="width:14%; min-width:8rem;">
+                            <span class="p-column-title">region</span>
+                            {{expert.region}}
+                        </td> 
+                        <td style="width:14%; min-width:8rem;">
+                            <span class="p-column-title">taux</span>
+                            {{expert.taux}}
+                        </td> 
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editExpert(expert)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteExpert(expert)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+
+
+
+
+
+        <p-dialog [(visible)]="expertDialog" [style]="{width: '450px'}" header="Détails du commercial" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+                <form [formGroup]="expertForm" (ngSubmit)="saveExpert()">
+                    <div class="field">
+                        <label for="nom">Nom</label>
+                        <input type="text" pInputText id="nom" formControlName="nom" required autofocus 
+                               [ngClass]="{'ng-invalid ng-dirty': submitted && expertForm.get('nom')!.invalid}"/>
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && expertForm.get('nom')!.invalid">Nom est requis.</small>
+                    </div>
+                    <div class="field">
+                        <label for="prenom">Prenom</label>
+                        <input type="text" pInputText id="prenom" formControlName="prenom" required autofocus 
+                               [ngClass]="{'ng-invalid ng-dirty': submitted && expertForm.get('prenom')!.invalid}"/>
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && expertForm.get('prenom')!.invalid">prenom est requis.</small>
+                    </div>
+                    <div class="field">
+                        <label for="inputEmail">Email</label>
+                        <input type="email" pInputText id="email" formControlName="email" required autofocus 
+                               [ngClass]="{'ng-invalid ng-dirty': submitted && expertForm.get('email')!.invalid}"/>
+                        <small *ngIf="submitted && expertForm.get('email')!.invalid" class="text-danger">
+                            Email invalide.
+                        </small>
+                    </div>
+                    <div class="field">
+                        <label for="inputTel">Numéro de téléphone</label>
+                        <input type="tel" pInputText id="phoneNumber" formControlName="phoneNumber" required autofocus 
+                        [ngClass]="{'ng-invalid ng-dirty': submitted && expertForm.get('phoneNumber')!.invalid}"/>
+                        <small *ngIf="submitted && expertForm.get('phoneNumber')!.invalid" class="text-danger">
+                            Numéro de téléphone requis.
+                        </small>
+                    </div>
+                    <div class="field">
+                        <label for="region">Region</label>
+                        <input type="text" pInputText id="region" formControlName="region" required autofocus 
+                               [ngClass]="{'ng-invalid ng-dirty': submitted && expertForm.get('region')!.invalid}"/>
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && expertForm.get('region')!.invalid">region est requis.</small>
+                    </div>
+                    <div class="field">
+                        <label for="taux">taux</label>
+                        <input type="number" pInputText id="taux" formControlName="taux" required autofocus 
+                               [ngClass]="{'ng-invalid ng-dirty': submitted && expertForm.get('taux')!.invalid}"/>
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && expertForm.get('taux')!.invalid">taux est requis.</small>
+                    </div>
+                    <div class="field">
+                        <label for="signupPassword">Mot de passe</label>
+                        <p-password id="signupPassword" placeholder="Enter Password" formControlName="password" [toggleMask]="true" class="w-full p-3" required></p-password>
+                        
+                        <div *ngIf="(expertForm.get('password')?.touched || submitted) && expertForm.get('password')?.invalid" class="text-danger">
+                            <div *ngIf="expertForm.get('password')?.errors?.required">Le mot de passe est requis.</div>
+                            <div *ngIf="expertForm.get('password')?.errors?.minlength">Le mot de passe doit comporter au moins 8 caractères.</div>
+                            <div *ngIf="expertForm.get('password')?.errors?.pattern">Le mot de passe doit contenir au moins une majuscule, un chiffre et un symbole.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <label for="image">Image</label>
+                        <p-fileUpload mode="basic" name="image" accept="image/*" maxFileSize="1000000" 
+                                      (onSelect)="onFileSelected($event)" label="Choisir une image" chooseLabel="Choisir une image">
+                        </p-fileUpload>
+                    </div>
+                </form>
+            </ng-template>
+        
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button pButton pRipple label="Enregistrer" icon="pi pi-check" class="p-button-text" (click)="saveExpert()"></button>
+            </ng-template>
+        </p-dialog>
+
+        
+
+        <p-dialog [(visible)]="deleteexpertDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+              <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+              <span *ngIf="expert">Vous voulez supprimer ce expert ?</span>
+            </div>
+            <ng-template pTemplate="footer">
+              <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Non" (click)="deleteexpertDialog = false"></button>
+              <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Oui" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+
+    </div>
+</div>

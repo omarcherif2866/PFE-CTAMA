@@ -1,0 +1,44 @@
+<app-navbar-style-one></app-navbar-style-one>
+
+<div class="page-title-area">
+    <div class="d-table">
+        <div class="d-table-cell">
+                <div class="section-title">
+                    <h2>Nos Dernières Actualités</h2>
+                    <p class="bar"></p>
+                    <p>Restez informé des nouveautés et des innovations de CTAMA :
+
+                </div>
+        </div>
+    </div>
+    <div class="shape1"><img src="assets/img/shape11.png" alt="shape"></div>
+    <div class="shape2 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+    <div class="shape3"><img src="assets/img/shape3.png" alt="shape"></div>
+    <div class="shape4"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape5"><img src="assets/img/shape5.png" alt="shape"></div>
+    <div class="shape6 rotateme"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape7"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape8 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+</div>
+
+
+
+
+
+<div class="bigdata-services-area ptb-80 bg-eef6fd">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-12" *ngFor="let actualite of actualites">
+                <div class="single-services-box-item">
+                    <div class="icon">
+                        <img *ngIf="actualite.Image" [src]="getImageUrl(actualite.Image)" alt="image">
+                    </div>
+                    <h3><a [routerLink]="['/blog-details', actualite.Id]">{{ actualite.Nom }}</a></h3>
+                    <p>{{ actualite.Description }}</p>
+                    <a [routerLink]="['/blog-details', actualite.Id]" class="learn-more-btn"><i-feather name="arrow-right"></i-feather> Consulter l'actualité</a>
+                    <div class="shape"><img src="assets/img/bigdata-analytics/rectangle.png" alt="image"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

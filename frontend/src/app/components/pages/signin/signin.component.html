@@ -1,0 +1,54 @@
+<!-- <app-navbar-style-one></app-navbar-style-one>
+<br><br><br><br><br><br><br><br> -->
+
+<div class="main-banner">
+    <div class="d-table">
+        <div class="d-table-cell">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 offset-lg-3">
+                        <div class="banner-form ml-3">
+                            <form (submit)="signin()" [formGroup]="form" id="createForm" enctype="multipart/form-data">
+
+                                <div class="form-group">
+                                    <label for="inputEmail">Email</label>
+                                    <input type="email" id="inputEmail" class="form-control" placeholder="Votre Adresse Email" formControlName="email" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="inputPassword">Mot de passe</label>
+                                    <input type="password" id="inputPassword" class="form-control" placeholder="Entrer mot de passe" formControlName="password" required>
+                                </div>
+                               
+                                <div class="flex items-center justify-between mb-5 gap-8">
+                                  <a href="/forgetpassword" 
+                                     class="font-medium no-underline text-left cursor-pointer" 
+                                     style="color: var(--primary-color); margin-right: auto;">
+                                     Mot de passe oublié
+                                  </a>
+                                  <a 
+                                  (click)="onSignupClick()"
+                                     class="font-medium no-underline text-right cursor-pointer" 
+                                     style="color: var(--primary-color); margin-left: auto;">
+                                     Rejoignez-nous
+                                  </a>
+                              </div>
+                              
+
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary radius-30">Se Connecter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <br><br><br><br><br><br><br><br> -->
+<p-dialog [(visible)]="displaySignupDialog" [modal]="true" [closable]="true" [style]="{width: '400px'}">
+    <ng-template pTemplate="content">
+      <app-signup></app-signup> <!-- Affiche le SignupComponent -->
+    </ng-template>
+</p-dialog>

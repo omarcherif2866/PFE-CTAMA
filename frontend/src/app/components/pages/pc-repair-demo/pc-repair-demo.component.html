@@ -1,0 +1,260 @@
+<app-navbar-style-one></app-navbar-style-one>
+
+<!-- Main Banner -->
+ <br><br>
+ <br><br>
+ <div class="agency-portfolio-home-slides" *ngIf="agencyPortfolioMainBanner.length > 0">
+    <owl-carousel-o [options]="homeSlides">
+        <ng-template carouselSlide *ngFor="let content of agencyPortfolioMainBanner">
+            <div class="agency-portfolio-main-banner" [ngStyle]="{'background-image': 'url(' + content.bgImg + ')'}">
+            </div>
+        </ng-template>
+    </owl-carousel-o>
+</div>
+
+
+
+
+<div class="repair-main-banner">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="repair-banner-content">
+                    <h1>Bienvenue a CTAMA</h1>
+                    <p>La Caisse Tunisienne d’Assurances Mutuelles Agricoles (CTAMA) est une Société à Forme Mutuelle régie par le décret N° 92-2257 du 31 Décembre 1992. Elle est le doyen des sociétés d’assurance en Tunisie.
+
+                        Créée en 1912 sous forme d’une Caisse Mutuelle Agricole pour couvrir les risques grêles et mortalité de bétail.</p>
+                    <boutton routerLink="/a_propos" class="btn btn-primary">En Savoir Plus</boutton>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="repair-banner-image">
+                    <img src="assets/img/repair-banner-image/repair-banner-img.png" alt="image">
+                    <img src="assets/img/repair-banner-image/1.png" class="animate__animated animate__zoomIn" alt="image">
+                    <img src="assets/img/repair-banner-image/2.png" class="animate__animated animate__fadeInLeft" alt="image">
+                    <img src="assets/img/repair-banner-image/circle.png" class="rotateme" alt="image">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+  
+<!-- type d'assurances -->
+<div class="ptb-10 pb-0">
+    <div class="container">
+<div class="single-assurance-services-row">
+    <div class="col">
+        <div class="single-assurance-services">
+            <div class="icon">
+                <i class="flaticon-skyline"></i>
+            </div>
+            <h3>Habitation</h3>
+            <a routerLink="/particuliers/assurance-multirisques-habitation"><i-feather name="arrow-right"></i-feather></a>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="single-assurance-services">
+            <div class="icon">
+                <i class="flaticon-car-insurance"></i>
+            </div>
+            <h3>Automobile</h3>
+            <a routerLink="/particuliers/assurance-automobile"><i-feather name="arrow-right"></i-feather></a>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="single-assurance-services">
+            <div class="icon">
+                <i class="fas fa-seedling"></i>
+            </div>
+            <h3>Agriculture</h3>
+            <a routerLink="/agriculteurs"><i-feather name="arrow-right"></i-feather></a>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="single-assurance-services">
+            <div class="icon">
+                <i class="fas fa-hand-holding-heart"></i>
+            </div>
+            <h3>Assurance vie</h3>
+            <a routerLink=""><i-feather name="arrow-right"></i-feather></a>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+<!-- agences -->
+<div class="repair-cta-area" style="background-color: var(--blueColor);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="cta-repair-content">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-6 col-sm-3">
+                            <div class="funfact">
+                                <h3>+<span [countUp]="agencesCount"></span></h3>
+                                <p>Agences</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-6 col-sm-3">
+                            <div class="funfact">
+                                <h3>+<span [countUp]="ppCount"></span></h3>
+                                <p>Clients personne Physique</p>
+                              </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-6 col-sm-3">
+                            <div class="funfact">
+                                <h3>+<span [countUp]="pmCount"></span></h3>
+                                <p>Clients personne Morale</p>
+                              </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-6 col-sm-3">
+                            <div class="funfact">
+                                <h3>+<span [countUp]="expertsCount"></span></h3>
+                                <p>Experts</p>
+                            </div>
+                        </div>
+                    </div>
+                    <a routerLink="/agences" class="btn btn-primary">Trouvez une agence</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+               <div class="agence-img">
+                   <img src="assets/img/tunisie.png" alt="image">
+               </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<br><br><br><br>
+
+
+
+
+
+<!-- type d'assurances -->
+ <div class="assuranceType ptb-80 pb-0">
+    <div class="container">
+        <div class="section-title">
+            <h2>Nos Valeurs</h2>
+            <div class="bar"></div>
+            <p>
+                Chez Oziss, nous croyons fermement que nos valeurs sont la clé de notre succès et 
+celui de nos clients. Nos valeurs fondamentales nous guident dans chaque décision et 
+chaque projet que nous entreprenons :
+            </p>
+        </div>
+        <div class="row-services">
+
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="single-assurance agriculteurs">
+                    <div class="icon">
+                        <i></i>
+                    </div>
+                    <h3>Agriculteurs</h3>
+                    <p>Découvrez nos produits et services agricoles</p>
+                    <a routerLink="/"><i-feather name="arrow-right"></i-feather></a>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="single-assurance professionnels">
+                    <div class="icon">
+                        <i></i>
+                    </div>
+                    <h3>Professionnels</h3>
+                    <p>Entrepreneurs, PDG, start-upeurs, la CTAMA a concentré toute son expertise pour garantir votre croissance.</p>
+                    <a routerLink="/"><i-feather name="arrow-right"></i-feather></a>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="single-assurance particuliers">
+                    <div class="icon">
+                        <i></i>
+                    </div>
+                    <h3>Particuliers</h3>
+                    <p>Découvrez nos offres exclusives pour vous assurer au quotidien. Les assurances auto, habitation et santé les plus compétitives du marché.</p>
+                    <a routerLink="/"><i-feather name="arrow-right"></i-feather></a>
+                </div>
+            </div>
+            
+
+        </div>
+    </div>
+</div>
+
+
+
+<!-- actualites -->
+<div class="blog-area ptb-80">
+    <div class="container">
+        <div class="section-title">
+            <h2>Nos Dernières Actualités</h2>
+            <div class="bar"></div>
+            <p>Restez informé des nouveautés et des innovations d’Oziss :
+            </p>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6"*ngFor="let actualite of actualites">
+                <div class="single-blog-post" >
+                    <div class="blog-image">
+                        <a [routerLink]="['/blog-details', actualite.Id]">
+                            <img *ngIf="actualite.Image" [src]="getImageUrl(actualite.Image)" alt="image">
+                        </a>
+                    </div>
+                    <div class="blog-post-content">
+                        <h3><a [routerLink]="['/blog-details', actualite.Id]">{{ actualite.Nom }}</a></h3>
+                        <p>{{ actualite.Description }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+  
+
+  <!-- CTA -->
+  <div class="repair-cta-area" style="background-color: var(--blueColor);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="cta-repair-content">
+                    <h3>Nous vous aiderons à remettre votre projet sur le marché </h3>
+                    <p>
+                        Prêt à faire le premier pas vers la transformation numérique de votre entreprise ? 
+Contactez-nous pour discuter de vos besoins et découvrir comment Oziss peut vous 
+aider à atteindre vos objectifs.
+                    </p>
+                    <a routerLink="/contact" class="btn btn-primary">Contactez nous</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+               <div class="cta-repair-img">
+                   <img src="assets/img/contact.jpg" alt="image">
+               </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+  
+

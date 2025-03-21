@@ -1,0 +1,143 @@
+/*contact-css*/
+.page-title-area {
+    height: 10px; /* Diminue l'espacement vertical */
+    text-align: center;
+    position: relative;
+}
+
+
+.d-table-cell {
+    .section-title {
+        .bar {
+            &::before {
+                background: var(--gradientColor);
+            }
+        }
+    }
+    &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 37%;
+        width: 100%;
+        z-index: -1;
+    }
+}
+
+
+.btn-primary {
+    background: var(--gradientColor);
+    border: none; /* Supprimez la bordure si nécessaire */
+    color: white; /* Couleur du texte */
+    text-transform: uppercase; /* Met le texte en majuscules */
+    text-align: center;
+    display: inline-block;
+    border-radius: 5px; /* Ajustez le radius selon vos besoins */
+    transition: background 0.3s ease; /* Transition douce pour le hover */
+}
+
+.contact-info-box {
+    text-align: center;
+    transition: .4s;
+    box-shadow: 0 2px 48px 0 rgba(0, 0, 0, 0.08);
+    background: var(--whiteColor);
+    padding: 30px;
+    
+    .icon {
+        display: inline-block;
+        width: 65px;
+        height: 65px;
+        line-height: 62px;
+        background: var(--bgColor);
+        border-radius: 50%;
+        font-size: 30px;
+        color: var(--mainColor);
+        transition: .4s;
+    }
+    h3 {
+        margin: 25px 0 15px;
+        font-size: 18px;
+    }
+    p {
+        margin-bottom: 0;
+
+        a {
+            color: var(--paragraphColor);
+
+            &:hover {
+                color: var(--mainColor);
+            }
+        }
+    }
+    &:hover {
+        transform: translateY(-10px);
+
+        .icon {
+            color: var(--whiteColor);
+            background: var(--mainColor);
+        }
+    }
+}
+#map {
+    iframe {
+        margin-bottom: -5px;
+        height: 500px;
+        border: none;
+        width: 100%;
+    }
+}
+#contactForm {
+    .btn {
+        margin-top: 10px;
+    }
+}
+textarea.form-control {
+    min-height: auto;
+    height: auto;
+}
+
+@media only screen and (max-width: 767px) {
+
+    .contact-info-area {
+        padding-bottom: 20px;
+    }
+    .contact-info-box {
+        padding: 30px 20px;
+        margin-bottom: 30px;
+
+        h3 {
+            font-size: 17px;
+        }
+    }
+    #contactForm {
+        margin-top: 45px;
+    }
+
+}
+
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .contact-info-area {
+        padding-bottom: 50px;
+    }
+    .contact-info-box {
+        margin-bottom: 30px;
+    }
+    #contactForm {
+        margin-top: 45px;
+    }
+
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+
+}
+
+@media only screen and (min-width: 1550px) {
+
+}

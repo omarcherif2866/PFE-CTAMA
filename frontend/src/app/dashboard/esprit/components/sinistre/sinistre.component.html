@@ -1,0 +1,89 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <!-- <p-messages></p-messages> -->
+
+            <p-toolbar styleClass="mb-4" >
+
+            </p-toolbar>
+
+            <div class="table-container">
+                <p-table #dt [value]="sinistresValides" [columns]="cols" responsiveLayout="scroll" 
+         [rows]="5" [globalFilterFields]="['nom']" [paginator]="true" 
+         [rowsPerPageOptions]="[5,10,20,30]" [showCurrentPageReport]="true" 
+         currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} entrées" 
+         [(selection)]="selectedSinistres" selectionMode="multiple" 
+         [rowHover]="true" dataKey="id">
+                    <ng-template pTemplate="caption">
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                            <h5 class="m-0">Manage sinistres</h5>
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
+                            </span>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="date_survenance">date_survenance <p-sortIcon field="date_survenance"></p-sortIcon></th>
+                            <th pSortableColumn="date_declaration">date_declaration <p-sortIcon field="date_declaration"></p-sortIcon></th>
+                            <th pSortableColumn="num_police">num_police <p-sortIcon field="num_police"></p-sortIcon></th>
+                            <th pSortableColumn="decription">Description  <p-sortIcon field="decription"></p-sortIcon></th>
+                            <th pSortableColumn="objet_assure">objet_assure <p-sortIcon field="objet_assure"></p-sortIcon></th>
+                            <th pSortableColumn="reference">reference <p-sortIcon field="reference"></p-sortIcon></th>
+                            <th pSortableColumn="documents">documents <p-sortIcon field="documents"></p-sortIcon></th>
+
+                            <th pSortableColumn="status">Statut <p-sortIcon field="status"></p-sortIcon></th>
+
+                            <th >Modifier etat du sinistre <p-sortIcon ></p-sortIcon></th>
+
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-sinistre>
+                      <tr>
+                    
+
+                        <td>{{sinistre.date_survenance}}</td>
+                        <td>{{sinistre.date_declaration}}</td>
+                        <td>{{sinistre.num_police}}</td> <!-- Affichage de l'expert ou message -->
+                        <td>{{sinistre.description}}</td>
+                        <td>{{sinistre.objet_assure}}</td>
+                        <td>{{sinistre.reference}}</td>
+                        <td>
+                            <i class="pi pi-file-pdf pdf-icon" (click)="openPdf(sinistre.documents.doc)"></i>
+                            <span class="pdf-link" (click)="openPdf(sinistre.documents.doc)">{{sinistre.documents.doc}}</span>
+                        </td>
+
+                        <td style="width:14%; min-width:8rem;">
+                            <span class="p-column-title">Status</span>
+                            <span [ngClass]="{
+                                'status-declaration': sinistre._status === 'déclaration',
+                                'status-expertise': sinistre._status === 'expertise',
+                                'status-reglement': sinistre._status === 'reglement',
+
+                            }">
+                                {{sinistre._status}}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="p-column-title">Modifier le statut</span>
+                            <p-dropdown [options]="statusOptions" [(ngModel)]="selectedStatuses[sinistre._id]" optionLabel="label"
+                                        optionValue="value" (onChange)="onStatusChange(sinistre, $event)" appendTo="body"></p-dropdown>
+                        </td>
+                      </tr>
+
+                    </ng-template>
+                    
+                </p-table>
+            </div>
+        </div>
+
+        <p-dialog [(visible)]="displayPdfDialog" [modal]="true" [header]="'Aperçu du PDF - ' + selectedPdfName" [style]="{ width: '70vw' }">
+            <ng-container *ngIf="selectedPdf">
+              <iframe [src]="selectedPdf" width="100%" height="500px"></iframe>
+            </ng-container>
+          </p-dialog>
+
+    </div>
+</div>

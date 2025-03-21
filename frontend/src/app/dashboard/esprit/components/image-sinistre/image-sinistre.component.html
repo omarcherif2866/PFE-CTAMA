@@ -1,0 +1,173 @@
+<div class="grid">
+  <div class="col-12">
+      <div class="card px-6 py-6">
+          <p-toast></p-toast>
+          <p-toolbar styleClass="mb-4" *ngIf=" getUserRole() === 'expert'">
+              <ng-template pTemplate="left" >
+                  <div class="my-2" >
+                      <button pButton pRipple label="Ajouter des images pour une sinistre" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+                  </div>
+              </ng-template>
+          </p-toolbar>
+          <div class="table-container">
+            <p-table #dt [value]="imageSinistres" [columns]="cols" responsiveLayout="scroll" [rows]="5" [globalFilterFields]="['dateAjout', 'expert.nom', 'expert.prenom']" [paginator]="true" [rowsPerPageOptions]="[5,10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} entrées" [(selection)]="selectedImages" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Manage imageSinistres</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                  <tr>
+                      <th pSortableColumn="expert" *ngIf="getUserRole() === 'PersonnePhysique'|| getUserRole() === 'PersonneMorale'">Expert <p-sortIcon field="expert"></p-sortIcon></th>
+                      <th pSortableColumn="client" *ngIf="getUserRole() === 'expert'">Client <p-sortIcon field="client"></p-sortIcon></th>
+                      <th pSortableColumn="documents">Document <p-sortIcon field="documents"></p-sortIcon></th>
+                      <th pSortableColumn="dateAjout">Date d'Ajout <p-sortIcon field="dateAjout"></p-sortIcon></th>
+                      <th>Images avant accident</th>
+                      <th>Images aprés accident</th>
+                      <th>Action</th>
+                  </tr>
+              </ng-template>
+              
+              <ng-template pTemplate="body" let-imageSinistre>
+                  <tr>
+                      <!-- Affichage du nom de l'expert -->
+                      <td *ngIf="getUserRole() === 'PersonnePhysique'|| getUserRole() === 'PersonneMorale'">{{ imageSinistre.expert?.nom || 'N/A' }} {{ imageSinistre.expert?.prenom || 'N/A' }}</td>
+              
+                      <!-- Affichage du client (nom + prénom) -->
+                      <td *ngIf="getUserRole() === 'expert'">{{ imageSinistre.client.nom }} {{ imageSinistre.client.prenom }}</td>
+              
+                      <!-- Affichage du nom du document -->
+                      <td>{{ imageSinistre.documents.doc }}</td>
+              
+                      <!-- Affichage de la date au format lisible -->
+                      <td>{{ imageSinistre.dateAjout | date:'dd/MM/yyyy HH:mm' }}</td>
+              
+                      <!-- Affichage des images -->
+                      <td class="image-cell">
+                        <div class="image-container">
+                          <div *ngFor="let img of imageSinistre.image; let i = index" class="image-wrapper">
+                            <img [src]="img" alt="Image Sinistre" width="50" height="50" 
+                                 (click)="openDialog(imageSinistre.image, i)">
+                          </div>
+                        </div>
+                      </td>
+                      
+                      
+                      <td class="image-cell">
+                        <div *ngIf="imageSinistre.imageAfterAccident?.length > 0; else addImageButton">
+                          <div class="image-container">
+                            <div *ngFor="let img of imageSinistre.imageAfterAccident; let i = index" class="image-wrapper">
+                              <img [src]="img" alt="Image après accident" width="50" height="50"
+                                   (click)="openDialog(imageSinistre.imageAfterAccident, i)">
+                            </div>
+                          </div>
+                        </div>
+                      
+                        <ng-template #addImageButton>
+                          <input type="file" (change)="onImageSelect($event, imageSinistre)" multiple accept="image/*" style="display: none;" #fileInput>
+                          <button pButton pRipple icon="pi pi-plus" class="add-image-button" (click)="fileInput.click()"></button>
+                        </ng-template>
+                      </td>
+                      
+                      
+                      <td>
+                          <!-- <div class="flex">
+                              <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>
+                              <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"></button>
+                          </div> -->
+                      </td>
+                  </tr>
+              </ng-template>
+              
+            </p-table>
+          </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+        <p-dialog [(visible)]="imageSinistreDialog" [style]="{width: '450px'}" header="Détails de la voiture" [modal]="true" class="p-fluid">
+          <ng-template pTemplate="header">
+              <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
+                  <h2 class="text-center text-primary mb-4">
+                    <i class="fas fa-upload" style="font-size: 2.5rem; margin-right: 8px; color: var(--orangeColor);"></i>Ajout d'images de sinistre
+                  </h2>
+              </div>
+          </ng-template>
+              <ng-template pTemplate="content">
+                <div class="container mt-4">
+                    <!-- Sélection du client -->
+                    <div class="mb-3">
+                      <label for="clientSelect" class="form-label fw-bold">Sélectionner un client :</label>
+                      <select id="clientSelect" class="form-select" [(ngModel)]="selectedClientId" (change)="getDocumentsCommun()">
+                        <option value="" disabled selected>-- Choisissez un client --</option>
+                        <option *ngFor="let client of clients" [value]="client._id">
+                          {{ client.nom }} {{ client.prenom }}
+                        </option>
+                      </select>
+                    </div>
+
+                    <!-- Sélection du document -->
+                    <div class="mb-3">
+                      <label for="documentSelect" class="form-label fw-bold">Sélectionner un document :</label>
+                      <select id="documentSelect" class="form-select" [(ngModel)]="selectedDocument">
+                        <option value="" disabled selected>-- Choisissez un document --</option>
+                        <option *ngFor="let doc of documentsCommun" [ngValue]="doc" >
+                          {{ doc.Doc }}
+                        </option>
+                      </select>
+                    </div>
+
+                    <!-- Sélection des fichiers -->
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">Sélectionner les images :</label>
+                      <input type="file" class="form-control" multiple (change)="onFileSelected($event)" />
+                    </div>
+
+                    <!-- Aperçu des fichiers sélectionnés -->
+                    <div *ngIf="selectedFiles.length > 0" class="mb-3">
+                      <p class="fw-bold text-secondary"><i class="fas fa-file-image"></i> Fichiers sélectionnés :</p>
+                      <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let file of selectedFiles">
+                          {{ file.name }} ({{ (file.size / 1024).toFixed(2) }} Ko)
+                          <button class="btn btn-sm btn-outline-danger" (click)="removeFile(file)">
+                            <i class="fas fa-trash-alt"></i>
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <!-- Bouton d'envoi -->
+                    <div class="text-center mt-4">
+                      <button class="btn btn-primary btn-lg" (click)="uploadImages()">
+                        <i class="fas fa-cloud-upload-alt"></i> Envoyer les images
+                      </button>
+                    </div>
+
+                </div>
+              </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="true" [style]="{width: '60vw'}">
+          <ng-template pTemplate="header">
+              <h3>Image Sinistre</h3>
+          </ng-template>
+          <ng-template pTemplate="content">
+              <div class="dialog-container" style="display: flex; justify-content: center; align-items: center;">
+                  <button (click)="previousImage()" [disabled]="currentIndex === 0" class="nav-button">⬅ Précédent</button>
+                  <img [src]="selectedImage" alt="Image Sinistre" style="max-width: 90%; max-height: 400px; border-radius: 5px;">
+                  <button (click)="nextImage()" [disabled]="currentIndex === imagesList.length - 1" class="nav-button">Suivant ➡</button>
+              </div>
+          </ng-template>
+        </p-dialog>
+        

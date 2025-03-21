@@ -1,0 +1,82 @@
+.btn-primary {
+    background: var(--orangeColor);
+    border: none; /* Supprimez la bordure si nécessaire */
+    color: white; /* Couleur du texte */
+    text-transform: uppercase; /* Met le texte en majuscules */
+    text-align: center;
+    display: inline-block;
+    border-radius: 5px; /* Ajustez le radius selon vos besoins */
+    transition: background 0.3s ease; /* Transition douce pour le hover */
+}
+
+.pdf-icon {
+    font-size: 1.5rem;
+    color: red;
+    cursor: pointer;
+  }
+  
+  .pdf-icon:hover {
+    color: darkred;
+  }
+  .pdf-link {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .pdf-link:hover {
+    color: darkblue;
+  }
+
+
+
+.nav-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.btn-outline-danger {
+  z-index: 1;
+  border: none;
+  padding: 15px 40px;
+  position: relative;
+  border-radius: 4px;
+  text-transform: uppercase;
+  transition: var(--transition);
+  font: {
+      weight: 600;
+      size: 14px;
+  };
+  &::after, &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 0;
+      transition: var(--transition);
+      background: red;
+      z-index: -1;
+  }
+  &::after {
+      left: 0;
+      border-radius: 4px 0 0 4px;
+  }
+  &::before {
+      right: 0;
+      border-radius: 0 4px 4px 0;
+  }
+  &:hover {
+      &::after, &::before {
+          width: 50%;
+      }
+  }
+
+  .fas.fa-trash-alt {
+      color: black; /* Icône noire par défaut */
+      transition: color 0.3s ease; /* Transition douce pour le changement de couleur */
+  }
+
+  &:hover .fas.fa-trash-alt {
+      color: white; /* Icône blanche au survol */
+  }
+}
+
+

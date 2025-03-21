@@ -1,0 +1,39 @@
+.p-button-rounded {
+    border-radius: 50% !important; /* Assurez-vous que les styles sont forcés */
+  }
+
+
+.calendar-container {
+  position: relative; // Position relative pour le bouton de fermeture
+}
+
+.custom-calendar {
+  max-width: 740px; /* Ajustez la largeur selon vos besoins */
+  margin: 0 auto; /* Centrer le calendrier */
+}
+
+.close-button {
+  position: absolute;
+  top: 10px; // Ajustez la position selon vos préférences
+  right: 10px; // Ajustez la position selon vos préférences
+  background: none;
+  border: none;
+  font-size: 24px; // Taille de l'icône
+  color: #000; // Couleur de l'icône (changez si nécessaire)
+  cursor: pointer;
+  z-index: 10; // Assurez-vous que le bouton est au-dessus du calendrier
+}
+
+.close-button:hover {
+  color: #f00; // Couleur de survol de l'icône
+}
+
+@media only screen and (max-width: 767px) {
+  .projet-description {
+      display: -webkit-box; // Utilisation de flexbox pour contrôler l'affichage
+      -webkit-box-orient: vertical; // Direction verticale
+      -webkit-line-clamp: 3; // Limite à 3 lignes
+      overflow: hidden; // Cache le texte supplémentaire
+      text-overflow: ellipsis; // Affiche des points de suspension pour le texte coupé
+  }
+}

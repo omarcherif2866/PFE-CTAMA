@@ -1,0 +1,228 @@
+  <div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <!-- <p-messages></p-messages> -->
+
+            <p-toolbar styleClass="mb-4" >
+                <ng-template pTemplate="left">
+                    <div class="my-2" >
+                        <button pButton pRipple label="Deposer votre constat" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
+            <div class="table-container">
+                <p-table #dt [value]="documents" [columns]="cols" responsiveLayout="scroll" [rows]="5" [globalFilterFields]="['nom']" [paginator]="true" [rowsPerPageOptions]="[5,10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} entrées" [(selection)]="selectedDocuments" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                    <ng-template pTemplate="caption">
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                            <h5 class="m-0">Manage documents</h5>
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
+                            </span>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="doc">Documents <p-sortIcon field="doc"></p-sortIcon></th>
+                            <th pSortableColumn="cliens">Clients <p-sortIcon field="cliens"></p-sortIcon></th>
+                            <th pSortableColumn="expert">Expert <p-sortIcon field="expert"></p-sortIcon></th>
+                            <th pSortableColumn="decription">Description  <p-sortIcon field="decription"></p-sortIcon></th>
+                            <th pSortableColumn="status" *ngIf=" getUserRole() === 'admin'">Statut <p-sortIcon field="status"></p-sortIcon></th>
+                            <th >Modifier etat du sinistre <p-sortIcon ></p-sortIcon></th>
+                            <th >Affecter expert <p-sortIcon ></p-sortIcon></th>
+
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-document>
+                      <tr>
+                        
+                        <td>
+                          <i class="pi pi-file-pdf pdf-icon" (click)="openPdf(document.doc)"></i>
+                          <span class="pdf-link" (click)="openPdf(document.doc)">{{ document.doc }}</span>
+                        </td>
+
+                        <td>
+                            <span class="client-link" (click)="showClientInfo(document.client)">
+                                {{ clientInfos[document._id] }}
+                            </span>
+                        </td> <!-- Affichage du client -->
+                        <td>
+                            <span class="client-link" (click)="showExpertInfo(document.expert)">
+                            {{ expertInfos[document._id] }}
+                            </span>
+                        </td>
+                        <td>{{document.description}}</td>
+                        <td style="width:14%; min-width:8rem;">
+                            <span class="p-column-title">Status</span>
+                            <span [ngClass]="{
+                                'status-attente': document.status === 'En attente',
+                                'status-Validé': document.status === 'Validé',
+                                'status-Annulée': document.status === 'Non Validé',
+
+                            }">
+                                {{document.status}}
+                            </span>
+                        </td>
+                        <td *ngIf=" getUserRole() === 'admin'">
+                            <span class="p-column-title">Modifier le statut</span>
+                            <p-dropdown [options]="statusOptions" [(ngModel)]="selectedStatuses[document._id]" optionLabel="label"
+                                        optionValue="value" (onChange)="onStatusChange(document, $event)" appendTo="body"></p-dropdown>
+                        </td>
+                        <td>
+                            <p-dropdown [options]="experts" [(ngModel)]="selectedExperts[document._id]" optionLabel="nom"
+                                        optionValue="_id" placeholder="Sélectionner un expert"
+                                        appendTo="body" (onChange)="affecterExpert(document._id, document.client, $event.value)"
+                                        [disabled]="document.status !== 'Validé'">
+                            </p-dropdown>
+                        </td>
+                        
+                        
+                      </tr>
+
+                    </ng-template>
+                    
+                </p-table>
+            </div>
+        </div>
+
+        <p-dialog [(visible)]="documentDialog" [style]="{width: '450px'}" header="Détails de la document" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="header">
+                <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
+                    <i class="pi pi-file-edit" style="font-size: 2.5rem; margin-right: 8px; color: var(--orangeColor);"></i>
+                </div>
+            </ng-template>
+            
+            <ng-template pTemplate="content">
+                <form [formGroup]="documentForm">
+                    <!-- Référence du sinistre -->
+                    <div class="p-field">
+                        <label for="reference">Référence du sinistre</label>
+                        <input 
+                            id="reference" 
+                            type="text" 
+                            pInputText 
+                            formControlName="reference"
+                            class="p-inputtext p-component"
+                            placeholder="Ex: REF-QTD8BNH18">
+                        <small *ngIf="documentForm.get('reference')!.hasError('required') && documentForm.get('reference')!.touched"
+                               class="p-error">
+                            La référence du sinistre est requise
+                        </small>
+                    </div>
+            
+                    <!-- Sélection du fichier -->
+                    <div class="p-field">
+                        <label for="file">Votre fichier pdf</label>
+                        <p-fileUpload 
+                            name="file" 
+                            mode="basic" 
+                            accept=".pdf" 
+                            (onSelect)="onFileSelect($event)" 
+                            chooseLabel="Sélectionner un fichier"
+                        ></p-fileUpload>
+                    </div>
+            
+                    <!-- Description -->
+                    <div class="p-field">
+                        <label for="description">Description</label>
+                        <textarea 
+                            id="description" 
+                            formControlName="description" 
+                            class="p-inputtext p-component" 
+                            rows="5" 
+                            required
+                            placeholder="Entrez une description...">
+                        </textarea>
+                    </div>
+                </form>
+            </ng-template>
+          
+            
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button  pButton pRipple [label]="actionLabel" icon="pi pi-check" class="p-button-text" (click)="onSubmit()"></button>
+            </ng-template>
+        </p-dialog>
+          
+          
+        <p-dialog [(visible)]="displayPdfDialog" [modal]="true" [header]="'Aperçu du PDF - ' + selectedPdfName" [style]="{ width: '70vw' }">
+          <ng-container *ngIf="selectedPdf">
+            <iframe [src]="selectedPdf" width="100%" height="500px"></iframe>
+          </ng-container>
+        </p-dialog>
+        
+
+        <p-dialog header="Informations du Client" [(visible)]="displayClientDialog" [modal]="true" [style]="{width: '50vw'}">
+            <div *ngIf="selectedClient">
+                <p *ngIf="selectedClient.typeClient === 'PersonnePhysique'">
+                    <strong>Nom :</strong> {{ selectedClient.nom }} <br>
+                    <strong>Prénom :</strong> {{ selectedClient.prenom }} <br>
+                    <strong>Téléphone :</strong> {{ selectedClient.phoneNumber }}<br>
+                    <strong>Identifiant National :</strong> {{ selectedClient.identifiant_national}}<br>
+                    <strong>Email :</strong> {{ selectedClient.email }}<br>
+                    <strong>CIN ou Passeport :</strong> {{ selectedClient.CIN_Pass }}<br>
+
+                </p>
+                <p *ngIf="selectedClient.typeClient === 'PersonneMorale'">
+                    <strong>Matricule Fiscal :</strong> {{ selectedClient.matricule_fiscal }}
+                </p>
+            </div>
+        </p-dialog>
+        
+        <p-dialog header="Informations de l'expert" [(visible)]="displayExpertDialog" [modal]="true" [style]="{width: '50vw'}">
+            <div *ngIf="selectedExpert">
+                <p >
+                    <strong>Nom :</strong> {{ selectedExpert.nom }} <br>
+                    <strong>Prénom :</strong> {{ selectedExpert.prenom }} <br>
+                    <strong>Email :</strong> {{ selectedExpert.email }} <br>
+                    <strong>Téléphone :</strong> {{ selectedExpert.phoneNumber }} <br>
+                    <strong>Region :</strong> {{ selectedExpert.region }} <br>
+                    <strong>Taux :</strong> {{ selectedExpert.taux }} <br>
+
+
+                </p>
+
+            </div>
+        </p-dialog>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

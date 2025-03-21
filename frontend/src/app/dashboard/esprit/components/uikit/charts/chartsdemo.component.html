@@ -1,0 +1,205 @@
+<!-- <h1 style="color: green; text-align: center">GeeksforGeeks</h1> -->
+
+
+<p-timeline 
+  [value]="gfg" 
+  align="alternate"
+  layout="horizontal"
+  styleClass="customized-timeline">
+
+  <ng-template pTemplate="marker" let-event>
+    <span
+      class="custom-marker p-shadow-2 rounded-marker"
+      [style.backgroundColor]="event.color">
+      <i [ngClass]="event.Icon" ></i>
+    </span>
+  </ng-template>
+
+  <ng-template pTemplate="content" let-event>
+    <button pButton pRipple type="button"
+      style="border-radius: 5%;"
+      label="{{event.title}}"
+      class="{{event.ButtonColor}}"
+      [routerLink]="event.link"> 
+    </button>
+  </ng-template>
+  
+
+</p-timeline>
+
+
+
+
+<!-- <div style="display: flex; flex-direction: column; padding: 1rem;">
+  <div class="flex-row" style="display: flex; flex-direction: row; gap: 1rem;" *ngIf="userRole === 'admin' || userRole === 'commercial'"> -->
+        <!-- Nombre total de produits -->
+        <!-- <div style="flex: 1 1 0%; margin-bottom: 1rem;">
+            <div class="card flex flex-column align-items-center" style="background-color: #3801ec">
+              <h5 class="text-left w-full" style="color: white;">Le nombre total de produits:</h5>
+              <h1 class="text-center w-full" style="color: white;">{{ productCount }}</h1>
+              <p *ngIf="errorMessage" class="error" style="color: white;">{{ errorMessage }}</p>
+            </div>
+        </div> -->
+
+
+
+        <!-- Nombre total de services -->
+        <!-- <div style="flex: 1 1 0%; margin-bottom: 1rem;">
+            <div class="card flex flex-column align-items-center" style="background-color: #109d00">
+                <h5 class="text-left w-full" style="color: white;">Le nombre total de services:</h5>
+                <h1 class="text-center w-full" style="color: white;">{{ serviceCount }}</h1>
+                <p *ngIf="errorMessage" class="error" style="color: white;">{{ errorMessage }}</p>
+            </div>
+        </div> -->
+
+
+
+        <!-- Nombre total de clients -->
+        <!-- <div style="flex: 1 1 0%; margin-bottom: 1rem;">
+          <div class="card flex flex-column align-items-center" style="background-color: #0088c7">
+              <h5 class="text-left w-full" style="color: white;">Le nombre total de clients:</h5>
+              <h1 class="text-center w-full" style="color: white;">{{ clientCount }}</h1>
+              <p *ngIf="errorMessage" class="error" style="color: white;">{{ errorMessage }}</p>
+          </div>
+        </div> -->
+  
+
+
+        <!-- Nombre total de partenaires -->
+        <!-- <div style="flex: 1 1 0%; margin-bottom: 1rem;">
+            <div class="card flex flex-column align-items-center" style="background-color: #d47f00">
+                <h5 class="text-left w-full" style="color: white;">Le nombre total de partenaires:</h5>
+                <h1 class="text-center w-full" style="color: white;">{{ partnerCount }}</h1>
+                <p *ngIf="errorMessage" class="error" style="color: white;">{{ errorMessage }}</p>
+            </div>
+        </div>
+</div> -->
+
+
+  <!-- <div class="flex-row" style="display: flex; flex-direction: row; gap: 1rem;" *ngIf="userRole === 'admin' || userRole === 'commercial' ">
+    <div style="flex: 0 0 50%; max-width: 50%;" class="chart-container">
+      <div class="card">
+        <h5>Produits les plus commandés</h5>
+        <p-chart type="line" [data]="lineData" [options]="lineOptions"></p-chart>
+      </div>
+    </div>
+    <div style="flex: 0 0 50%; max-width: 50%;" class="chart-container">
+      <div class="card flex flex-column align-items-center">
+        <h5 class="text-left w-full">Nombre de clients / partenaires</h5>
+        <p-chart type="pie" [data]="pieData" [options]="pieOptions"></p-chart>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="flex-row" style="display: flex; flex-direction: row; gap: 1rem;" *ngIf="userRole === 'admin' || userRole === 'commercial'">
+    <div style="flex: 0 0 50%; max-width: 50%;" class="chart-container">
+      <div class="card">
+        <h5>Produits par services</h5>
+        <p-chart type="bar" [data]="barData" [options]="barOptions"></p-chart>
+      </div>
+    </div>
+    <div style="flex: 0 0 50%; max-width: 50%;" class="chart-container">
+      <div class="card">
+        <h5 class="text-left w-full">Les budgets de nos clients</h5>
+        <p-table [value]="clients" [paginator]="true" [rows]="5" responsiveLayout="scroll">
+          <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+              <th pSortableColumn="budget">Budget <p-sortIcon field="budget"></p-sortIcon></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-client>
+            <tr>
+              <td>{{client.name}}</td>
+              <td>{{client.budget | currency:'USD'}}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" *ngIf="userRole === 'client'">
+    <h5 class="text-left w-full">Doughnut Chart</h5>
+    <div class="doughnut">
+      <p-chart *ngIf="doughnutData" type="doughnut" [data]="doughnutData" [options]="doughnutOptions"></p-chart>
+    </div>
+  </div> -->
+
+
+
+
+
+  <!-- <div style="display: flex; flex-direction: column; padding: 1rem; width: 100%;">
+    <div *ngIf="filteredProjets.length > 0 && userRole === 'partner'; else noProjets">
+      <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; width: 100%;">
+   -->
+        <!-- Graphique : Nombre de projets par statut -->
+
+        <!-- <div style="flex: 1 1 100%; max-width: 100%;" class="chart-container">
+          <div class="card flex flex-column align-items-center">
+            <h5 class="text-left w-full">Nombre de projets par statut</h5>
+            <p-chart 
+              type="pie" 
+              [data]="pieChartData" 
+              [options]="pieChartOptions" 
+              style="width: 100%; height: 300px;">
+            </p-chart>
+          </div>
+        </div> -->
+  
+
+
+
+
+
+
+        <!-- Graphique : Nombre de projets terminés par mois  -->
+
+        <!-- <div style="flex: 1 1 100%; max-width: 100%;" class="chart-container">
+          <div class="card flex flex-column align-items-center">
+            <h5 class="text-left w-full">Nombre de projets terminés par mois </h5>
+            <p-chart 
+              type="bar" 
+              [data]="barChartData" 
+              [options]="barChartOptions" 
+              style="width: 100%; height: 200px;">
+            </p-chart>
+          </div>
+        </div> -->
+  
+
+
+
+
+
+        <!-- Graphique : Nombre de projets terminés par année -->
+
+        <!-- <div style="flex: 1 1 100%; max-width: 100%;" class="chart-container">
+          <div class="card flex flex-column align-items-center">
+            <h5 class="text-left w-full">Nombre de projets terminés par année</h5>
+            <p-chart 
+              type="bar" 
+              [data]="barChartDataYear" 
+              [options]="barChartOptionsYear" 
+              style="width: 80%; height: 200px;">
+            </p-chart>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  
+    <ng-template #noProjets>
+      <div class="no-projects-message">
+        <p>Aucun projet correspondant trouvé.</p>
+      </div>
+    </ng-template>
+  </div>
+   -->
+
+  
+  
+  
+<!-- </div> -->

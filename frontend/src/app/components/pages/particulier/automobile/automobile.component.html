@@ -1,0 +1,134 @@
+<app-navbar-style-one></app-navbar-style-one>
+
+<div class="page-title-area">
+    <div class="d-table">
+        <div class="d-table-cell">
+            <div class="section-title">
+                <h2>Details du services</h2>
+                <p class="bar"></p>
+            </div>
+        </div>
+    </div>
+    <div class="shape1"><img src="assets/img/shape11.png" alt="shape"></div>
+    <div class="shape2 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+    <div class="shape3"><img src="assets/img/shape3.png" alt="shape"></div>
+    <div class="shape4"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape5"><img src="assets/img/shape5.png" alt="shape"></div>
+    <div class="shape6 rotateme"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape7"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape8 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+</div>
+
+
+
+<div class="services-details-area ptb-80">
+    
+    <div class="container">
+        <div class="service-path">
+            <a routerLink="/" class="service-link">Accueil</a> 
+        </div>
+        <br><br>
+        <div class="row align-items-center">
+            <div [ngClass]="{'col-lg-6': true, 'order-lg-1': !isImageOnLeft}" class="services-details">
+                <div class="services-details-desc">
+                    <h3>Faire face à l’imprévu avec l’assurance auto CTAMA</h3>
+                    <p>Parce que sur la route, personne n’est à l’abri d’un imprévu, ASSURANCES CTAMA vous propose un contrat assurance automobile qui permet de vous protéger contre les aléas de la route.
+
+                        CTAMA met à votre disposition un contrat simple et flexible, qui vous permet de choisir une couverture plus étendue des risques</p>
+                </div>
+                <!-- <div>
+                    <div class="repair-about-content">
+                        <ul>
+                            <li *ngFor="let item of service?.subDesc">
+                                <span><i-feather name="check"></i-feather> {{ item }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div> -->
+            </div>
+            <div [ngClass]="{'col-lg-6': true, 'order-lg-0': isImageOnLeft}" class="services-details-image">
+
+                <img src="../../../../../assets/img/automobile.jpg" class="animate__animated animate__fadeInUp" alt="image">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="secondBloc">
+    <h3>Roulez serein avec le contrat assurance automobile de la CTAMA</h3>
+    <p>En plus de la Responsabilité Civile, choisissez en toute liberté les garanties et services qui vous conviennent.
+
+        Vous devez veiller à opter pour la couverture la plus optimale suivant vos besoins et votre utilisation de votre véhicule.
+        
+        
+        Plusieurs formules d’assurances sont disponibles.</p>
+</div>
+
+<div class="faq-area ptb-80">
+    <div class="container">
+        <div class="faq-accordion">
+            <div class="accordion">
+                <div class="accordion-section">
+                    <div class="accordion-header" (click)="toggleSection(0)" [ngClass]="{ 'open': isSectionOpen(0) }">
+                        L’assurances "Tous risques"
+                    </div>
+                    <div class="accordion-content" [ngClass]="{ 'open': isSectionOpen(0) }">
+                        <p>avec un dédommagement sur la base de la valeur à neuf. Cette couverture prend en charge tous les dommages subis par le véhicule quelles que soient les circonstances de l’accident ou la responsabilité du conducteur.
+                            Les dommages en cas de catastrophe naturelle sont aussi couverts.
+                            Cette Garantie couvre, les dégâts causés au véhicule assuré, le vol et l’incendie, la foudre,</p>
+                    </div>
+                </div>
+                <div class="accordion-section">
+                    <div class="accordion-header" (click)="toggleSection(1)" [ngClass]="{ 'open': isSectionOpen(1) }">
+                        La garantie "incendie"
+                    </div>
+                    <div class="accordion-content" [ngClass]="{ 'open': isSectionOpen(1) }">
+                        <p>couvre l’incendie du véhicule et les dégâts causés par la foudre,</p>
+                    </div>
+                </div>
+                <div class="accordion-section">
+                    <div class="accordion-header" (click)="toggleSection(2)" [ngClass]="{ 'open': isSectionOpen(2) }">
+                        La garantie "vol"
+                    </div>
+                    <div class="accordion-content" [ngClass]="{ 'open': isSectionOpen(2) }">
+                        <p>couvre le vol ou la tentative de vol du véhicule, et peut aussi couvrir le vol du contenu du véhicule et de ses accessoires,</p>
+                    </div>
+                </div>
+                <div class="accordion-section">
+                    <div class="accordion-header" (click)="toggleSection(3)" [ngClass]="{ 'open': isSectionOpen(3) }">
+                        Les dommages accidentels avec collision
+                    </div>
+                    <div class="accordion-content" [ngClass]="{ 'open': isSectionOpen(3) }">
+                        <p>couvrent tous dommages subis par le véhicule et liés à une collision avec un autre véhicule identifié, que le conducteur soit fautif ou non,</p>
+                    </div>
+                </div>
+                <div class="accordion-section">
+                    <div class="accordion-header" (click)="toggleSection(4)" [ngClass]="{ 'open': isSectionOpen(4) }">
+                        L’assurance de bris de glaces
+                    </div>
+                    <div class="accordion-content" [ngClass]="{ 'open': isSectionOpen(4) }">
+                        <p>couvre les dommages au niveau du pare-brise, les glaces arrière et latérales.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="secondBloc">
+    <h3>Des garanties complémentaires pour compléter votre couverture</h3>
+    <p> <strong>Des personnes transportées à titre gratuit :</strong> Garantit le remboursement des frais pharmaceutiques, médicaux, chirurgicaux et d’hospitalisation, et le versement d’un capital en cas de décès ou d’incapacité suite à un accident.
+
+<br>
+    <strong> L’individuelle conducteur </strong>lorsque celui-ci est blessé suite à un accident de la circulation dans lequel il est responsable ou non. En cas de décès du conducteur, l’indemnité est reversée aux ayants droit.</p>
+</div>
+
+<div class="secondBloc">
+    <h3>En cas de panne : L’Assistance Dépannage automobile
+    </h3>
+    <p> Les Services d’assistance sont accessibles 24h/24 et 7j/7. La garantie assistance dépannage comprend généralement le remorquage du véhicule, l’hébergement du conducteur et sa famille ou encore une voiture de remplacement le temps des réparations.
+
+<br>
+Aussi en cas de sinistre un réseau de professionnels de notre partenaire est à votre disposition pour la réparation de votre véhicule sans avance de fonds.</p>
+</div>

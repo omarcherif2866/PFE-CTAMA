@@ -1,0 +1,257 @@
+.page-title-area {
+    height: 10px; /* Diminue l'espacement vertical */
+    text-align: center;
+    position: relative;
+}
+
+
+.d-table-cell {
+    .section-title {
+        .bar {
+            &::before {
+                background: var(--gradientColor);
+            }
+        }
+    }
+    &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 37%;
+        width: 100%;
+        z-index: -1;
+    }
+}
+
+.service-link,
+.service-name {
+    color: inherit; /* Couleur par défaut */
+    text-decoration: none;
+    transition: background 0.3s ease; /* Transition fluide */
+    background: none; /* Pas de fond au départ */
+    -webkit-background-clip: text; /* Nécessaire pour afficher un dégradé sur le texte */
+    -webkit-text-fill-color: inherit; /* Couleur initiale du texte */
+    color: #646363; /* Couleur grise par défaut */
+
+}
+
+
+.service-link:hover,
+.service-name:hover {
+    background: var(--gradientColor, linear-gradient(90deg, #FF0000, #FFA500)); /* Gradient par défaut si var non défini */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; /* Nécessaire pour afficher le dégradé */
+    transition: background 0.3s ease;
+}
+
+.service-link {
+    font-size: 22px; /* Taille spécifique pour service-link */
+    font-weight: bold; /* Applique le gras */
+
+}
+
+.service-name {
+    font-size: 20px; /* Taille spécifique pour service-name */
+}
+
+
+
+.btn-primary {
+    background: var(--gradientColor);
+    border: none; /* Supprimez la bordure si nécessaire */
+    color: white; /* Couleur du texte */
+    text-transform: uppercase; /* Met le texte en majuscules */
+    text-align: center;
+    display: inline-block;
+    border-radius: 5px; /* Ajustez le radius selon vos besoins */
+    transition: background 0.3s ease; /* Transition douce pour le hover */
+}
+
+.order-lg-0 {
+    order: 0;
+  }
+  
+  .order-lg-1 {
+    order: 1;
+  }
+
+
+
+  
+ 
+
+.repair-about-content {
+    .sub-title {
+        text-transform: uppercase;
+        color: var(--mainColor);
+        display: block;
+        font: {
+            size: 15px;
+            weight: 400;
+        };
+    }
+    h2 {
+        font: {
+            size: 24px;
+            weight: 600;
+        };
+        margin: {
+            top: 10px;
+            bottom: 10px;
+        };
+    }
+    ul {
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        list-style-type: none;
+        margin: {
+            top: -10px;
+            left: -10px;
+            right: -10px;
+        }
+        li {
+            -ms-flex: 0 0 50%;
+            flex: 0 0 50%;
+            max-width: 50%;
+            width: 100%;
+            margin-top: 25px;
+            color: var(--paragraphColor);
+            position: relative;
+            padding: {
+                right: 10px;
+                left: 10px;
+            };
+            span {
+                display: block;
+                position: relative;
+                z-index: 1;
+                padding: 10px;
+                border-radius: 3px;
+                transition: var(--transition);
+                box-shadow: 0 2px 48px 0 rgba(0, 0, 0, 0.08);
+
+                i-feather {
+                    margin-right: 5px;
+                    display: inline-block;
+                    color: var(--mainColor);
+                    transition: var(--transition);
+                    width: 18px;
+                }
+                &::before {
+                    content: '';
+                    left: 0;
+                    top: 0;
+                    height: 100%;
+                    width: 100%;
+                    background: var(--gradientColor);
+                    opacity: 0;
+                    visibility: hidden;
+                    position: absolute;
+                    border-radius: 3px;
+                    z-index: -1;
+                    transition: var(--transition);
+                }
+                &:hover, &:focus {
+                    color: var(--whiteColor);
+                    transform: translateY(-5px);
+
+                    &::before {
+                        opacity: 1;
+                        visibility: visible;
+                    }
+                    i-feather {
+                        color: var(--whiteColor);
+                    }
+                }
+            }
+        }
+    }
+}
+
+.services-details-desc {
+    h3 {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+    .features-details-list {
+        padding: 0;
+        margin: 20px 0 0;
+        list-style-type: none;
+
+        li {
+            margin-bottom: 12px;
+            color: var(--paragraphColor);
+            position: relative;
+            padding-left: 15px;
+
+            &::before {
+                background: var(--mainColor);
+                width: 8px;
+                height: 8px;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                position: absolute;
+                content: '';
+            }
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+.separate {
+    margin-top: 80px;
+}
+.services-details-image {
+    text-align: center;
+}
+
+@media only screen and (max-width: 767px) {
+
+    .services-details-desc {
+        h3 {
+            font-size: 18px;
+        }
+    }
+    .services-details-image {
+        order: 1;
+        margin-bottom: 30px;
+    }
+    .services-details {
+        order: 2;
+    }
+    .separate {
+        margin-top: 30px;
+    }
+
+}
+
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .services-details {
+        order: 2;
+    }
+    .services-details-image {
+        order: 1;
+        margin-bottom: 40px;
+    }
+    .separate {
+        margin-top: 40px;
+    }
+
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+
+}
+
+@media only screen and (min-width: 1550px) {
+
+}

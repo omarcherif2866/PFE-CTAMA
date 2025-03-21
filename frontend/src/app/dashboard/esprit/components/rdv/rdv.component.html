@@ -1,0 +1,182 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                  <div class="my-2">
+                    <button pButton pRipple label="Ajouter un nouveau rdv" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()" *ngIf="userRole === 'expert' "></button>
+                    <button pButton pRipple label="Afficher le calendrier" icon="pi pi-calendar" class="p-button-info" (click)="toggleCalendar()"></button>
+                  </div>
+                </ng-template>
+              </p-toolbar>
+              
+              <div *ngIf="showCalendar" class="calendar-container">
+                <button (click)="toggleCalendar()" class="close-button">
+                    <i class="pi pi-times"></i> <!-- Icône de croix -->
+                </button>
+                <full-calendar [options]="calendarOptions" class="custom-calendar"></full-calendar>
+               </div>
+              
+               
+              
+
+              <div class="table-container">
+                <p-table
+                    #dt
+                    [value]="rdvs"
+                    [columns]="cols"
+                    responsiveLayout="scroll"
+                    [rows]="5"
+                    [globalFilterFields]="['titre', 'description', 'date']"
+                    [paginator]="true"
+                    [rowsPerPageOptions]="[5, 10, 20, 30]"
+                    [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} entrées"
+                    [(selection)]="selectedRDVs"
+                    selectionMode="multiple"
+                    [rowHover]="true"
+                    dataKey="_id"
+                    expandableRows
+                    rowExpandMode="multiple"
+                >
+                    <ng-template pTemplate="caption">
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                            <h5 class="m-0">Gérer les Projets</h5>
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Rechercher..." class="w-full sm:w-auto" />
+                            </span>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="description">Description <p-sortIcon field="description"></p-sortIcon></th>
+                            <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
+                            <th pSortableColumn="heure">Heure <p-sortIcon field="heure"></p-sortIcon></th>                      
+                            <th pSortableColumn="ownedBy">Créer par <p-sortIcon field="ownedBy"></p-sortIcon></th>
+                            <th pSortableColumn="receiver">Projet avec <p-sortIcon field="receiver"></p-sortIcon></th>
+    
+                            <th *ngIf="userRole === 'expert' ">Action</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rdv>
+                        <tr>
+
+    
+                            <td class="rdv-description" (click)="showFullDescription(rdv.description)">{{rdv.description}}</td>
+
+    
+                            <td style="width:14%; min-width:8rem;">
+                                <span class="p-column-title">date</span>
+                                {{rdv.date}}
+                            </td>    
+                            <td style="width:14%; min-width:8rem;">
+                                <span class="p-column-title">heure</span>
+                                {{rdv.heure}}
+                            </td>    
+                            <td style="width:14%; min-width:8rem;" >
+                                <span class="p-column-title" ></span>
+                                <strong>Email:</strong>  {{ rdv.ownedBy.email}}
+                                <strong>Nom:</strong> {{ rdv.ownedBy.nom}}
+
+                            </td>   
+                            <td style="width:14%; min-width:8rem;" >
+                                <span class="p-column-title" ></span>
+                                <strong>Email:</strong>  {{ rdv.receiver.email}}
+                                <strong>Nom:</strong> {{ rdv.receiver.nom}} <br>
+                                <strong>Tél:</strong> {{ rdv.ownedBy.phoneNumber}}
+
+                            </td>               
+                            
+                            <td *ngIf="userRole === 'expert' ">
+                                <div class="flex" >
+                                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editRDV(rdv)"></button>
+                                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteRDV(rdv)"></button>
+                                </div>
+    
+                                  
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+            
+        </div>
+
+        <p-dialog [(visible)]="rdvDialog" [style]="{width: '450px'}" header="Détails du rdv" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+                <form [formGroup]="rdvForm">
+                    <div class="field">
+                        <label for="description">Description</label>
+                        <textarea id="description" pInputTextarea formControlName="description" rows="3" cols="20"></textarea>
+                    </div>
+                    <div class="field">
+                        <label for="datedate">Date</label>
+                        <p-calendar formControlName="date" [showIcon]="true" inputId="icon" required></p-calendar>
+                        <small *ngIf="submitted && rdvForm.get('date')?.invalid" class="ng-dirty ng-invalid">Date est requise.</small>
+                    </div>
+                    <div class="field">
+                        <label for="heure">Heure de Début</label>
+                        <p-calendar 
+                            inputId="heure" 
+                            formControlName="heure" 
+                            [timeOnly]="true"
+                            hourFormat="24"
+                            [showSeconds]="false"
+                            [showButtonBar]="false"
+                            [appendTo]="'body'"
+                            [placeholder]="'Sélectionner l’heure de début'"
+                            required
+                        />
+                        <small *ngIf="submitted " class="ng-dirty ng-invalid">Heure  est requise.</small>
+                    </div>
+                    <div class="field">
+                        <label for="client">Client</label>
+                        <p-dropdown [options]="clients" optionLabel="nom" formControlName="receiver" placeholder="Sélectionner un partenaire" appendTo="body"></p-dropdown>
+                        <small *ngIf="submitted && rdvForm.get('receiver')?.invalid" class="ng-dirty ng-invalid">client est requis.</small>
+                    </div>
+
+                </form>
+                
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button pButton pRipple [label]="actionLabel" icon="pi pi-check" class="p-button-text" (click)="saveRDV()"></button>
+            </ng-template>
+        </p-dialog>
+        
+          
+          
+          <p-dialog [(visible)]="deleteRDVDialog" header="Confirmation" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+              <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+              <span *ngIf="rdv">Voulez-vous supprimer ce rojet ?</span>
+            </div>
+            <ng-template pTemplate="footer">
+              <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Non" (click)="deleteRDVDialog = false"></button>
+              <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Oui" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog header="Description Complète" [(visible)]="displayModal" [modal]="true" [responsive]="true">
+            <p>{{ selectedDescription }}</p>
+            <p-footer>
+                <button type="button" pButton icon="pi pi-times" (click)="displayModal = false" label="Fermer"></button>
+            </p-footer>
+        </p-dialog>
+
+        <p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="true" header="Détails du Projet" (onHide)="onDialogHide()">
+            <div *ngIf="selectedRDVs.length > 0">
+                <p><strong>🕒 Heure du rendez-vous:</strong> {{ selectedRDVs[0].Heure }}</p>
+                <p><strong>👩‍💼 Créé par:</strong> {{ selectedRDVs[0].OwnedBy!.Email }}</p>
+                <p><strong>👤 Avec:</strong> {{ selectedRDVs[0].Receiver!.Email }}</p>
+                <p><strong>Description:</strong> {{ selectedRDVs[0].Description }}</p>
+            </div>
+        </p-dialog>
+          
+
+        
+          
+    </div>
+</div>

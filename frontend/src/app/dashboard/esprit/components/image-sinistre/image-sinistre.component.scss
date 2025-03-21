@@ -1,0 +1,88 @@
+.btn-primary {
+    background: var(--orangeColor);
+    border: none; /* Supprimez la bordure si nécessaire */
+    color: white; /* Couleur du texte */
+    text-transform: uppercase; /* Met le texte en majuscules */
+    text-align: center;
+    display: inline-block;
+    border-radius: 5px; /* Ajustez le radius selon vos besoins */
+    transition: background 0.3s ease; /* Transition douce pour le hover */
+}
+
+.dialog-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-button {
+    background-color: var(--orangeColor);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.nav-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+
+
+
+/* Style de la cellule d'image */
+/* Style de la cellule d'image */
+.image-cell {
+  vertical-align: middle; /* Alignement correct */
+}
+  
+  /* Style pour les images */
+
+  
+  /* Style du bouton + */
+  .add-image-button {
+    width: 40px;  /* Ajustez la taille selon vos besoins */
+    height: 40px;  /* Ajustez la taille selon vos besoins */
+    background-color: rgba(128, 128, 128, 0.226);
+    border: none;
+    color: white;
+    display: flex;  /* Pour centrer le contenu (icône) à l'intérieur du bouton */
+    justify-content: center;  /* Centrer horizontalement */
+    align-items: center;  /* Centrer verticalement */
+    border-radius: 50%;  /* Pour rendre le bouton rond */
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Effet hover pour le bouton */
+  .add-image-button:hover {
+    background-color: rgba(128, 128, 128, 0.5);  /* Couleur de survol */
+  }
+  
+  .image-container {
+    display: flex;
+    overflow-x: auto; /* Défilement horizontal */
+    gap: 10px;
+    max-width: 180px; /* Limite à 3 images visibles */
+    padding: 5px;
+    scroll-snap-type: x mandatory;
+  }
+  
+  .image-wrapper {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+  
+  .image-container img {
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .image-container img:hover {
+    transform: scale(1.1);
+  }
+  
+  
+  

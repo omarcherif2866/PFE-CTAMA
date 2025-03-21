@@ -1,0 +1,402 @@
+<!-- <app-navbar-style-one></app-navbar-style-one>
+<br><br><br> -->
+
+  
+<!-- <div *ngIf="!showPPForm && !showPMForm">
+    <div class="card">
+      <div class="splitter-container">
+        <div class="splitter" [ngClass]="{'hoveredPP': hoveredElement === 'PersonnePhysique'}">
+          <div class="col flex align-items-center justify-content-center">
+            <button type="button" class="btn-link" (mouseenter)="onHover('PersonnePhysique')" (mouseleave)="onHover(null)" (click)="showPPForm = true">Personne Physique</button>
+          </div>
+        </div>
+        <div class="splitter" [ngClass]="{'hoveredPM': hoveredElement === 'PersonneMorale'}">
+          <div class="col flex align-items-center justify-content-center">
+            <button type="button" class="btn-link btn-linkPM" (mouseenter)="onHover('PersonneMorale')" (mouseleave)="onHover(null)" (click)="showPMForm = true">Personne Morale</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+  
+  
+
+  <div *ngIf="showPPForm">
+    <div class="main-banner">
+        <div class="d-table">
+            <div class="d-table-cell">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-12">
+                            <div class="banner-form ml-3">
+                                <div class="text-center mb-5">
+                                    <span class="text-600 font-medium" style="font-size: 24px; font-weight: bold;">Inscription du Client</span>
+                                </div>
+                                <form (submit)="creerCompte()" [formGroup]="form" id="createForm" enctype="multipart/form-data">
+                                    <div class="form-row" style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px;">
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="inputName">Nom</label>
+                                            <input type="text" id="inputName" pInputText class="form-control" placeholder="Votre Nom" formControlName="nom" required>
+                                        </div>
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="inputPrenom">Prénom</label>
+                                            <input type="text" id="inputPrenom" pInputText class="form-control" placeholder="Votre prenom" formControlName="prenom" required>
+                                        </div>
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="inputEmail">Email</label>
+                                            <input type="email" id="inputEmail" pInputText class="form-control" placeholder="Votre adresse email" formControlName="email" required>
+                                        </div>
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="inputTel">Numéro de téléphone</label>
+                                            <input type="tel" id="inputTel" pInputText class="form-control" placeholder="Votre Numéro de téléphone" formControlName="phoneNumber" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row" style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px;">
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="inputAdresse">Adresse</label>
+                                            <input type="text" id="inputAdresse" pInputText class="form-control" placeholder="Votre adresse" formControlName="adresse" required>
+                                        </div>
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="signupPassword">Mot de passe</label>
+                                            <input type="password" id="signupPassword" placeholder="Votre Mot de passe" formControlName="password" class="form-control" required>
+                                            <div *ngIf="signupPassword?.touched && signupPassword?.invalid" class="text-danger">
+                                              <div *ngIf="signupPassword?.errors?.required">Le mot de passe est requis.</div>
+                                              <div *ngIf="signupPassword?.errors?.minlength">Le mot de passe doit comporter au moins 8 caractères.</div>
+                                              <div *ngIf="signupPassword?.errors?.passwordStrength">Le mot de passe doit contenir au moins une majuscule, un chiffre et un symbole.</div>
+                                            </div>
+                                          </div>
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="inputConfirmPassword">Confirmer mot de passe</label>
+                                            <input type="password" id="inputConfirmPassword" class="form-control" placeholder="Retaper votre Mot de passe" formControlName="confirmPassword" required>
+                                        </div>
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="inputImage">Image</label>
+                                            <input type="file" class="form-control" id="inputImage" (change)="onFileChange($event)" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row" style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px;">
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="inputnumeroPermis">Numéro de Permis</label>
+                                            <input type="text" id="inputnumeroPermis" pInputText class="form-control" placeholder="Votre Numéro de Permis" formControlName="numeroPermis" required>
+                                        </div>
+                                    
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="inputIN">Identifiant National</label>
+                                            <input type="text" id="inputIN" pInputText class="form-control" placeholder="Votre Identifiant National" formControlName="identifiant_national" required>
+                                        </div>
+                                    
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="inputCIN_Pass">CIN ou Passeport</label>
+                                            <input type="text" id="inputCIN_Pass" pInputText class="form-control" placeholder="Votre CIN ou Passeport" formControlName="CIN_Pass" required>
+                                        </div>
+                                    
+                                        <div class="form-group" style="flex: 1; min-width: 200px; position: relative;">
+                                            <label for="inputSex">Sexe</label>
+                                            <select id="inputSex" class="form-control form-select " formControlName="sex" required>
+                                                <option value="" disabled selected>Choisissez votre sexe</option>
+                                                <option value="homme">Homme</option>
+                                                <option value="femme">Femme</option>
+                                            </select>
+                                            <i class="fa fa-chevron-down select-icon"></i>
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                    
+                                    <div class="form-row" style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px;">
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="inputNationalite">Nationalite</label>
+                                            <input type="text" id="inputNationalite" pInputText class="form-control" placeholder="Votre nationalite" formControlName="nationalite">
+                                        </div>
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="inputProfession">Profession</label>
+                                            <input type="text" id="inputProfession" pInputText class="form-control" placeholder="Votre profession" formControlName="profession">
+                                        </div>
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="inputBirthDate">Date de naissance</label>
+                                            <input type="date" id="inputBirthDate" pInputText class="form-control" formControlName="birthDate">
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center justify-between mb-5 gap-5">
+                                        <a href="/signin" class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)">Vous avez déjà un compte?</a>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary radius-30">S'inscrire</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="shape1"><img src="assets/img/shape11.png" alt="shape"></div>
+        <div class="shape2 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+        <div class="shape3"><img src="assets/img/shape3.png" alt="shape"></div>
+        <div class="shape4"><img src="assets/img/shape4.png" alt="shape"></div>
+        <div class="shape5"><img src="assets/img/shape5.png" alt="shape"></div>
+        <div class="shape6 rotateme"><img src="assets/img/shape4.png" alt="shape"></div>
+        <div class="shape7"><img src="assets/img/shape4.png" alt="shape"></div>
+        <div class="shape8 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+    </div>
+</div>
+
+
+<div *ngIf="showPMForm">
+    <div class="main-banner">
+        <div class="d-table">
+            <div class="d-table-cell">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-12">
+                            <div class="banner-form ml-3">
+                                <div class="text-center mb-5">
+                                    <span class="text-600 font-medium" style="font-size: 24px; font-weight: bold;">Inscription du Partenaire</span>
+                                </div>
+                                
+                                <form (submit)="creerComptePM()" [formGroup]="formPM" id="createForm" enctype="multipart/form-data">
+                                    <div class="form-row" style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px;">
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="inputEmail">Email</label>
+                                            <input type="email" id="inputEmail" pInputText class="form-control" placeholder="Votre adresse email" formControlName="email" required>
+                                        </div>
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="inputTel">Numéro de téléphone</label>
+                                            <input type="tel" id="inputTel" pInputText class="form-control" placeholder="Votre Numéro de téléphone" formControlName="phoneNumber" required>
+                                        </div>
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="inputAdresse">Adresse</label>
+                                            <input type="text" id="inputAdresse" pInputText class="form-control" placeholder="Votre adresse" formControlName="adresse" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row" style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px;">
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="signupPassword">Mot de passe</label>
+                                            <input type="password" id="signupPassword" placeholder="Votre Mot de passe" formControlName="password" class="form-control" required>
+                                            <div *ngIf="signupPassword?.touched && signupPassword?.invalid" class="text-danger">
+                                              <div *ngIf="signupPassword?.errors?.required">Le mot de passe est requis.</div>
+                                              <div *ngIf="signupPassword?.errors?.minlength">Le mot de passe doit comporter au moins 8 caractères.</div>
+                                              <div *ngIf="signupPassword?.errors?.passwordStrength">Le mot de passe doit contenir au moins une majuscule, un chiffre et un symbole.</div>
+                                            </div>
+                                          </div>
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="inputConfirmPassword">Confirmer mot de passe</label>
+                                            <input type="password" id="inputConfirmPassword" class="form-control" placeholder="Retaper votre Mot de passe" formControlName="confirmPassword" required>
+                                        </div>
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="inputImage">Image</label>
+                                            <input type="file" class="form-control" id="inputImage" (change)="onFileChangePM($event)" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row" style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px;">
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="inputRaisonSociale">Raison Sociale </label>
+                                            <input type="text" id="inputRaisonSociale" pInputText class="form-control" placeholder="Votre Raison Sociale" formControlName="raisonSociale" required>
+                                        </div>
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="inputactivite">Secteur d'activité  </label>
+                                            <input type="text" id="inputactivite" pInputText class="form-control" placeholder="Votre Secteur d'activité" formControlName="activite" required>
+                                        </div>
+                                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                                            <label for="inputMatricule_fiscal">Matricule fiscal</label>
+                                            <input type="text" id="inputMatricule_fiscal" pInputText class="form-control" placeholder="Votre Matricule Fiscal" formControlName="matricule_fiscal" required>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="flex items-center justify-between mb-5 gap-5">
+                                        <a href="/signin" class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)">Vous avez déjà un compte?</a>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary radius-30">S'inscrire</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="shape1"><img src="assets/img/shape11.png" alt="shape"></div>
+    <div class="shape2 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+    <div class="shape3"><img src="assets/img/shape3.png" alt="shape"></div>
+    <div class="shape4"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape5"><img src="assets/img/shape5.png" alt="shape"></div>
+    <div class="shape6 rotateme"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape7"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape8 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+</div> -->
+
+
+
+
+  
+  
+	
+<div class="section" >
+    <div class="container">
+        <div class="row full-height justify-content-center">
+            <div class="">
+                <div class="">
+                    <h6 class="mb-0 pb-3" ><span>Personne Morale </span><span >Personne Physique</span></h6>
+                    <input class="checkbox" type="checkbox" id="reg-log" name="reg-log" />
+                    <label for="reg-log" ></label>
+                    <div class="card-3d-wrap mx-auto">
+                        <div class="card-3d-wrapper">
+                            <div class="card-front">
+                                <div class="center-wrap">
+                                    <div class="section text-center">
+                                        <form (submit)="creerComptePM()" [formGroup]="formPM" id="createForm" enctype="multipart/form-data">
+                                            <div class="form-row" style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px;">
+                                                <div class="form-group" style="flex: 1; min-width: 200px;">
+                                                    <input type="email" id="inputEmail" pInputText class="form-style" placeholder="Votre adresse email" formControlName="email" required>
+                                                </div>
+                                                <div class="form-group" style="flex: 1; min-width: 200px;">
+                                                    <input type="tel" id="inputTel" pInputText class="form-style" placeholder="Votre Numéro de téléphone" formControlName="phoneNumber" required>
+                                                </div>
+                                                <div class="form-group" style="flex: 1; min-width: 200px;">
+                                                    <input type="text" id="inputAdresse" pInputText class="form-style" placeholder="Votre adresse" formControlName="adresse" required>
+                                                </div>
+                                            </div>
+        
+                                            <div class="form-row" style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px;">
+                                                <div class="form-group" style="flex: 1; min-width: 200px;">
+                                                    <input type="password" id="signupPassword" placeholder="Votre Mot de passe" formControlName="password" class="form-style" required>
+                                                    <div *ngIf="signupPassword?.touched && signupPassword?.invalid" class="text-danger">
+                                                      <div *ngIf="signupPassword?.errors?.required">Le mot de passe est requis.</div>
+                                                      <div *ngIf="signupPassword?.errors?.minlength">Le mot de passe doit comporter au moins 8 caractères.</div>
+                                                      <div *ngIf="signupPassword?.errors?.passwordStrength">Le mot de passe doit contenir au moins une majuscule, un chiffre et un symbole.</div>
+                                                    </div>
+                                                  </div>
+                                                <div class="form-group" style="flex: 1; min-width: 200px;">
+                                                    <input type="password" id="inputConfirmPassword" class="form-style" placeholder="Retaper votre Mot de passe" formControlName="confirmPassword" required>
+                                                </div>
+                                                <div class="form-group" style="flex: 1; min-width: 200px;">
+                                                    <input type="file" class="form-style custom-file-input" id="inputImage" (change)="onFileChangePM($event)" required>
+                                                    <label for="inputImage" class="custom-file-label">Choisir un fichier</label>
+                                                </div>
+                                                
+                                            </div>
+        
+                                            <div class="form-row" style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px;">
+                                                <div class="form-group" style="flex: 1; min-width: 200px;">
+                                                    <input type="text" id="inputRaisonSociale" pInputText class="form-style" placeholder="Votre Raison Sociale" formControlName="raisonSociale" required>
+                                                </div>
+                                                <div class="form-group" style="flex: 1; min-width: 200px;">
+                                                    <input type="text" id="inputactivite" pInputText class="form-style" placeholder="Votre Secteur d'activité" formControlName="activite" required>
+                                                </div>
+                                                <div class="form-group" style="flex: 1; min-width: 200px;">
+                                                    <input type="text" id="inputMatricule_fiscal" pInputText class="form-style" placeholder="Votre Matricule Fiscal" formControlName="matricule_fiscal" required>
+                                                </div>
+                                            </div>
+        
+        
+        
+                                            <div class="flex items-center justify-between mb-5 gap-5">
+                                                <a (click)="onSigninClick()" class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--blueColor)">
+                                                  Vous avez déjà un compte ?
+                                                </a>
+                                            </div>                                              
+                                            <div class="d-grid">
+                                                <button type="submit" class="btn btn-primary radius-30">S'inscrire</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-back">
+                                <div class="center-wrap-back">
+                                    <div class="section text-center">
+                                        <form (submit)="creerCompte()" [formGroup]="form" id="createForm" enctype="multipart/form-data">
+                                            <div class="form-group">
+                                                <input type="text" id="inputName" pInputText class="form-style" placeholder="Votre Nom" formControlName="nom" required>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <input type="text" id="inputPrenom" pInputText class="form-style" placeholder="Votre Prénom" formControlName="prenom" required>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <input type="email" id="inputEmail" pInputText class="form-style" placeholder="Votre Email" formControlName="email" required>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <input type="tel" id="inputTel" pInputText class="form-style" placeholder="Votre Numéro de téléphone" formControlName="phoneNumber" required>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <input type="password" id="signupPassword" placeholder="Votre Mot de passe" formControlName="password" class="form-style" required>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <input type="password" id="inputConfirmPassword" class="form-style" placeholder="Confirmer le mot de passe" formControlName="confirmPassword" required>
+                                            </div>
+                                            <div class="form-group mt-2" style=" min-width: 200px; height: 50px;">
+                                                <input type="file" class="form-style custom-file-input" id="inputImage" (change)="onFileChangePM($event)" required>
+                                                <label for="inputImage" class="custom-file-label">Choisir un fichier</label>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <input type="text" id="inputnumeroPermis" pInputText class="form-style" placeholder="Numéro de Permis" formControlName="numeroPermis" required>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <input type="text" id="inputIN" pInputText class="form-style" placeholder="Identifiant National" formControlName="identifiant_national" required>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <input type="text" id="inputCIN_Pass" pInputText class="form-style" placeholder="CIN ou Passeport" formControlName="CIN_Pass" required>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <select id="inputSex" class="form-style" formControlName="sex" required>
+                                                    <option value="" disabled selected>Choisissez votre sexe</option>
+                                                    <option value="homme">Homme</option>
+                                                    <option value="femme">Femme</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <input type="text" id="inputNationalite" pInputText class="form-style" placeholder="Nationalité" formControlName="nationalite">
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <input type="text" id="inputProfession" pInputText class="form-style" placeholder="Profession" formControlName="profession">
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <input type="date" id="inputBirthDate" pInputText class="form-style" formControlName="birthDate">
+                                            </div>
+                                            <br>
+                                            <div class="flex items-center justify-between mb-5 gap-5">
+                                                <a (click)="onSigninClick()" class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--blueColor)">
+                                                  Vous avez déjà un compte ?
+                                                </a>
+                                            </div>                                              
+                                            <button type="submit" class="btn btn-primary ">S'inscrire</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="shape1"><img src="assets/img/shape11.png" alt="shape"></div>
+    <div class="shape2 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+    <div class="shape3"><img src="assets/img/shape3.png" alt="shape"></div>
+    <div class="shape4"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape5"><img src="assets/img/shape5.png" alt="shape"></div>
+    <div class="shape6 rotateme"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape7"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape8 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+    <div class="shape1"><img src="assets/img/shape11.png" alt="shape"></div>
+    <div class="shape2 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+    <div class="shape3"><img src="assets/img/shape3.png" alt="shape"></div>
+    <div class="shape4"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape5"><img src="assets/img/shape5.png" alt="shape"></div>
+    <div class="shape6 rotateme"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape7"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape8 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+    
+    

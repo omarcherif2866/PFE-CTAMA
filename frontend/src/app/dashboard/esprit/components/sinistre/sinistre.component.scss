@@ -1,0 +1,28 @@
+.status-declaration {
+    color: rgb(74, 189, 8);
+  }
+  
+  .status-reglement {
+    color: red;
+  }
+
+  .status-expertise {
+    color: orange;
+  }
+
+  .pdf-icon {
+    font-size: 1.5rem;
+    color: red;
+    cursor: pointer;
+  }
+  
+  .pdf-icon:hover {
+    color: darkred;
+  }
+  .pdf-link {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .pdf-link:hover {
+    color: darkblue;
+  }

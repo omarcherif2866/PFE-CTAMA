@@ -1,0 +1,150 @@
+/* Conteneur des véhicules */
+.vehicles {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  /* Style pour le Véhicule A avec fond jaune */
+  .vehicleA {
+    width: 45%; /* Ajustez la largeur si nécessaire */
+    background-color: rgb(253, 252, 232); /* Fond jaune */
+    padding: 15px; /* Espacement interne */
+    border-radius: 8px; /* Coins arrondis pour un effet plus doux */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre légère */
+  }
+  
+  /* Style pour le Véhicule B avec fond vert */
+  .vehicleB {
+    width: 45%; /* Ajustez la largeur si nécessaire */
+    background-color: rgb(224, 251, 238); /* Fond vert */
+    padding: 15px; /* Espacement interne */
+    border-radius: 8px; /* Coins arrondis pour un effet plus doux */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre légère */
+  }
+  
+  .vehicleB:disabled label {
+    color: #d6d6d6; /* Adjust this color to your preference */
+  }
+  
+  fieldset {
+    border: 2px solid #ccc;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+  }
+  
+  legend {
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+  
+  .field-container {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .field {
+    display: flex;
+    flex-direction: column;
+    min-width: 200px; /* Largeur minimale pour un bon alignement */
+  }
+  
+  label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  input,
+  select {
+    width: 100%; /* S'assure que l'input prend toute la largeur du conteneur */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+
+  
+  
+  .btn-primary {
+    background: var(--orangeColor);
+    border: none; /* Supprimez la bordure si nécessaire */
+    color: white; /* Couleur du texte */
+    text-transform: uppercase; /* Met le texte en majuscules */
+    text-align: center;
+    display: inline-block;
+    border-radius: 5px; /* Ajustez le radius selon vos besoins */
+    transition: background 0.3s ease; /* Transition douce pour le hover */
+}
+
+
+.vehiclesA-container {
+  display: flex;  /* Afficher les éléments en ligne */
+  justify-content: center; /* Centrer horizontalement */
+  gap: 20px; /* Espacement entre les véhicules */
+}
+
+.vehiclesB-container {
+  display: flex;  /* Afficher les éléments en ligne */
+  justify-content: center; /* Centrer horizontalement */
+  gap: 20px; /* Espacement entre les véhicules */
+}
+
+.car-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.081);
+}
+
+.moto-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.081);
+}
+
+.car-image {
+  position: absolute;
+  width: 160px;
+  height: auto;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.moto-image {
+  position: absolute;
+  width: 110px;
+  height: auto;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.click-zone {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 0, 0, 0.3);
+  cursor: pointer;
+  border: 1px dashed black;
+}
+
+.cross {
+  position: absolute;
+  font-size: 20px;
+  color: red;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  
+}

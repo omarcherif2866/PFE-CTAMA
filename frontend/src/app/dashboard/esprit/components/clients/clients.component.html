@@ -1,0 +1,71 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+
+            <p-table #dt [value]="Users" [columns]="cols" responsiveLayout="scroll" [rows]="5" [globalFilterFields]="['nom','email']" [paginator]="true" [rowsPerPageOptions]="[5,10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} entrées" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0" >Gérer les clients</h5>
+                        <h5 class="m-0" >Nos clients</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Rechercher..."  class="w-full sm:w-auto"/>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Image</th>
+                        <th pSortableColumn="nom">Nom <p-sortIcon field="nom"></p-sortIcon></th>
+                        <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
+                        <th pSortableColumn="phoneNumber">Numero de téléphone <p-sortIcon field="phoneNumber"></p-sortIcon></th>
+                        <th pSortableColumn="companyName">Nom de l'entreprise<p-sortIcon field="companyName"></p-sortIcon></th>
+                        <th pSortableColumn="industry">Secteur d'activité  <p-sortIcon field="industry"></p-sortIcon></th>
+                        <th pSortableColumn="position">Poste occupé  <p-sortIcon field="position"></p-sortIcon></th>
+                        <th pSortableColumn="estimatedBudget">Budget estimé  <p-sortIcon field="estimatedBudget"></p-sortIcon></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-user>
+                    <tr>
+
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Image</span>
+                            <img [src]="getImageUrl(user.image)" [alt]="user.image" width="70" class="shadow-4" />
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Nom</span>
+                            {{user.nom}}
+                        </td>
+                        <td style="width:14%; min-width:8rem;">
+                            <span class="p-column-title">Email</span>
+                            {{user.email}}
+                        </td>
+                        <td style="width:14%; min-width:8rem;">
+                            <span class="p-column-title"></span>
+                            {{user.phoneNumber}}
+                        </td>                        
+                        <td style="width:14%; min-width:8rem;">
+                            <span class="p-column-title"></span>
+                            {{user.companyName}}
+                        </td>                        
+                        <td style="width:14%; min-width:8rem;">
+                            <span class="p-column-title"></span>
+                            {{user.industry}}
+                        </td>                        
+                        <td style="width:14%; min-width:8rem;">
+                            <span class="p-column-title"></span>
+                            {{user.position}}
+                        </td>                        
+                        <td style="width:14%; min-width:8rem;">
+                            <span class="p-column-title"></span>
+                            {{user.estimatedBudget}}
+                        </td>
+                 
+
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

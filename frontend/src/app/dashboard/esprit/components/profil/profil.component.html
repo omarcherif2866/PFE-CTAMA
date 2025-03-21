@@ -1,0 +1,123 @@
+<p-messages [value]="messages" class="messages-container"></p-messages>
+
+<div class="w-full surface-card py-8 px-3 sm:px-3 large-card" style="border-radius: 53px;">
+    <form class="form-body" #f="ngForm" (ngSubmit)="onSubmit()">
+        <div>
+            <!-- Image -->
+            <div class="field" style="text-align: center;">  
+                <img *ngIf="form.image" 
+                     [src]="getImageUrl(form.image)" 
+                     alt="User Image" 
+                     class="user-photo"
+                     style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; display: block; margin: 0 auto;">
+            </div>
+          
+            <!-- File Upload Image -->
+            <div class="field">
+                <label for="image">Image</label>
+                <p-fileUpload mode="basic" name="image" accept="image/*" maxFileSize="1000000" (onSelect)="onFileSelected($event)" label="Choisir une image" chooseLabel="Choisir une image"></p-fileUpload>
+            </div>
+  
+            <br><br>
+
+            <!-- Form Fields -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Left Column -->
+                <div class="left-column">
+
+                    <div>
+                        <label for="inputEmail" class="block text-900 text-xl font-medium mb-2">Email</label>
+                        <input type="email" id="inputEmail" placeholder="Enter Email Address" [(ngModel)]="form.email" name="email" pInputText class="w-full" style="padding: 1rem" required>
+                    </div>
+
+                    <div>
+                        <label for="inputphoneNumber" class="block text-900 text-xl font-medium mb-2">Numéro de téléphone</label>
+                        <input type="tel" id="inputTel" placeholder="Enter Telephone Number" [(ngModel)]="form.phoneNumber" name="phoneNumber" pInputText class="w-full" style="padding: 1rem" required>
+                    </div>
+
+                    <div *ngIf="getUserRole() === 'PersonnePhysique'|| getUserRole() === 'PersonneMorale'">
+                        <label for="inputAdresse" class="block text-900 text-xl font-medium mb-2">Adresse</label>
+                        <input type="text" id="inputAdresse" placeholder="Enter Address" [(ngModel)]="form.adresse" name="adresse" pInputText class="w-full" style="padding: 1rem" required>
+                    </div>
+
+                    <div *ngIf="getUserRole() === 'PersonnePhysique'|| getUserRole() === 'expert'">
+                        <label for="inputNom" class="block text-900 text-xl font-medium mb-2">Nom</label>
+                        <input type="text" id="inputNom" placeholder="Nom" [(ngModel)]="form.nom" name="nom" pInputText class="w-full" style="padding: 1rem" required>
+                    </div>
+
+                    <div *ngIf="getUserRole() === 'PersonnePhysique'|| getUserRole() === 'expert'">
+                        <label for="inputPrenom" class="block text-900 text-xl font-medium mb-2">Prénom</label>
+                        <input type="text" id="inputPrenom" placeholder="Prénom" [(ngModel)]="form.prenom" name="prenom" pInputText class="w-full" style="padding: 1rem">
+                    </div>
+
+                    <div *ngIf="getUserRole() === 'PersonnePhysique'">
+                        <label for="inputBirthDate" class="block text-900 text-xl font-medium mb-2">Date de naissance</label>
+                        <input type="date" id="inputBirthDate" [(ngModel)]="form.birthDate" name="birthDate" pInputText class="w-full" style="padding: 1rem">
+                    </div>
+
+                    <div *ngIf="getUserRole() === 'PersonnePhysique'">
+                        <label for="inputNumeroPermis" class="block text-900 text-xl font-medium mb-2">Numéro de permis</label>
+                        <input type="text" id="inputNumeroPermis" [(ngModel)]="form.numeroPermis" name="numeroPermis" pInputText class="w-full" style="padding: 1rem">
+                    </div>
+
+                    <div *ngIf="getUserRole() === 'PersonnePhysique'">
+                        <label for="inputIdentifiantNational" class="block text-900 text-xl font-medium mb-2">Identifiant National</label>
+                        <input type="text" id="inputIdentifiantNational" [(ngModel)]="form.identifiant_national" name="identifiant_national" pInputText class="w-full" style="padding: 1rem">
+                    </div>
+                    
+                    <div *ngIf="getUserRole() === 'PersonnePhysique'">
+                        <label for="inputCINPass" class="block text-900 text-xl font-medium mb-2">CIN ou Passeport</label>
+                        <input type="text" id="inputCINPass" [(ngModel)]="form.CIN_Pass" name="CIN_Pass" pInputText class="w-full" style="padding: 1rem">
+                    </div>
+
+                    <div *ngIf="getUserRole() === 'PersonnePhysique'">
+                        <label for="inputSex" class="block text-900 text-xl font-medium mb-2">Sexe</label>
+                        <input type="text" id="inputSex" [(ngModel)]="form.sex" name="sex" pInputText class="w-full" style="padding: 1rem">
+                    </div>
+
+                    <div *ngIf="getUserRole() === 'PersonnePhysique'">
+                        <label for="inputNationalite" class="block text-900 text-xl font-medium mb-2">Nationalité</label>
+                        <input type="text" id="inputNationalite" [(ngModel)]="form.nationalite" name="nationalite" pInputText class="w-full" style="padding: 1rem">
+                    </div>
+
+                    <div *ngIf="getUserRole() === 'PersonnePhysique'">
+                        <label for="inputProfession" class="block text-900 text-xl font-medium mb-2">Profession</label>
+                        <input type="text" id="inputProfession" [(ngModel)]="form.profession" name="profession" pInputText class="w-full" style="padding: 1rem">
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="right-column">
+                    <div *ngIf="getUserRole() === 'expert'">
+                        <label for="inputregion" class="block text-900 text-xl font-medium mb-2">Région</label>
+                        <input type="text" id="inputregion" placeholder="Région" [(ngModel)]="form.region" name="region" pInputText class="w-full" style="padding: 1rem">
+                    </div>
+                    <div *ngIf="getUserRole() === 'expert'">
+                        <label for="inputtaux" class="block text-900 text-xl font-medium mb-2">Taux</label>
+                        <input type="number" id="inputtaux" placeholder="Taux" [(ngModel)]="form.taux" name="taux" pInputText class="w-full" style="padding: 1rem">
+                    </div>
+                    <div *ngIf="getUserRole() === 'PersonneMorale'">
+                        <label for="inputRaisonSociale" class="block text-900 text-xl font-medium mb-2">Raison sociale</label>
+                        <input type="text" id="inputRaisonSociale" [(ngModel)]="form.raisonSociale" name="raisonSociale" pInputText class="w-full" style="padding: 1rem">
+                    </div>
+
+                    <div *ngIf="getUserRole() === 'PersonneMorale'">
+                        <label for="inputActivite" class="block text-900 text-xl font-medium mb-2">Activité</label>
+                        <input type="text" id="inputActivite" [(ngModel)]="form.activite" name="activite" pInputText class="w-full" style="padding: 1rem">
+                    </div>
+
+                    <div *ngIf="getUserRole() === 'PersonneMorale'">
+                        <label for="inputMatriculeFiscal" class="block text-900 text-xl font-medium mb-2">Matricule fiscal</label>
+                        <input type="text" id="inputMatriculeFiscal" [(ngModel)]="form.matricule_fiscal" name="matricule_fiscal" pInputText class="w-full" style="padding: 1rem">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <br>
+            <div class="d-grid">
+                <button pButton pRipple label="Modifier Profile" class="w-full p-3 text-xl"></button>
+            </div>
+        </div>
+    </form>
+</div>

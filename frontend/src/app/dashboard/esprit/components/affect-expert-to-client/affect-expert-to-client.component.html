@@ -1,0 +1,56 @@
+<div class="p-d-flex p-jc-center p-ai-center" style="min-height: 100vh;">
+  <p-card header="Affecter un expert à un client" 
+          styleClass="p-shadow-4" 
+          [style]="{ 
+            width: '50%', 
+            borderRadius: '10px', 
+            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+            marginLeft: '250px',  
+            marginTop: '130px'   
+          }">
+    <form (ngSubmit)="affecterExpert()">
+      <div class="p-field">
+        <label for="client">Choisir un client :</label>
+        <p-dropdown 
+          id="client" 
+          [(ngModel)]="clientId" 
+          [options]="Users" 
+          optionLabel="nom" 
+          placeholder="Sélectionnez un client"
+          name="clientId" 
+          required 
+          (onChange)="onClientChange($event)">
+        </p-dropdown>
+      </div>
+
+      <div class="p-field">
+        <label for="expert">Choisir un expert :</label>
+        <p-dropdown 
+          id="expert" 
+          [(ngModel)]="expertId" 
+          [options]="experts" 
+          optionLabel="nom" 
+          placeholder="Sélectionnez un expert"
+          name="expertId" 
+          required>
+        </p-dropdown>
+      </div>
+
+      <div class="p-field">
+        <label for="document">Choisir un document :</label>
+        <p-dropdown 
+          id="document" 
+          [(ngModel)]="documentId" 
+          [options]="documents" 
+          optionLabel="label"
+          optionValue="value" 
+          placeholder="Sélectionnez un document"
+          name="documentId" 
+          required>
+        </p-dropdown>
+      </div>
+
+      <button pButton type="submit" label="Affecter" icon="pi pi-check"></button>
+    </form>
+  </p-card>
+</div>

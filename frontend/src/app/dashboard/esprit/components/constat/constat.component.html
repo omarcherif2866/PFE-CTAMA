@@ -1,0 +1,562 @@
+<form [formGroup]="accidentForm" (ngSubmit)="createPdf()">
+    <fieldset>
+        <legend>Informations générales</legend>
+        <div class="field-container">
+          <div class="field">
+            <label for="date">Date de l’accident</label>
+            <input id="date" type="date" formControlName="date" [max]="today" required>
+          </div>
+      
+          <div class="field">
+            <label for="time">Heure</label>
+            <input id="time" type="time" formControlName="time" required>
+          </div>
+      
+          <div class="field">
+            <label for="location">Lieu</label>
+            <input id="location" type="text" formControlName="location" required>
+          </div>
+      
+          <div class="field">
+            <label for="blesse">Blessés (même légers)</label>
+            <select id="blesse" formControlName="blesse" required>
+              <option value="non">Non</option>
+              <option value="oui">Oui</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+      
+      
+  
+    <!-- Dégâts matériels -->
+    <fieldset>
+        <legend>Dégâts matériels</legend>
+        <div class="field-container">
+          <div class="field">
+            <label for="otherDamages">Autres qu’aux véhicules A et B</label>
+            <select id="otherDamages" formControlName="otherDamages" required>
+              <option value="non">Non</option>
+              <option value="oui">Oui</option>
+            </select>
+          </div>
+        </div>
+      
+        <legend>Témoins</legend>
+        <div class="field-container">
+          <div class="field">
+            <label for="witnessName">Nom du témoin</label>
+            <input id="witnessName" type="text" formControlName="witnessName">
+          </div>
+      
+          <div class="field">
+            <label for="witnessAddress">Adresse du témoin</label>
+            <input id="witnessAddress" type="text" formControlName="witnessAddress">
+          </div>
+      
+          <div class="field">
+            <label for="witnessPhone">Téléphone du témoin</label>
+            <input id="witnessPhone" type="text" formControlName="witnessPhone">
+          </div>
+        </div>
+      </fieldset>
+      
+  
+    <!-- Mise en page avec flexbox -->
+      <div class="vehicles">
+        <!-- Véhicule A -->
+        <fieldset class="vehicleA">
+          <legend>Véhicule A</legend>
+        
+          <!-- Assurance -->
+          <div class="input-group-A">
+            <div class="input-wrapper">
+                <label for="insuranceCompanyA">Véhicule assuré par</label>
+                <input id="insuranceCompanyA" type="text" formControlName="insuranceCompanyA" required>
+            </div>
+            <input type="checkbox" class="checkbox left-checkbox" ><p>1</p>
+          </div>
+
+          <div class="input-group-A">
+            <div class="input-wrapper">
+              <label for="contractNumberA">Contrat d’Assurance</label>
+              <input id="contractNumberA" type="text" formControlName="contractNumberA" required>
+            </div>
+            <input type="checkbox" class="checkbox left-checkbox"><p>2</p>
+          </div>
+
+          <div class="input-group-A">
+            <div class="input-wrapper">
+              <label for="agencyA">Agence Assurance</label>
+              <input id="agencyA" type="text" formControlName="agencyA">
+            </div>
+            <input type="checkbox" class="checkbox left-checkbox"><p>3</p>
+          </div>
+
+          <div class="input-group-A">
+            <div class="input-wrapper">
+              <label for="validFromA">Validité Assurance (Début)</label>
+              <input id="validFromA" type="date" formControlName="validFromA" required>
+            </div>
+            <input type="checkbox" class="checkbox left-checkbox"><p>4</p>
+          </div>
+
+          <div class="input-group-A">
+            <div class="input-wrapper">
+              <label for="validToA">Validité Assurance (Fin)</label>
+              <input id="validToA" type="date" formControlName="validToA" required>
+            </div>
+            <input type="checkbox" class="checkbox left-checkbox"><p>5</p>
+          </div>
+          
+                  <!-- Conducteur -->
+          <div class="input-group-A">
+            <div class="input-wrapper">         
+              <label for="driverNameA">Nom du Conducteur</label>
+              <input id="driverNameA" type="text" formControlName="driverNameA" required>
+            </div>
+            <input type="checkbox" class="checkbox left-checkbox"><p>6</p>
+          </div>
+
+          <div class="input-group-A">
+            <div class="input-wrapper">
+              <label for="driverFirstNameA">Prénom du Conducteur</label>
+              <input id="driverFirstNameA" type="text" formControlName="driverFirstNameA" required>
+            </div>
+            <input type="checkbox" class="checkbox left-checkbox"><p>7</p>
+          </div>
+
+          <div class="input-group-A">
+            <div class="input-wrapper">
+              <label for="driverAddressA">Adresse du Conducteur</label>
+              <input id="driverAddressA" type="text" formControlName="driverAddressA" required>
+            </div>
+            <input type="checkbox" class="checkbox left-checkbox"><p>8</p>
+          </div>
+
+          <div class="input-group-A">
+            <div class="input-wrapper">
+              <label for="driverLicenseNumberA">Numéro Permis de Conduire</label>
+              <input id="driverLicenseNumberA" type="text" formControlName="driverLicenseNumberA" required>
+            </div>
+            <input type="checkbox" class="checkbox left-checkbox"><p>9</p>
+          </div>
+
+          <div class="input-group-A">
+            <div class="input-wrapper">
+              <label for="driverLicenseIssuedDateA">Délivré le</label>
+              <input id="driverLicenseIssuedDateA" type="date" formControlName="driverLicenseIssuedDateA" required>
+            </div>
+            <input type="checkbox" class="checkbox left-checkbox"><p>10</p>
+          </div>
+
+          <!-- Assuré -->
+          <div class="input-group-A">
+            <div class="input-wrapper">
+              <label for="insuredNameA">Nom de l’Assuré</label>
+              <input id="insuredNameA" type="text" formControlName="insuredNameA" required>
+            </div>
+            <input type="checkbox" class="checkbox left-checkbox"><p>11</p>
+          </div>
+
+          <div class="input-group-A">
+            <div class="input-wrapper">
+              <label for="insuredFirstNameA">Prénom de l’Assuré</label>
+              <input id="insuredFirstNameA" type="text" formControlName="insuredFirstNameA" required>
+            </div>
+            <input type="checkbox" class="checkbox left-checkbox"><p>12</p>
+          </div>
+
+          <div class="input-group-A">
+            <div class="input-wrapper">
+              <label for="insuredAddressA">Adresse de l’Assuré</label>
+              <input id="insuredAddressA" type="text" formControlName="insuredAddressA" required>
+            </div>
+            <input type="checkbox" class="checkbox left-checkbox"><p>13</p>
+          </div>
+
+          <div class="input-group-A">
+            <div class="input-wrapper">
+              <label for="insuredPhoneA">Téléphone de l’Assuré</label>
+              <input id="insuredPhoneA" type="text" formControlName="insuredPhoneA" required>
+            </div>
+            <input type="checkbox" class="checkbox left-checkbox"><p>14</p>
+          </div>
+
+          <!-- Véhicule -->
+          <div class="input-group-A">
+            <div class="input-wrapper">
+              <label for="vehicleBrandA">Marque et Type du Véhicule</label>
+              <input id="vehicleBrandA" type="text" formControlName="vehicleBrandA" required>
+            </div>
+            <input type="checkbox" class="checkbox left-checkbox"><p>15</p>
+          </div>
+
+          <div class="input-group-A">
+            <div class="input-wrapper">
+              <label for="vehicleRegistrationA">Immatriculation du Véhicule</label>
+              <input id="vehicleRegistrationA" type="text" formControlName="vehicleRegistrationA" required>
+            </div>
+            <input type="checkbox" class="checkbox left-checkbox"><p>16</p>
+          </div>
+
+          <div class="input-group-A">
+            <div class="input-wrapper">
+              <label for="venantA">Venant de</label>
+              <input id="venantA" type="text" formControlName="venantA" required>
+            </div>
+            <input type="checkbox" class="checkbox left-checkbox"><p>17</p>
+          </div>
+
+          <div class="input-group-A">
+            <div class="input-wrapper">
+              <label for="allantA">Allant à</label>
+              <input id="allantA" type="text" formControlName="allantA" required>
+            </div>
+          </div>
+
+          <div class="vehiclesA-container">
+            <!-- Voiture -->
+            <div class="car-container">
+              <img src="assets/img/voiture.png" class="car-image" alt="Voiture" />
+              <div
+                *ngFor="let zone of vehiclesZones['vehicleA_car']; let i = index"
+                class="click-zone"
+                [ngStyle]="{ left: zone.x + 'px', top: zone.y + 'px' }"
+                (click)="toggleCross('vehicleA_car', i)"
+              >
+                <span *ngIf="zone.clicked" class="cross">✖</span>
+              </div>
+            </div>
+          
+            <!-- Moto -->
+            <div class="moto-container">
+              <img src="assets/img/moto.png" class="moto-image" alt="Moto" />
+              <div
+                *ngFor="let zone of vehiclesZones['vehicleA_moto']; let i = index"
+                class="click-zone"
+                [ngStyle]="{ left: zone.x + 'px', top: zone.y + 'px' }"
+                (click)="toggleCross('vehicleA_moto', i)"
+              >
+                <span *ngIf="zone.clicked" class="cross">✖</span>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        
+        
+
+        <div class="texts-between">
+          <!-- <br><br><br><br> -->
+          <p style="margin-top: 80px;"> en statlonnement</p>
+          <!-- <br> -->
+          <p style="margin-top: 45px;">quittait un stationnement</p>
+          <!-- <br> -->
+          <p style="margin-top: 60px;">prenait un stationnement</p>
+          <!-- <br> -->
+          <p style="margin-top: 40px;">sortait d'un parking, d'un lieu privé, d'un chemin de terre</p>
+          <p style="margin-top: -5px;">s'engageait dans un parking, un lieu privé un chemin de terre</p>
+          <p>arrêt de circulation</p>
+          <p style="margin-top: 40px;">frottement sans changement de file</p>
+          <p style="margin-top: 16px;">heurtait à l'arriere, en roulant dans le même sens et sur une même file</p>
+          <p style="margin-top: 18px;">roulait dans le même sens et sur une file différente</p>
+          <p style="margin-top: 30px;">changeait de file</p>
+          <p style="margin-top: 50px;">doublait</p>
+          <p style="margin-top: 50px;">virait à droite</p>
+          <p style="margin-top: 60px;">virait à gauche</p>
+          <p style="margin-top: 50px;">reculait</p>
+          <p style="margin-top: 30px;">empiétait sur la partie de chaussé réservee à la circulation en sens inverse</p>
+          <p style="margin-top: 30px;">venait de droite (dans un carrefour)</p>
+          <p style="margin-top: 30px;">n'avait pas observé le signal de priorité</p>
+
+        </div>
+        
+    
+        <!-- Véhicule B -->
+        <fieldset class="vehicleB">
+          <legend>Véhicule B</legend>
+        
+          <!-- Assurance -->
+          <div class="input-group-B">
+            <p>1</p> <input type="checkbox" class="checkbox right-checkbox">
+            <div class="input-wrapper">
+              <label for="insuranceCompanyB">Véhicule assuré par</label>
+              <input id="insuranceCompanyB" type="text" formControlName="insuranceCompanyB" required>
+            </div>
+          </div>
+        
+          <div class="input-group-B">
+            <p>2</p><input type="checkbox" class="checkbox right-checkbox">
+            <div class="input-wrapper">
+              <label for="contractNumberB">Contrat d'Assurance</label>
+              <input id="contractNumberB" type="text" formControlName="contractNumberB" required>
+            </div>
+          </div>
+        
+          <div class="input-group-B">
+            <p>3</p><input type="checkbox" class="checkbox right-checkbox">
+            <div class="input-wrapper">
+              <label for="agencyB">Agence Assurance</label>
+              <input id="agencyB" type="text" formControlName="agencyB">
+            </div>
+          </div>
+        
+          <div class="input-group-B">
+            <p>4</p><input type="checkbox" class="checkbox right-checkbox">
+            <div class="input-wrapper">
+              <label for="validFromB">Validité Assurance (Début)</label>
+              <input id="validFromB" type="date" formControlName="validFromB" required>
+            </div>
+          </div>
+        
+          <div class="input-group-B">
+            <p>5</p><input type="checkbox" class="checkbox right-checkbox">
+            <div class="input-wrapper">
+              <label for="validToB">Validité Assurance (Fin)</label>
+              <input id="validToB" type="date" formControlName="validToB" required>
+            </div>
+          </div>
+        
+          <!-- Conducteur -->
+          <div class="input-group-B">
+            <p>6</p><input type="checkbox" class="checkbox right-checkbox">
+            <div class="input-wrapper">
+              <label for="driverNameB">Nom du Conducteur</label>
+              <input id="driverNameB" type="text" formControlName="driverNameB" required>
+            </div>
+          </div>
+        
+          <div class="input-group-B">
+            <p>7</p><input type="checkbox" class="checkbox right-checkbox">
+            <div class="input-wrapper">
+              <label for="driverFirstNameB">Prénom du Conducteur</label>
+              <input id="driverFirstNameB" type="text" formControlName="driverFirstNameB" required>
+            </div>
+          </div>
+        
+          <div class="input-group-B">
+            <p>8</p><input type="checkbox" class="checkbox right-checkbox">
+            <div class="input-wrapper">
+              <label for="driverAddressB">Adresse du Conducteur</label>
+              <input id="driverAddressB" type="text" formControlName="driverAddressB" required>
+            </div>
+          </div>
+        
+          <div class="input-group-B">
+            <p>9</p><input type="checkbox" class="checkbox right-checkbox">
+            <div class="input-wrapper">
+              <label for="driverLicenseNumberB">Numéro Permis de Conduire</label>
+              <input id="driverLicenseNumberB" type="text" formControlName="driverLicenseNumberB" required>
+            </div>
+          </div>
+        
+          <div class="input-group-B">
+            <p>10</p><input type="checkbox" class="checkbox right-checkbox">
+            <div class="input-wrapper">
+              <label for="driverLicenseIssuedDateB">Délivré le</label>
+              <input id="driverLicenseIssuedDateB" type="date" formControlName="driverLicenseIssuedDateB" required>
+            </div>
+          </div>
+        
+          <!-- Assuré -->
+          <div class="input-group-B">
+            <p>11</p><input type="checkbox" class="checkbox right-checkbox">
+            <div class="input-wrapper">
+              <label for="insuredNameB">Nom de l'Assuré</label>
+              <input id="insuredNameB" type="text" formControlName="insuredNameB" required>
+            </div>
+          </div>
+        
+          <div class="input-group-B">
+            <p>12</p><input type="checkbox" class="checkbox right-checkbox">
+            <div class="input-wrapper">
+              <label for="insuredFirstNameB">Prénom de l'Assuré</label>
+              <input id="insuredFirstNameB" type="text" formControlName="insuredFirstNameB" required>
+            </div>
+          </div>
+        
+          <div class="input-group-B">
+            <p>13</p><input type="checkbox" class="checkbox right-checkbox">
+            <div class="input-wrapper">
+              <label for="insuredAddressB">Adresse de l'Assuré</label>
+              <input id="insuredAddressB" type="text" formControlName="insuredAddressB" required>
+            </div>
+          </div>
+        
+          <div class="input-group-B">
+            <p>14</p><input type="checkbox" class="checkbox right-checkbox">
+            <div class="input-wrapper">
+              <label for="insuredPhoneB">Téléphone de l'Assuré</label>
+              <input id="insuredPhoneB" type="text" formControlName="insuredPhoneB" required>
+            </div>
+          </div>
+        
+          <!-- Véhicule -->
+          <div class="input-group-B">
+            <p>15</p><input type="checkbox" class="checkbox right-checkbox">
+            <div class="input-wrapper">
+              <label for="vehicleBrandB">Marque et Type du Véhicule</label>
+              <input id="vehicleBrandB" type="text" formControlName="vehicleBrandB" required>
+            </div>
+          </div>
+        
+          <div class="input-group-B">
+            <p>16</p><input type="checkbox" class="checkbox right-checkbox">
+            <div class="input-wrapper">
+              <label for="vehicleRegistrationB">Immatriculation du Véhicule</label>
+              <input id="vehicleRegistrationB" type="text" formControlName="vehicleRegistrationB" required>
+            </div>
+          </div>
+        
+          <div class="input-group-B">
+            <p>17</p><input type="checkbox" class="checkbox right-checkbox">
+            <div class="input-wrapper">
+              <label for="venantB">Venant de</label>
+              <input id="venantB" type="text" formControlName="venantB" required>
+            </div>
+          </div>
+        
+          <div class="input-group-B">
+            <div class="input-wrapper">
+              <label for="allantB">Allant à</label>
+              <input id="allantB" type="text" formControlName="allantB" required>
+            </div>
+          </div>
+        
+          <div class="vehiclesB-container">
+            <!-- Voiture -->
+            <div class="car-containerB">
+              <img src="assets/img/voiture.png" class="car-imageB" alt="Voiture" />
+              <div
+                *ngFor="let zone of vehiclesZones['vehicleB_car']; let i = index"
+                class="click-zone"
+                [ngStyle]="{ left: zone.x + 'px', top: zone.y + 'px' }"
+                (click)="toggleCross('vehicleB_car', i)"
+              >
+                <span *ngIf="zone.clicked" class="cross">✖</span>
+              </div>
+            </div>
+          
+            <!-- Moto -->
+            <div class="moto-containerB">
+              <img src="assets/img/moto.png" class="moto-imageB" alt="Moto" />
+              <div
+                *ngFor="let zone of vehiclesZones['vehicleB_moto']; let i = index"
+                class="click-zone"
+                [ngStyle]="{ left: zone.x + 'px', top: zone.y + 'px' }"
+                (click)="toggleCross('vehicleB_moto', i)"
+              >
+                <span *ngIf="zone.clicked" class="cross">✖</span>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+
+      <!-- <div class="drag-drop-container">
+        <div class="elements-panell">
+          <h3>Ajoutez les éléments</h3>
+          <div cdkDrag class="drag-item" *ngFor="let element of elements"
+               [cdkDragData]="element"
+               (cdkDragStarted)="onDragStart($event)">
+            <img [src]="element.img" [alt]="element.name" width="50">
+          </div>
+        </div>
+        <button (click)="onDropTest()">Test onDrop()</button>
+
+        <div class="elements-panel" cdkDropList (cdkDropListDropped)="onDrop($event)">
+          <h3>Zone de dépôt</h3>
+          <div *ngFor="let item of droppedElements; trackBy: trackByFn" class="dropped-item"
+              [ngStyle]="{'left.px': item.x, 'top.px': item.y, 'transform': 'rotate(' + item.rotation + 'deg)'}">
+
+            <img [src]="item.img" width="50">
+            <div class="bouttons">
+              <button (click)="rotateRight(item)" class="rotate-button">🔄</button>
+              <button (click)="rotateLeft(item)"  class="rotate-left-button">↺</button> 
+              <button (click)="removeItem(item)"  class="remove-button">❌</button> 
+            </div>
+          </div>
+        </div>
+      </div> -->
+      
+  
+      
+      
+      <div  class="container" cdkDropListGroup>
+        <!-- Liste source -->
+        <div class="elements-panell" cdkDropList id="sourceList" [cdkDropListConnectedTo]="['dropZone']">
+          <h5>Ajoutez les éléments</h5>
+          <div cdkDrag class="drag-item" *ngFor="let element of elements" [cdkDragData]="element">
+            <img [src]="element.img" [alt]="element.name" width="50">
+          </div>
+        </div>
+      
+        <!-- Zone de dépôt -->
+        <div class="elements-panel" cdkDropList (cdkDropListDropped)="onDrop($event)">
+          <h3>Zone de dépôt</h3>
+          <div *ngFor="let item of droppedElements; trackBy: trackByFn"
+          class="dropped-item"
+          [ngStyle]="{'left.px': item.x, 'top.px': item.y, 'transform': 'rotate(' + item.rotation + 'deg)'}"
+          cdkDrag 
+          [cdkDragData]="item"
+          (cdkDragMoved)="onDragMoved($event)" 
+          (cdkDragReleased)="onDragReleased($event)">
+       <div class="item-container">
+         <img [src]="item.img" width="80" height="150">
+         <div class="bouttons">
+          <button type="button" (click)="rotateLeft(item)" class="rotate-left-button">↺</button>
+          <button type="button" (click)="removeItem(item)" class="remove-button">❌</button>
+        </div>
+       </div>
+     </div>
+     
+        </div>
+        
+      </div>
+      
+       
+      <div class="vehicles">
+        <!-- Véhicule A -->
+        <fieldset class="vehicleA">
+      
+          <div class="input-group-A">
+            <div class="input-wrapper">
+              <label for="degatsApparentsA">Dégats Apparents</label>
+              <textarea id="degatsApparentsA" formControlName="degatsApparentsA" required></textarea>
+            </div>
+          </div>
+          
+          <div class="input-group-A">
+            <div class="input-wrapper">
+              <label for="observationsA">Observations</label>
+              <textarea id="observationsA" formControlName="observationsA" required></textarea>
+            </div>
+          </div>
+        </fieldset>
+        
+       
+    
+        <!-- Véhicule B -->
+        <fieldset class="vehicleB">
+          <div class="input-group-B">
+            <div class="input-wrapper">
+              <label for="degatsApparentsB">Dégats Apparents</label>
+              <textarea id="degatsApparentsB" formControlName="degatsApparentsB" required></textarea>
+            </div>
+          </div>
+          
+          <div class="input-group-B">
+            <div class="input-wrapper">
+              <label for="observationsB">Observations</label>
+              <textarea id="observationsB" formControlName="observationsB" required></textarea>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    
+  
+    <!-- Bouton de soumission -->
+    <button type="submit"  class="btn btn-primary">Soumettre</button>
+  </form>
+  

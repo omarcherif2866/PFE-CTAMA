@@ -1,0 +1,85 @@
+.messages-container {
+    position: fixed;
+    top: 20px; /* Ajustement pour positionner en haut */
+    right: 20px; /* Ajustement pour positionner à droite */
+    z-index: 9999; /* Assurez-vous que les messages s'affichent au-dessus de tout autre contenu */
+  }
+
+/* Styles globaux pour le formulaire */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Par défaut : 1 colonne */
+  gap: 1rem; /* Espace entre les colonnes et les lignes */
+}
+
+/* Pour les écrans moyens et plus grands */
+@media (min-width: 768px) {
+  .grid {
+      grid-template-columns: repeat(2, 1fr); /* 2 colonnes pour les écrans plus grands */
+  }
+  .form-body {
+    max-width: 90%; /* Largeur maximale pour le formulaire */
+    margin-left: auto; /* Décale le formulaire à droite */
+    margin-right: 0; /* Pas de marge à droite */
+  }
+}
+
+/* Style pour les labels */
+label {
+  font-size: 1rem; /* Taille de police pour les labels */
+  color: #333; /* Couleur de texte des labels */
+}
+
+/* Style pour les champs de saisie */
+input,
+textarea {
+  width: 100%; /* Prend toute la largeur disponible */
+  padding: 0.5rem; /* Espacement intérieur */
+  border: 1px solid #ccc; /* Bordure légère */
+  border-radius: 0.25rem; /* Bords arrondis */
+  font-size: 1rem; /* Taille de police pour les champs de saisie */
+  transition: border-color 0.3s; /* Transition pour le changement de bordure */
+}
+
+/* Change la couleur de la bordure au focus */
+input:focus,
+textarea:focus {
+  border-color: #007BFF; /* Bordure bleue au focus */
+  outline: none; /* Supprime l'outline par défaut */
+}
+
+/* Style pour les messages d'erreur ou d'invalidité */
+input:invalid,
+textarea:invalid {
+  border-color: red; /* Bordure rouge pour les champs invalides */
+}
+
+/* Style pour les boutons (si vous en ajoutez) */
+button {
+  background-color: #007BFF; /* Couleur de fond du bouton */
+  color: white; /* Couleur du texte */
+  padding: 0.75rem; /* Espacement intérieur du bouton */
+  border: none; /* Pas de bordure */
+  border-radius: 0.25rem; /* Bords arrondis */
+  cursor: pointer; /* Curseur de main sur hover */
+  transition: background-color 0.3s; /* Transition pour le changement de couleur */
+}
+
+/* Change la couleur de fond au hover */
+button:hover {
+  background-color: #0056b3; /* Couleur plus foncée au hover */
+}
+
+/* Style pour les colonnes */
+.left-column,
+.right-column {
+  padding: 1rem; /* Espacement intérieur pour les colonnes */
+}
+
+
+
+
+
+
+
+  

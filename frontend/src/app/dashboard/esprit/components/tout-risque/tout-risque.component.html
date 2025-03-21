@@ -1,0 +1,264 @@
+<form [formGroup]="accidentForm" (ngSubmit)="createPdf()">
+    <fieldset>
+        <legend>Informations générales</legend>
+        <div class="field-container">
+          <div class="field">
+            <label for="date">Date de l’accident</label>
+            <input id="date" type="date" formControlName="date" required>
+          </div>
+      
+          <div class="field">
+            <label for="time">Heure</label>
+            <input id="time" type="time" formControlName="time" required>
+          </div>
+      
+          <div class="field">
+            <label for="location">Lieu</label>
+            <input id="location" type="text" formControlName="location" required>
+          </div>
+      
+          <div class="field">
+            <label for="blesse">Blessés (même légers)</label>
+            <select id="blesse" formControlName="blesse" required>
+              <option value="non">Non</option>
+              <option value="oui">Oui</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+      
+      
+  
+    <!-- Dégâts matériels -->
+    <fieldset>
+        <legend>Dégâts matériels</legend>
+        <div class="field-container">
+          <div class="field">
+            <label for="otherDamages">Autres qu’aux véhicules A et B</label>
+            <select id="otherDamages" formControlName="otherDamages" required>
+              <option value="non">Non</option>
+              <option value="oui">Oui</option>
+            </select>
+          </div>
+        </div>
+      
+        <legend>Témoins</legend>
+        <div class="field-container">
+          <div class="field">
+            <label for="witnessName">Nom du témoin</label>
+            <input id="witnessName" type="text" formControlName="witnessName">
+          </div>
+      
+          <div class="field">
+            <label for="witnessAddress">Adresse du témoin</label>
+            <input id="witnessAddress" type="text" formControlName="witnessAddress">
+          </div>
+      
+          <div class="field">
+            <label for="witnessPhone">Téléphone du témoin</label>
+            <input id="witnessPhone" type="text" formControlName="witnessPhone">
+          </div>
+        </div>
+      </fieldset>
+      
+  
+    <!-- Mise en page avec flexbox -->
+      <div class="vehicles">
+        <!-- Véhicule A -->
+        <fieldset class="vehicleA">
+          <legend>Véhicule A</legend>
+        
+          <!-- Assurance -->
+          <label for="insuranceCompanyA">Société d’Assurances</label>
+          <input id="insuranceCompanyA" type="text" formControlName="insuranceCompanyA" required>
+        
+          <label for="contractNumberA">Contrat d’Assurance</label>
+          <input id="contractNumberA" type="text" formControlName="contractNumberA" required>
+        
+          <label for="agencyA">Agence Assurance</label>
+          <input id="agencyA" type="text" formControlName="agencyA">
+        
+          <label for="validFromA">Validité Assurance (Début)</label>
+          <input id="validFromA" type="date" formControlName="validFromA" required>
+        
+          <label for="validToA">Validité Assurance (Fin)</label>
+          <input id="validToA" type="date" formControlName="validToA" required>
+        
+                  <!-- Conducteur -->
+          <label for="driverNameA">Nom du Conducteur</label>
+          <input id="driverNameA" type="text" formControlName="driverNameA" required>
+        
+          <label for="driverFirstNameA">Prénom du Conducteur</label>
+          <input id="driverFirstNameA" type="text" formControlName="driverFirstNameA" required>
+        
+          <label for="driverAddressA">Adresse du Conducteur</label>
+          <input id="driverAddressA" type="text" formControlName="driverAddressA" required>
+        
+          <label for="driverLicenseNumberA">Numéro Permis de Conduire</label>
+          <input id="driverLicenseNumberA" type="text" formControlName="driverLicenseNumberA" required>
+        
+          <label for="driverLicenseIssuedDateA">Délivré le</label>
+          <input id="driverLicenseIssuedDateA" type="date" formControlName="driverLicenseIssuedDateA" required>
+        
+          <!-- Assuré -->
+          <label for="insuredNameA">Nom de l’Assuré</label>
+          <input id="insuredNameA" type="text" formControlName="insuredNameA" required>
+        
+          <label for="insuredFirstNameA">Prénom de l’Assuré</label>
+          <input id="insuredFirstNameA" type="text" formControlName="insuredFirstNameA" required>
+        
+          <label for="insuredAddressA">Adresse de l’Assuré</label>
+          <input id="insuredAddressA" type="text" formControlName="insuredAddressA" required>
+        
+          <label for="insuredPhoneA">Téléphone de l’Assuré</label>
+          <input id="insuredPhoneA" type="text" formControlName="insuredPhoneA" required>
+        
+
+          <!-- Véhicule -->
+          <label for="vehicleBrandA">Marque et Type du Véhicule</label>
+          <input id="vehicleBrandA" type="text" formControlName="vehicleBrandA" required>
+        
+          <label for="vehicleRegistrationA">Immatriculation du Véhicule</label>
+          <input id="vehicleRegistrationA" type="text" formControlName="vehicleRegistrationA" required>
+
+          <label for="venantA">Venant de</label>
+          <input id="venantA" type="text" formControlName="venantA" required>
+        
+          <label for="allantA">Allant à</label>
+          <input id="allantA" type="text" formControlName="allantA" required>
+
+          <div class="vehiclesA-container">
+            <!-- Voiture -->
+            <div class="car-container">
+              <img src="assets/img/voiture.png" class="car-image" alt="Voiture" />
+              <div
+                *ngFor="let zone of vehiclesZones['vehicleA_car']; let i = index"
+                class="click-zone"
+                [ngStyle]="{ left: zone.x + 'px', top: zone.y + 'px' }"
+                (click)="toggleCross('vehicleA_car', i)"
+              >
+                <span *ngIf="zone.clicked" class="cross">✖</span>
+              </div>
+            </div>
+          
+            <!-- Moto -->
+            <div class="moto-container">
+              <img src="assets/img/moto.png" class="moto-image" alt="Moto" />
+              <div
+                *ngFor="let zone of vehiclesZones['vehicleA_moto']; let i = index"
+                class="click-zone"
+                [ngStyle]="{ left: zone.x + 'px', top: zone.y + 'px' }"
+                (click)="toggleCross('vehicleA_moto', i)"
+              >
+                <span *ngIf="zone.clicked" class="cross">✖</span>
+              </div>
+            </div>
+          </div>
+          
+          
+        </fieldset>
+        
+        
+    
+        <!-- Véhicule B -->
+
+          <fieldset class="vehicleB" disabled>
+            <legend>Véhicule B</legend>
+          
+            <!-- Assurance -->
+            <label for="insuranceCompanyB">Société d’Assurances</label>
+            <input id="insuranceCompanyB" type="text" formControlName="insuranceCompanyB" required>
+          
+            <label for="contractNumberB">Contrat d’Assurance</label>
+            <input id="contractNumberB" type="text" formControlName="contractNumberB" required>
+          
+            <label for="agencyB">Agence Assurance</label>
+            <input id="agencyB" type="text" formControlName="agencyB">
+          
+            <label for="validFromB">Validité Assurance (Début)</label>
+            <input id="validFromB" type="date" formControlName="validFromB" required>
+          
+            <label for="validToB">Validité Assurance (Fin)</label>
+            <input id="validToB" type="date" formControlName="validToB" required>
+          
+            <!-- Conducteur -->
+            <label for="driverNameB">Nom du Conducteur</label>
+            <input id="driverNameB" type="text" formControlName="driverNameB" required>
+          
+            <label for="driverFirstNameB">Prénom du Conducteur</label>
+            <input id="driverFirstNameB" type="text" formControlName="driverFirstNameB" required>
+          
+            <label for="driverAddressB">Adresse du Conducteur</label>
+            <input id="driverAddressB" type="text" formControlName="driverAddressB" required>
+          
+            <label for="driverLicenseNumberB">Numéro Permis de Conduire</label>
+            <input id="driverLicenseNumberB" type="text" formControlName="driverLicenseNumberB" required>
+          
+            <label for="driverLicenseIssuedDateB">Délivré le</label>
+            <input id="driverLicenseIssuedDateB" type="date" formControlName="driverLicenseIssuedDateB" required>
+          
+            <!-- Assuré -->
+            <label for="insuredNameB">Nom de l’Assuré</label>
+            <input id="insuredNameB" type="text" formControlName="insuredNameB" required>
+          
+            <label for="insuredFirstNameB">Prénom de l’Assuré</label>
+            <input id="insuredFirstNameB" type="text" formControlName="insuredFirstNameB" required>
+          
+            <label for="insuredAddressB">Adresse de l’Assuré</label>
+            <input id="insuredAddressB" type="text" formControlName="insuredAddressB" required>
+          
+            <label for="insuredPhoneB">Téléphone de l’Assuré</label>
+            <input id="insuredPhoneB" type="text" formControlName="insuredPhoneB" required>
+          
+            <!-- Véhicule -->
+            <label for="vehicleBrandB">Marque et Type du Véhicule</label>
+            <input id="vehicleBrandB" type="text" formControlName="vehicleBrandB" required>
+          
+            <label for="vehicleRegistrationB">Immatriculation du Véhicule</label>
+            <input id="vehicleRegistrationB" type="text" formControlName="vehicleRegistrationB" required>
+          
+            <label for="venantB">Venant de</label>
+            <input id="venantB" type="text" formControlName="venantB" required>
+          
+            <label for="allantB">Allant à</label>
+            <input id="allantB" type="text" formControlName="allantB" required>
+          
+            <div class="vehiclesB-container">
+              <!-- Voiture -->
+              <div class="car-container">
+                <img src="assets/img/voiture.png" class="car-image" alt="Voiture" />
+                <div
+                  *ngFor="let zone of vehiclesZones['vehicleB_car']; let i = index"
+                  class="click-zone"
+                  [ngStyle]="{ left: zone.x + 'px', top: zone.y + 'px' }"
+                  (click)="toggleCross('vehicleB_car', i)"
+                >
+                  <span *ngIf="zone.clicked" class="cross">✖</span>
+                </div>
+              </div>
+          
+              <!-- Moto -->
+              <div class="moto-container">
+                <img src="assets/img/moto.png" class="moto-image" alt="Moto" />
+                <div
+                  *ngFor="let zone of vehiclesZones['vehicleB_moto']; let i = index"
+                  class="click-zone"
+                  [ngStyle]="{ left: zone.x + 'px', top: zone.y + 'px' }"
+                  (click)="toggleCross('vehicleB_moto', i)"
+                >
+                  <span *ngIf="zone.clicked" class="cross">✖</span>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+      </div>
+
+
+    
+    
+    
+  
+    <!-- Bouton de soumission -->
+    <button type="submit"  class="btn btn-primary">Soumettre</button>
+  </form>
+  

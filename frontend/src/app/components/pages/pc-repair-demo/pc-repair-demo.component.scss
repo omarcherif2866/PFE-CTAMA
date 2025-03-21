@@ -1,0 +1,833 @@
+/*main-banner-css*/
+.repair-main-banner {
+    overflow-x: hidden;
+    padding: {
+        top: 200px;
+        bottom: 140px;
+    }
+}
+
+.agence-img{
+    filter: drop-shadow(3px 3px 1px var(--orangeColor));
+}
+
+
+.single-assurance-services {
+    border-radius: 10%;
+    z-index: 1;
+    margin-bottom: 30px;
+    position: relative;
+    padding: 40px 30px;
+    text-align: center;
+    border: 1px dashed #8893db;
+    background-color: var(--whiteColor);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Adjust the values as needed */
+
+    &::after {
+        position: absolute;
+        transition: var(--transition);
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--blueColor);
+        z-index: -1;
+        opacity: 0;
+        visibility: hidden;
+        border-radius: 10%;
+
+    }
+    h3 {
+        font-size: 18px;
+        transition: var(--transition);
+        margin: {
+            top: 22px;
+            bottom: 17px;
+        }
+        line-height: 1.5;
+    }
+    .icon {
+        display: inline-flex; /* Utilisation de flexbox pour centrer */
+        justify-content: center; /* Centrage horizontal */
+        align-items: center; /* Centrage vertical */
+        color: var(--mainColor);
+        width: 85px;
+        height: 85px;
+        line-height: 85px;
+        border: 1px solid #e3f7e9;
+        border-radius: 50%;
+        transition: var(--transition);
+
+        i {
+            &::before {
+                font-size: 35px;
+            }
+        }
+    }
+    p {
+        margin-bottom: 25px;
+        transition: var(--transition);
+    }
+    a {
+        width: 35px;
+        background-color: #f9fafb;
+        height: 35px;
+        line-height: 35px;
+        color: var(--blackColor);
+        border-radius: 50%;
+
+        i-feather {
+            width: 15px;
+        }
+    }
+    &:hover, &:focus {
+        &::after {
+            opacity: 1;
+            visibility: visible;
+        }
+        h3 {
+            color: var(--whiteColor);
+        }
+        p {
+            color: var(--whiteColor);
+        }
+        .icon {
+            border-color: var(--whiteColor);
+            color: var(--orangeColor);
+        }
+        a {
+            background-color: var(--whiteColor);
+            color: var(--mainColor);
+        }
+    }
+}
+
+.assuranceType {
+    z-index: 1;
+    position: relative;
+    background: var(--gradientColor);
+
+    .section-title {
+        h2 {
+            color: var(--whiteColor);
+        }
+        .bar {
+            &::before {
+                background: var(--whiteColor);
+            }
+        }
+        p {
+            color: var(--whiteColor);
+            opacity: .95;
+        }
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 37%;
+        width: 100%;
+        background: var(--whiteColor);
+        z-index: -1;
+    }
+
+    /* Conteneur principal */
+    .row-services {
+        display: flex; /* Aligner les colonnes horizontalement */
+        justify-content: space-between; /* Espaces égaux entre les colonnes */
+        flex-wrap: wrap; /* Permet le passage à la ligne si nécessaire */
+        align-items: stretch; /* Étire les colonnes pour qu'elles aient la même hauteur */
+    }
+
+    /* Colonnes */
+    .col-lg-4, .col-md-6, .col-sm-6 {
+        flex: 0 0 32%; /* Chaque colonne occupe environ 32% */
+        padding: 15px; /* Espacement interne */
+        box-sizing: border-box; /* Inclut les marges et bordures */
+        display: flex; /* Permet de définir une hauteur pour les enfants */
+        flex-direction: column; /* Empile le contenu verticalement */
+    }
+
+    /* Service Box */
+    .single-assurance {
+        background-size: cover; 
+        background-repeat: no-repeat; /* Empêche la répétition */
+        background-position: center; /* Centre l'image */
+        background-color: #fff; /* Ajout d'une couleur de fond */
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .single-assurance.agriculteurs {
+        background-image: url('../../../../assets/img/typeAssurance/agriculteurs.jpg');
+    }
+    
+    /* Image pour Professionnels */
+    .single-assurance.professionnels {
+        background-image: url('../../../../assets/img/typeAssurance/professional.jpg');
+    }
+    
+    /* Image pour Particuliers */
+    .single-assurance.particuliers {
+        background-image: url('../../../../assets/img/typeAssurance/particulier.jpg');
+    }
+
+    /* Icone */
+    .icon {
+        margin-bottom: 15px; /* Espacement entre l'icône et le texte */
+    }
+}
+  
+
+.agency-portfolio-main-banner {
+    background-size: 80%; /* Réduit la taille de l'image à 80% */
+    z-index: 1;
+    height: 70vh;
+    position: relative;
+    background: {
+        position: center center;
+        repeat: no-repeat;
+        size: cover;
+    };
+}
+
+.btn-primary {
+    background: var(--orangeColor);
+    border: none; /* Supprimez la bordure si nécessaire */
+    color: white; /* Couleur du texte */
+    text-transform: uppercase; /* Met le texte en majuscules */
+    text-align: center;
+    display: inline-block;
+    border-radius: 5px; /* Ajustez le radius selon vos besoins */
+    transition: background 0.3s ease; /* Transition douce pour le hover */
+}
+
+.repair-banner-content {
+    h1 {
+        margin-bottom: 20px;
+        font: {
+            size: 45px;
+            weight: 500;
+        };
+    }
+    p {
+        margin-bottom: 30px;
+    }
+}
+.repair-banner-image {
+    position: relative;
+    text-align: center;
+
+    img {
+        &:nth-child(2) {
+            position: absolute;
+            left: 0;
+            top: -65px;
+            right: -30px;
+            margin: 0 auto;
+            z-index: -1;
+        }
+        &:nth-child(3) {
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            top: -69px;
+            z-index: -2;
+        }
+        &:nth-child(4) {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: -30px;
+            z-index: -1;
+            margin: 0 auto;
+        }
+    }
+}
+
+
+.single-assurance {
+    margin-bottom: 30px;
+    position: relative;
+    padding: 40px 30px;
+    text-align: center;
+    z-index: 1;
+    background: {
+        position: center center;
+        repeat: no-repeat;
+        size: cover;
+    };
+    &::before {
+        position: absolute;
+        transition: var(--transition);
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--whiteColor);
+        z-index: -1;
+        border: 1px dashed #8893db;
+    }
+    &::after {
+        position: absolute;
+        transition: var(--transition);
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--blueColor);
+        z-index: -1;
+        opacity: 0;
+        visibility: hidden;
+        border: 1px dashed #8893db;
+    }
+    h3 {
+        font-size: 18px;
+        transition: var(--transition);
+        margin: {
+            top: 22px;
+            bottom: 17px;
+        };
+    }
+
+    p {
+        margin-bottom: 25px;
+        transition: var(--transition);
+    }
+    a {
+        width: 35px;
+        height: 35px;
+        line-height: 35px;
+        border-radius: 50%;
+        color: var(--blackColor);
+        background-color: #f9fafb;
+
+        i-feather {
+            width: 15px;
+        }
+    }
+    &:hover, &:focus {
+        &::before {
+            opacity: 0;
+            visibility: hidden;
+        }
+        &::after {
+            opacity: .55; //opacity
+            visibility: visible;
+        }
+        h3 {
+            color: var(--whiteColor);
+        }
+        p {
+            color: var(--whiteColor);
+        }
+        .icon {
+            border-color: var(--whiteColor);
+            color: var(--whiteColor);
+        }
+        a {
+            background-color: var(--whiteColor);
+            color: var(--mainColor);
+        }
+    }
+}
+
+
+.repair-cta-area {
+    z-index: 1;
+    overflow: hidden;
+    position: relative;
+    padding: {
+        top: 10px;
+        bottom: 10px;
+    };
+}
+.cta-repair-content {
+    h3 {
+        color: var(--whiteColor);
+        margin-bottom: 17px;
+        font-size: 25px;
+    }
+    p {
+        color: var(--whiteColor);
+        margin-bottom: 25px;
+       opacity: .95;
+    }
+}
+.cta-repair-img {
+    text-align: end;
+}
+@media only screen and (max-width: 767px) {
+    
+    .agency-portfolio-main-banner {
+        height: 100%;
+        padding: {
+            top: 150px;
+            bottom: 120px;
+        };
+    }
+    .portfolio-banner-content {
+        text-align: center;
+        max-width: 100%;
+        margin-top: 0;
+        
+        .sub-title {
+            font-size: 14px;
+        }
+        h1 {
+            font-size: 25px;
+            margin-bottom: 12px;
+        }
+        p {
+            max-width: 100%;
+            font-size: 13px;
+        }
+    }
+    .single-assurance-services-row {
+        display: flex;
+        flex-direction: column;
+    }
+    .single-assurance-services {
+        width: 100%;
+        margin-bottom: 20px; /* Espacement entre les éléments */
+    }
+
+    .row-services {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .row-services .col-lg-4,
+    .row-services .col-md-6,
+    .row-services .col-sm-6 {
+        width: 100%;
+        max-width: 400px; /* Ajuste la largeur max selon tes besoins */
+    }
+
+    .single-assurance {
+        width: 100%;
+        text-align: center;
+        padding: 20px;
+    }
+
+
+
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .agency-portfolio-main-banner {
+        height: 100%;
+        padding: {
+            top: 200px;
+            bottom: 150px;
+        };
+    }
+    .portfolio-banner-content {
+        text-align: center;
+        margin-top: 0;
+
+        .sub-title {
+            font-size: 15px;
+        }
+        h1 {
+            font-size: 30px;
+        }
+        p {
+            font-size: 14px;
+        }
+    }
+
+
+
+}
+
+
+
+@media only screen and (max-width: 767px) {
+    
+    .repair-main-banner {
+        padding: {
+            top: 150px;
+            bottom: 85px;
+        };
+    }
+    .repair-banner-content {
+        text-align: center;
+
+        h1 {
+            line-height: 1.4;
+            margin-bottom: 17px;
+            font-size: 25px;
+        }
+        .btn {
+            margin-top: 20px; /* Ajuste la valeur selon l'espace souhaité */
+            display: inline-block; /* Assure que le bouton est un bloc inline pour le centrage */
+        }
+    }
+    .repair-banner-image {
+        margin-top: 60px;
+
+        img {
+            &:nth-child(2) {
+                top: 0;
+                right: 0;
+            }
+            &:nth-child(3) {
+                top: -35px;
+            }
+            &:nth-child(4) {
+                display: none;
+            }
+        }
+    }
+
+
+
+
+    
+    .single-assurance {
+        position: relative; /* Positionnement relatif pour le conteneur */
+        background-image: inherit; /* Assurez-vous que l'image d'arrière-plan est définie ici */
+        filter: brightness(0.7); /* Ajustez cette valeur pour rendre l'image plus claire ou plus sombre */
+        padding: 20px 15px; /* Ajustez le padding si nécessaire */
+        text-align: center; /* Centre le texte */
+    
+        &::before {
+            content: ''; /* Nécessaire pour activer le pseudo-élément */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.5); /* Calque blanc semi-transparent */
+            z-index: -1; /* S'assure que le calque est derrière le contenu */
+        }
+    
+        h3 {
+            font-size: 20px; /* Augmentez la taille de la police */
+            font-weight: bold; /* Met le texte en gras */
+            margin-top: 10px; /* Espacement au-dessus du titre */
+            margin-bottom: 5px; /* Espacement en dessous du titre */
+        }
+        
+        p {
+            font-size: 18px; /* Augmentez la taille de la police */
+            font-weight: bold; /* Met le texte en gras */
+            margin-bottom: 10px; /* Espacement en dessous de la description */
+            color: black;
+        }
+        
+    }
+
+    .repair-cta-area {
+        padding: {
+            top: 50px;
+            bottom: 50px;
+        }
+    }
+    .cta-repair-content {
+        text-align: center;
+        margin-bottom: 30px;
+
+        h3 {
+            font-size: 21px;
+            margin-bottom: 17px;
+        }
+        p {
+            font-size: 13px;
+        }
+    }
+    .cta-repair-img {
+        text-align: center;
+    }
+
+
+
+    .single-repair-box {
+        width: 320px; 
+        padding: 20px; /* Ajustez le padding pour réduire l'espace interne */
+        margin: 10px auto; 
+        .icon {
+            width: 75px;
+            height: 75px;
+            line-height: 75px;
+
+            i {
+                &::before {
+                    font-size: 25px;
+                }
+            }
+            h3 {
+                font-size: 17px;
+            }
+        }
+        .back-icon {
+            i {
+                &::before {
+                    font-size: 170px;
+                }
+            }
+            width: 200px;
+            height: 200px;
+        }
+    }
+
+
+    .contact-cta-box {
+        text-align: center;
+        margin: 20px 0 0;
+        max-width: 100%;
+        padding: 30px 20px;
+
+        h3 {
+            font-size: 17px;
+        }
+        .btn {
+            position: relative;
+            right: 0;
+            top: 0;
+            margin-top: 15px;
+        }
+    }
+
+
+
+
+}
+
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+
+
+
+
+    .repair-about-content {
+        ul {
+            li {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+        }
+    }
+
+
+    .repair-why-choose-us {
+        &::before {
+            height: 45%;
+        }
+    }
+
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .repair-main-banner {
+        padding-top: 155px;
+    }
+    .repair-banner-content {
+        text-align: center;
+        margin-bottom: 115px;
+
+        h1 {
+            margin-bottom: 18px;
+            font-size: 30px;
+        }
+    }
+    .repair-banner-image {
+        img {
+            &:nth-child(4) {
+                left: 0;
+                top: -40px;
+                margin: 0 auto;
+            }
+        }
+    }
+
+
+
+    .repair-cta-area {
+        padding-top: 80px;
+    }
+    .cta-repair-content {
+        margin-bottom: 30px;
+    }
+
+    .repair-why-choose-us {
+        &::before {
+            height: 40%;
+        }
+    }
+
+    
+
+
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+ 
+    .repair-main-banner {
+        padding: {
+            top: 150px;
+            bottom: 85px;
+        };
+    }
+    .repair-banner-content {
+        text-align: center;
+
+        h1 {
+            line-height: 1.4;
+            margin-bottom: 17px;
+            font-size: 25px;
+        }
+        .btn {
+            margin-top: 20px; /* Ajuste la valeur selon l'espace souhaité */
+            display: inline-block; /* Assure que le bouton est un bloc inline pour le centrage */
+        }
+    }
+    .repair-banner-image {
+        margin-top: 60px;
+
+        img {
+            &:nth-child(2) {
+                top: 0;
+                right: 0;
+            }
+            &:nth-child(3) {
+                top: -35px;
+            }
+            &:nth-child(4) {
+                display: none;
+            }
+        }
+    }
+
+
+
+
+    
+    .single-assurance {
+        position: relative; /* Positionnement relatif pour le conteneur */
+        background-image: inherit; /* Assurez-vous que l'image d'arrière-plan est définie ici */
+        filter: brightness(0.7); /* Ajustez cette valeur pour rendre l'image plus claire ou plus sombre */
+        padding: 20px 15px; /* Ajustez le padding si nécessaire */
+        text-align: center; /* Centre le texte */
+    
+        &::before {
+            content: ''; /* Nécessaire pour activer le pseudo-élément */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.5); /* Calque blanc semi-transparent */
+            z-index: -1; /* S'assure que le calque est derrière le contenu */
+        }
+    
+        h3 {
+            font-size: 20px; /* Augmentez la taille de la police */
+            font-weight: bold; /* Met le texte en gras */
+            margin-top: 10px; /* Espacement au-dessus du titre */
+            margin-bottom: 5px; /* Espacement en dessous du titre */
+        }
+        
+        p {
+            font-size: 18px; /* Augmentez la taille de la police */
+            font-weight: bold; /* Met le texte en gras */
+            margin-bottom: 10px; /* Espacement en dessous de la description */
+            color: black;
+        }
+        
+    }
+
+    .repair-cta-area {
+        padding: {
+            top: 50px;
+            bottom: 50px;
+        }
+    }
+    .cta-repair-content {
+        text-align: center;
+        margin-bottom: 30px;
+
+        h3 {
+            font-size: 21px;
+            margin-bottom: 17px;
+        }
+        p {
+            font-size: 13px;
+        }
+    }
+    .cta-repair-img {
+        text-align: center;
+    }
+
+
+
+    .single-repair-box {
+        width: 320px; 
+        padding: 20px; /* Ajustez le padding pour réduire l'espace interne */
+        margin: 10px auto; 
+        .icon {
+            width: 75px;
+            height: 75px;
+            line-height: 75px;
+
+            i {
+                &::before {
+                    font-size: 25px;
+                }
+            }
+            h3 {
+                font-size: 17px;
+            }
+        }
+        .back-icon {
+            i {
+                &::before {
+                    font-size: 170px;
+                }
+            }
+            width: 200px;
+            height: 200px;
+        }
+    }
+
+
+    .contact-cta-box {
+        text-align: center;
+        margin: 20px 0 0;
+        max-width: 100%;
+        padding: 30px 20px;
+
+        h3 {
+            font-size: 17px;
+        }
+        .btn {
+            position: relative;
+            right: 0;
+            top: 0;
+            margin-top: 15px;
+        }
+    }
+
+
+
+
+}
+

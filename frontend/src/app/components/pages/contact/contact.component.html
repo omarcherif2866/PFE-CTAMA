@@ -1,0 +1,107 @@
+<app-navbar-style-one></app-navbar-style-one>
+
+<!-- Page Title -->
+<div class="page-title-area">
+    <div class="d-table">
+        <div class="d-table-cell">
+            <div class="section-title">
+                <h2>Contactez nous</h2>
+                <p class="bar"></p>
+            </div>
+        </div>
+    </div>
+    <div class="shape1"><img src="assets/img/shape11.png" alt="shape"></div>
+    <div class="shape2 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+    <div class="shape3"><img src="assets/img/shape3.png" alt="shape"></div>
+    <div class="shape4"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape5"><img src="assets/img/shape5.png" alt="shape"></div>
+    <div class="shape6 rotateme"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape7"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape8 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+</div>
+
+<!-- Contact Info -->
+<div class="contact-info-area ptb-80">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="contact-info-box">
+                    <div class="icon">
+                        <i-feather name="mail"></i-feather>
+                    </div>
+                    <h3>Adresse Email</h3>
+                    <p><a href="mailto:info&#64;oziss.fr">info&#64;oziss.fr</a></p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="contact-info-box">
+                    <div class="icon">
+                        <i-feather name="map-pin"></i-feather>
+                    </div>
+                    <h3>Visitez nous</h3>
+                    <ul class="footer-contact-info">
+                         Sièges en Afrique, Europe et Amérique du Nord.        
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="contact-info-box">
+                    <div class="icon">
+                        <i-feather name="phone-call"></i-feather>
+                    </div>
+                    <h3>Appelez nous</h3>
+                    <p><a href="tel:+ (216) 52 577 028">[+216] 52 577 028</a></p>
+                    <p><a href="tel:+ (237) 6 53 16 70 87">[+237] 6 53 16 70 87</a></p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Map -->
+<!-- <div id="map">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d45326.805635336634!2d-74.2196370186449!3d41.213491375130594!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c2dfa9c79e079f%3A0xfb7cbf231a6fe59e!2sDater%20Mountain%20Nature%20Park!5e0!3m2!1sen!2sbd!4v1615638499527!5m2!1sen!2sbd"></iframe>
+</div> -->
+
+<!-- Contact -->
+<div class="contact-area ptb-80">
+    <div class="container">
+        <div class="section-title">
+            <h2>Restez en contact avec nous
+            </h2>
+            <div class="bar"></div>
+            <p>Tout ce qui vous préoccupe. Nous serons heureux de vous aider!</p>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-lg-6 col-md-12">
+                <img src="assets/img/contactImage.png" alt="image">
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <form [formGroup]="contactForm" (ngSubmit)="sendEmail()">
+                    <div class="row">
+                      <div class="col-lg-12 col-md-12">
+                        <div class="form-group">
+                          <input type="email" formControlName="email" class="form-control" placeholder="Email">
+                        </div>
+                      </div>
+                      <div class="col-lg-12 col-md-6">
+                        <div class="form-group">
+                          <input type="text" formControlName="subject" class="form-control" placeholder="Subject">
+                        </div>
+                      </div>
+                      <div class="col-lg-12 col-md-12">
+                        <div class="form-group">
+                          <textarea formControlName="message" class="form-control" cols="30" rows="5" placeholder="Your Message"></textarea>
+                        </div>
+                      </div>
+                      <div class="col-lg-12 col-md-12">
+                        <button type="submit" class="btn btn-primary">Envoyer Message</button>
+                      </div>
+                    </div>
+                  </form>
+                  
+            </div>
+        </div>
+    </div>
+</div>

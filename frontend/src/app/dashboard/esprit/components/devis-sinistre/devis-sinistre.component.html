@@ -1,0 +1,147 @@
+<div class="grid">
+  <div class="col-12">
+      <div class="card px-6 py-6">
+          <p-toast></p-toast>
+          <p-toolbar styleClass="mb-4" *ngIf="getUserRole() === 'PersonnePhysique'|| getUserRole() === 'PersonneMorale'">
+              <ng-template pTemplate="left">
+                  <div class="my-2" >
+                      <button pButton pRipple label="Ajouter des devis pour une sinistre" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+                  </div>
+              </ng-template>
+          </p-toolbar>
+          <div class="table-container">
+            <p-table #dt [value]="devisSinistres" [columns]="cols" responsiveLayout="scroll" [rows]="5" [globalFilterFields]="['nom']" [paginator]="true" [rowsPerPageOptions]="[5,10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} entrées" [(selection)]="selectedDevis" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Manage devisSinistres</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                  <tr>
+                      <th pSortableColumn="expert" *ngIf="getUserRole() === 'PersonnePhysique'|| getUserRole() === 'PersonneMorale'">Expert <p-sortIcon field="expert"></p-sortIcon></th>
+                      <th pSortableColumn="client" *ngIf="getUserRole() === 'expert'">Client <p-sortIcon field="client"></p-sortIcon></th>
+                      <th pSortableColumn="documents">Document <p-sortIcon field="documents"></p-sortIcon></th>
+                      <th pSortableColumn="dateAjout">Date d'Ajout <p-sortIcon field="dateAjout"></p-sortIcon></th>
+                      <th>Devis</th>
+                      <th>Action</th>
+                  </tr>
+              </ng-template>
+              
+              <ng-template pTemplate="body" let-devisSinistre>
+                  <tr>
+                      <!-- Affichage du nom de l'expert -->
+                      <td *ngIf="getUserRole() === 'PersonnePhysique'|| getUserRole() === 'PersonneMorale'">{{ devisSinistre.expert?.nom || 'N/A' }}  {{ devisSinistre.expert?.prenom || 'N/A' }}</td>
+              
+                      <!-- Affichage du client (nom + prénom) -->
+                      <td *ngIf="getUserRole() === 'expert'">{{ devisSinistre.client.nom }} {{ devisSinistre.client.prenom }}</td>
+              
+                      <!-- Affichage du nom du document -->
+                      <td>{{ devisSinistre.documents.doc }}</td>
+              
+                      <!-- Affichage de la date au format lisible -->
+                      <td>{{ devisSinistre.dateAjout | date:'dd/MM/yyyy HH:mm' }}</td>
+              
+                      <!-- Affichage des images -->
+                      <td>
+                        <div *ngFor="let pdf of devisSinistre.devis">
+                          <i class="pi pi-file-pdf pdf-icon" (click)="openPdf(pdf)"></i>
+                          <span class="pdf-link" (click)="openPdf(pdf)">{{ pdf }}</span>
+                        </div>
+                      </td>
+                      
+              
+                      <td>
+                          <!-- <div class="flex">
+                              <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>
+                              <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"></button>
+                          </div> -->
+                      </td>
+                  </tr>
+              </ng-template>
+              
+            </p-table>
+          </div>
+        </div>
+
+
+
+
+
+
+
+
+
+        <p-dialog [(visible)]="devisSinistreDialog" [style]="{width: '450px'}" header="Détails de la voiture" [modal]="true" class="p-fluid">
+          <ng-template pTemplate="header">
+              <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
+                  <h2 class="text-center text-primary mb-4">
+                    <i class="fas fa-upload" style="font-size: 2.5rem; margin-right: 8px; color: var(--orangeColor);"></i>Ajout de devis de sinistre
+                  </h2>
+              </div>
+          </ng-template>
+          <ng-template pTemplate="content">
+            <div class="container mt-4">
+
+              
+                  <!-- Sélection du client -->
+                  <div class="mb-3">
+                    <label for="expertSelect" class="form-label fw-bold">Sélectionner un expert :</label>
+                    <select id="expertSelect" class="form-select" [(ngModel)]="selectedExpertId" (change)="getDocumentsCommunByClient()">
+                      <option value="" disabled selected>-- Choisissez un expert --</option>
+                      <option *ngFor="let expert of experts" [value]="expert._id">
+                        {{ expert.nom }} {{ expert.prenom }}
+                      </option>
+                    </select>
+                  </div>
+              
+                  <!-- Sélection du document -->
+                  <div class="mb-3">
+                    <label for="documentSelect" class="form-label fw-bold">Sélectionner un document :</label>
+                    <select id="documentSelect" class="form-select" [(ngModel)]="selectedDocument">
+                      <option value="" disabled selected>-- Choisissez un document --</option>
+                      <option *ngFor="let doc of documentsCommun" [ngValue]="doc" >
+                        {{ doc.Doc }}
+                      </option>
+                    </select>
+                  </div>
+              
+                  <!-- Sélection des fichiers -->
+                  <div class="mb-3">
+                    <label class="form-label fw-bold">Sélectionner les devis :</label>
+                    <input type="file" class="form-control" multiple (change)="onFileSelected($event)" />
+                  </div>
+              
+                  <!-- Aperçu des fichiers sélectionnés -->
+                  <div *ngIf="selectedFiles.length > 0" class="mb-3">
+                    <p class="fw-bold text-secondary"><i class="fas fa-file-image"></i> Fichiers sélectionnés :</p>
+                    <ul class="list-group">
+                      <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let file of selectedFiles">
+                        {{ file.name }} ({{ (file.size / 1024).toFixed(2) }} Ko)
+                        <button class=" btn-sm btn-outline-danger" (click)="removeFile(file)">
+                          <i class="fas fa-trash-alt" ></i>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+              
+                  <!-- Bouton d'envoi -->
+                  <div class="text-center mt-4">
+                    <button class="btn btn-primary btn-lg" (click)="uploadDevis()">
+                      <i class="fas fa-cloud-upload-alt"></i> Envoyer les devis
+                    </button>
+                  </div>
+            </div>
+          </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="displayPdfDialog" [modal]="true" [header]="'Aperçu du PDF - ' + selectedPdfName" [style]="{ width: '70vw' }">
+          <ng-container *ngIf="selectedPdf">
+            <iframe [src]="selectedPdf" width="100%" height="500px"></iframe>
+
+          </ng-container>
+        </p-dialog>
+  

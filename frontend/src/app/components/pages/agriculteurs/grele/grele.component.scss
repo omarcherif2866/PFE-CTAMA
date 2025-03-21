@@ -1,0 +1,119 @@
+.creative-area {
+    height: 400px; /* Réduire la hauteur */
+    background: {
+        position: center center;
+        repeat: no-repeat;
+        attachment: fixed;
+        size: cover;
+    };
+    .container {
+        position: relative;
+    }
+    .d-table-cell {
+        vertical-align: bottom;
+    }
+}
+
+.secondBloc {
+    max-width: 800px; /* Réduit la largeur à 800px */
+    margin: 0 auto;   /* Centre le bloc horizontalement */
+    padding: 20px;    /* Ajoute un peu d'espace autour du contenu */
+    text-align: center; /* Centrer le texte */
+}
+
+p{
+    font-size: large;
+}
+
+.repair-about-content {
+    .sub-title {
+        text-transform: uppercase;
+        color: var(--mainColor);
+        display: block;
+        font: {
+            size: 15px;
+            weight: 400;
+        };
+    }
+    h2 {
+        font: {
+            size: 24px;
+            weight: 600;
+        };
+        margin: {
+            top: 10px;
+            bottom: 10px;
+        };
+    }
+    ul {
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        list-style-type: none;
+        margin: {
+            top: -10px;
+            left: -10px;
+            right: -10px;
+        }
+        li {
+            -ms-flex: 0 0 50%;
+            flex: 0 0 50%;
+            max-width: 50%;
+            width: 100%;
+            margin-top: 25px;
+            position: relative;
+            padding: {
+                right: 10px;
+                left: 10px;
+            };
+            span {
+                display: block;
+                position: relative;
+                z-index: 1;
+                padding: 10px;
+                border-radius: 3px;
+                transition: var(--transition);
+                box-shadow: 0 2px 48px 0 rgba(0, 0, 0, 0.08);
+                background-color: var(--blueColor); // La boîte devient orange
+                color: var(--whiteColor); // Texte en blanc pour le contraste
+                i-feather {
+                    margin-left: 5px;
+                    display: inline-block;
+                    color: var(--whiteColor); // Icône en blanc
+                    transition: var(--transition);
+                    width: 18px;
+                }
+                &::before {
+                    content: '';
+                    left: 0;
+                    top: 0;
+                    height: 100%;
+                    width: 100%;
+                    background: var(--orangeColor);
+                    opacity: 0;
+                    visibility: hidden;
+                    position: absolute;
+                    border-radius: 3px;
+                    z-index: -1;
+                    transition: var(--transition);
+                }
+                &:hover, &:focus {
+                    color: var(--whiteColor);
+                    transform: translateY(-5px);
+
+                    &::before {
+                        opacity: 1;
+                        visibility: visible;
+                    }
+                    i-feather {
+                        color: var(--whiteColor);
+                    }
+                }
+            }
+        }
+    }
+}
+
+h3 {
+    color: var(--blueColor);
+}

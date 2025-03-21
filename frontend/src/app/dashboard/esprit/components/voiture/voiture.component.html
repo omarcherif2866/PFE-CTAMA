@@ -1,0 +1,111 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4" >
+                <ng-template pTemplate="left">
+                    <div class="my-2" >
+                        <button pButton pRipple label="Ajouter un voiture" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
+            <div class="table-container">
+                <p-table #dt [value]="voitures" [columns]="cols" responsiveLayout="scroll" [rows]="5" [globalFilterFields]="['nom']" [paginator]="true" [rowsPerPageOptions]="[5,10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} entrées" [(selection)]="selectedVoitures" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                    <ng-template pTemplate="caption">
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                            <h5 class="m-0">Manage voitures</h5>
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
+                            </span>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="marque">Marque <p-sortIcon field="marque"></p-sortIcon></th>
+                            <th pSortableColumn="modele">Modele <p-sortIcon field="modele"></p-sortIcon></th>
+                            <th pSortableColumn="puissance_fiscale">Puissance Fiscale <p-sortIcon field="puissance_fiscale"></p-sortIcon></th>
+                            <th pSortableColumn="nbr_portes">Nombre de portes <p-sortIcon field="nbr_portes"></p-sortIcon></th>
+                            <th pSortableColumn="num_chas">Numero de chassis<p-sortIcon field="num_chas"></p-sortIcon></th>
+                            <th>Action</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-voiture>
+                        <tr>
+                            <td>{{voiture.marque}}</td>
+                            <td>{{voiture.modele}}</td>
+                            <td>{{voiture.puissance_fiscale}}</td>
+                            <td>{{voiture.nbr_portes}}</td>
+                            <td>{{voiture.num_chas}}</td>
+                            <td >
+                                <div class="flex" >
+                                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editVoiture(voiture)"></button>
+                                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteVoiture(voiture)"></button>
+                                </div>
+
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+
+        <p-dialog [(visible)]="voitureDialog" [style]="{width: '450px'}" header="Détails de la voiture" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="header">
+                <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
+                    <i class="pi pi-car" style="font-size: 2.5rem; margin-right: 8px; color: var(--orangeColor);"></i>
+                </div>
+            </ng-template>
+            
+            <ng-template pTemplate="content">
+                <div class="field" >
+                    <label for="puissance_fiscale">Puissance Fiscale</label>
+                    <input type="number" pInputText id="puissance_fiscale" [(ngModel)]="voiture.PuissanceFiscale" required min="0" placeholder="Entrez la puissance fiscale" />
+                </div>
+                <div class="field">
+                    <label for="marque">Marque</label>
+                    <input type="text" pInputText id="marque" [(ngModel)]="voiture.Marque" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !voiture.Marque}"/>
+                </div>
+                
+                <div class="field">
+                    <label for="modele">Modele</label>
+                    <input type="text" pInputText id="modele" [(ngModel)]="voiture.Modele" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !voiture.Modele}"/>
+                </div>
+
+
+                <div class="field">
+                    <label for="nbr_portes">Nombre de portes</label>
+                    <input type="number" pInputText id="nbr_portes" [(ngModel)]="voiture.NbrPortes" required min="0" placeholder="Entrez le nombre de portes" />
+                </div>
+                         
+                <div class="field">
+                    <label for="num_chas">Numero de chassis</label>
+                    <input type="text" pInputText id="num_chas" [(ngModel)]="voiture.NumChas" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !voiture.NumChas}"/>
+                </div>             
+                
+            </ng-template>
+            
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button  pButton pRipple [label]="actionLabel" icon="pi pi-check" class="p-button-text" (click)="saveVoiture()"></button>
+            </ng-template>
+        </p-dialog>
+          
+          
+          <p-dialog [(visible)]="deleteVoitureDialog" header="Confirmation" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+              <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+              <span *ngIf="voiture">Voulez-vous supprimer cette voiture ?</span>
+            </div>
+            <ng-template pTemplate="footer">
+              <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Non" (click)="deleteVoitureDialog = false"></button>
+              <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Oui" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+
+    
+        
+    </div>
+</div>
