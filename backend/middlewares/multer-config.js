@@ -75,3 +75,4 @@ export default function (image, size, isArray = false) {
     },
   })[isArray ? "array" : "single"](image, 10); // Permet d'utiliser array si `isArray` est vrai
 }
+

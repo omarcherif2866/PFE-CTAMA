@@ -22,10 +22,11 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                   <tr>
-                      <th pSortableColumn="expert" *ngIf="getUserRole() === 'PersonnePhysique'|| getUserRole() === 'PersonneMorale'">Expert <p-sortIcon field="expert"></p-sortIcon></th>
-                      <th pSortableColumn="client" *ngIf="getUserRole() === 'expert'">Client <p-sortIcon field="client"></p-sortIcon></th>
+                      <th pSortableColumn="expert" *ngIf="getUserRole() === 'PersonnePhysique'|| getUserRole() === 'PersonneMorale' || getUserRole() === 'admin' || getUserRole() === 'gestionnaire_sinistre'">Expert <p-sortIcon field="expert"></p-sortIcon></th>
+                      <th pSortableColumn="client" *ngIf="getUserRole() === 'expert' || getUserRole() === 'admin' || getUserRole() === 'gestionnaire_sinistre'">Client <p-sortIcon field="client"></p-sortIcon></th>
                       <th pSortableColumn="documents">Document <p-sortIcon field="documents"></p-sortIcon></th>
                       <th pSortableColumn="dateAjout">Date d'Ajout <p-sortIcon field="dateAjout"></p-sortIcon></th>
+
                       <th>Devis</th>
                       <th>Action</th>
                   </tr>
@@ -34,13 +35,33 @@
               <ng-template pTemplate="body" let-devisSinistre>
                   <tr>
                       <!-- Affichage du nom de l'expert -->
-                      <td *ngIf="getUserRole() === 'PersonnePhysique'|| getUserRole() === 'PersonneMorale'">{{ devisSinistre.expert?.nom || 'N/A' }}  {{ devisSinistre.expert?.prenom || 'N/A' }}</td>
+                      <!-- <td *ngIf="getUserRole() === 'PersonnePhysique'|| getUserRole() === 'PersonneMorale'">{{ devisSinistre.expert?.nom || 'N/A' }}  {{ devisSinistre.expert?.prenom || 'N/A' }}</td> -->
               
                       <!-- Affichage du client (nom + prénom) -->
-                      <td *ngIf="getUserRole() === 'expert'">{{ devisSinistre.client.nom }} {{ devisSinistre.client.prenom }}</td>
+                      <!-- <td *ngIf="getUserRole() === 'expert'">{{ devisSinistre.client.nom }} {{ devisSinistre.client.prenom }}</td> -->
               
+                      <td *ngIf="getUserRole() === 'PersonnePhysique'|| getUserRole() === 'PersonneMorale' || getUserRole() === 'admin' || getUserRole() === 'gestionnaire_sinistre'">
+                        <span *ngIf="devisSinistre.expert" 
+                              class="client-link" 
+                              (click)="showExpertInfo(devisSinistre.expert._id)">
+                          {{ devisSinistre.expert.nom }} {{ devisSinistre.expert.prenom }}
+                        </span>
+                      </td>
+
+                      <td *ngIf="getUserRole() === 'expert' || getUserRole() === 'admin' || getUserRole() === 'gestionnaire_sinistre'">
+                        <span *ngIf="devisSinistre.client" 
+                              class="client-link" 
+                              (click)="showClientInfo(devisSinistre.client._id)">
+                          {{ devisSinistre.client.nom }} {{ devisSinistre.client.prenom }}
+                        </span>
+                      </td>
                       <!-- Affichage du nom du document -->
-                      <td>{{ devisSinistre.documents.doc }}</td>
+                      <!-- <td>{{ devisSinistre.documents.doc }}</td> -->
+                      <td>
+                        <i class="pi pi-file-pdf pdf-icon" (click)="openPdf(devisSinistre.documents.doc )"></i>
+                        <span class="pdf-link" (click)="openPdf(devisSinistre.documents.doc )">{{ devisSinistre.documents.doc }}</span>
+                      </td>
+                     
               
                       <!-- Affichage de la date au format lisible -->
                       <td>{{ devisSinistre.dateAjout | date:'dd/MM/yyyy HH:mm' }}</td>
@@ -143,5 +164,38 @@
             <iframe [src]="selectedPdf" width="100%" height="500px"></iframe>
 
           </ng-container>
+        </p-dialog>
+
+        <p-dialog header="Informations de l'expert" [(visible)]="displayExpertDialog" [modal]="true" [style]="{width: '50vw'}">
+          <div *ngIf="selectedExpert">
+              <p >
+                  <strong>Nom :</strong> {{ selectedExpert.nom }} <br>
+                  <strong>Prénom :</strong> {{ selectedExpert.prenom }} <br>
+                  <strong>Email :</strong> {{ selectedExpert.email }} <br>
+                  <strong>Téléphone :</strong> {{ selectedExpert.phoneNumber }} <br>
+                  <strong>Region :</strong> {{ selectedExpert.region }} <br>
+                  <strong>Taux :</strong> {{ selectedExpert.taux }} <br>
+
+
+              </p>
+
+          </div>
+        </p-dialog>
+
+        <p-dialog header="Informations du Client" [(visible)]="displayClientDialog" [modal]="true" [style]="{width: '50vw'}">
+          <div *ngIf="selectedClient">
+              <p *ngIf="selectedClient.typeClient === 'PersonnePhysique'">
+                  <strong>Nom :</strong> {{ selectedClient.nom }} <br>
+                  <strong>Prénom :</strong> {{ selectedClient.prenom }} <br>
+                  <strong>Téléphone :</strong> {{ selectedClient.phoneNumber }}<br>
+                  <strong>Identifiant National :</strong> {{ selectedClient.identifiant_national}}<br>
+                  <strong>Email :</strong> {{ selectedClient.email }}<br>
+                  <strong>CIN ou Passeport :</strong> {{ selectedClient.CIN_Pass }}<br>
+
+              </p>
+              <p *ngIf="selectedClient.typeClient === 'PersonneMorale'">
+                  <strong>Matricule Fiscal :</strong> {{ selectedClient.matricule_fiscal }}
+              </p>
+          </div>
         </p-dialog>
   

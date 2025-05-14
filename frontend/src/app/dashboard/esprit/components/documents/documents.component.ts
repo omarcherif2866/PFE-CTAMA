@@ -63,6 +63,7 @@ export class DocumentsComponent implements OnInit {
   displayExpertDialog: boolean = false;
   selectedExpert: any = null;
   selectedExperts: { [key: string]: string } = {}; // Stocke les experts sélectionnés par document
+  referenceSinistres: { [key: string]: string } = {};
 
   constructor(
     private fb: FormBuilder,
@@ -428,6 +429,106 @@ showExpertInfo(expertId: string): void {
 
 getUserRole(): string | null {
   return localStorage.getItem('userRole');
+}
+
+
+
+modifierReference(documentId: string) {
+  if (!documentId || !this.referenceSinistres[documentId]) {
+      console.error("ID ou référence invalide :", documentId, this.referenceSinistres[documentId]);
+      return;
+  }
+  
+  // First get the sinistre ID from the document ID
+  this.sinistreService.getSinistreByDocument(documentId).subscribe(
+      (sinistre: any) => {
+          // Use _id from the response directly, not the getter method
+          const sinistreId = sinistre._id;
+          
+          if (!sinistreId) {
+              console.error("ID du sinistre non trouvé dans la réponse", sinistre);
+              alert("Impossible de trouver l'ID du sinistre");
+              return;
+          }
+          
+          // Then update the reference using the sinistre ID
+          this.sinistreService.updateReference(sinistreId, this.referenceSinistres[documentId]).subscribe(
+              (response) => {
+                  console.log("Référence mise à jour avec succès :", response);
+                  this.messageService.add({
+                    severity: "success",
+                    summary: "Succès",
+                    detail: "Référence Phoenix mise à jour avec succès",
+                    life: 1000
+                });
+              },
+              (error) => {
+                  console.error("Erreur lors de la mise à jour de la référence", error);
+                  this.messageService.add({
+                    severity: "error",
+                    summary: "Erreur",
+                    detail: "Erreur lors de la mise à jour de la référence"
+                });
+              }
+          );
+      },
+      (error) => {
+          console.error("Erreur lors de la récupération du sinistre", error);
+          alert('Erreur lors de la récupération du sinistre');
+      }
+  );
+}
+
+
+
+
+updateSinistreReference(sinistreId: string, newReference: string) {
+  this.sinistreService.updateReference(sinistreId, newReference).subscribe({
+    next: (updatedSinistre) => {
+      console.log('Sinistre mis à jour :', updatedSinistre);
+      alert('Référence mise à jour avec succès');
+    },
+    error: (error) => {
+      console.error('Erreur lors de la mise à jour du sinistre', error);
+      alert('Erreur lors de la mise à jour');
+    }
+  });
+}
+
+
+generateOrdreMission(documentId: string, docName: string) {
+  if (!documentId) {
+    console.error('ID du document non défini');
+    return;
+  }
+
+  console.log('Génération de l\'ordre de mission pour le document ID:', documentId);
+
+  this.expertService.generateOrdeMission(documentId).subscribe({
+    next: (blob: Blob) => {
+      if (blob.size === 0) {
+        console.error('Le fichier PDF reçu est vide');
+        return;
+      }
+
+      // Vérifie que c'est un PDF
+      if (blob.type !== 'application/pdf') {
+        console.warn('Le fichier reçu n\'est pas un PDF', blob.type);
+      }
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `Ordre_de_mission-${docName}`; // ✅ ici on utilise le nom reçu
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    },
+    error: (error) => {
+      console.error('Erreur lors du téléchargement du PDF:', error);
+    }
+  });
 }
 
 

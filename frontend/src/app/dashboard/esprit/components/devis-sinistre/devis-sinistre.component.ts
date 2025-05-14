@@ -6,6 +6,7 @@ import { DevisSinistre } from 'src/app/components/models/devis-sinistre';
 import { Documents } from 'src/app/components/models/documents';
 import { Expert } from 'src/app/components/models/expert';
 import { AuthService } from 'src/app/components/services/auth/auth.service';
+import { DevissinistreService } from 'src/app/components/services/devissinistre.service';
 import { DocumentService } from 'src/app/components/services/document.service';
 import { ExpertService } from 'src/app/components/services/expert.service';
 
@@ -43,11 +44,19 @@ export class DevisSinistreComponent {
   selectedDocument: Documents | null = null;
   cols: any[] = [];
   rowsPerPageOptions = [5, 10, 20];
+  expertInfos: { [key: string]: string } = {};  // Stocke les infos par document ID
+  selectedExpert: any = null;
+  displayExpertDialog: boolean = false;
+
+  
+  displayClientDialog: boolean = false;
+  selectedClient: any = null;
 
   constructor(private expertService: ExpertService,
               private authservice : AuthService,
               private documentService : DocumentService,
               private sanitizer: DomSanitizer,
+              private devisService: DevissinistreService
 
 
   ) {}
@@ -297,7 +306,21 @@ getAllDevis(): void {
         console.error('Erreur lors de la récupération des devis:', error);
       }
     );
-  } 
+  } else if (this.getUserRole()==='admin' || this.getUserRole()==='gestionnaire_sinistre') {
+    this.devisService.getDevisSinistres().subscribe(
+      devis => {
+        console.log("Raw API response:", JSON.stringify(devis));
+
+        this.devisSinistres = devis;
+  
+  
+        console.log("devisSinistres: ", this.devisSinistres);
+      },
+      error => {
+        console.error('Erreur lors de la récupération des devis:', error);
+      }
+    );
+  }
 }
  
 openPdf(pdfPath: string): void {
@@ -312,6 +335,69 @@ openPdf(pdfPath: string): void {
   this.selectedPdfName = pdfPath; 
   this.displayPdfDialog = true;
 }
+
+
+getExpertInfo(expertId: string | null | undefined, docId: string): void {
+  if (!expertId) {
+    console.error("Aucun ID d'expert fourni.");
+    this.expertInfos[docId] = "Il n'y a pas encore un expert affecté";
+    return;
+  }
+
+  this.expertService.getExpertById(expertId).subscribe(
+    (expert: any) => {  
+      if (expert) {
+        this.expertInfos[docId] = `${expert.nom} ${expert.prenom} `;
+      } else {
+        this.expertInfos[docId] = "Expert introuvable";
+      }
+    },
+    (error) => {
+      this.expertInfos[docId] = "Il n'y a pas d'expert affecté pour le moment";
+    }
+  );
+}
+
+showExpertInfo(expertId: string): void {
+  console.log("ID de l'expert reçu :", expertId); // Vérification
+  if (!expertId) {
+      console.error("Aucun ID Expert fourni.");
+      return;
+  }
+
+  this.expertService.getExpertById(expertId).subscribe(
+      (expert: any) => {
+          console.log("Données de l'expert reçues :", expert); // Vérification
+          this.selectedExpert = expert; 
+          this.displayExpertDialog = true; 
+      },
+      (error) => {
+          console.error("Erreur lors du chargement de l'expert :", error);
+          this.selectedExpert = { error: "Erreur lors du chargement du client" };
+          this.displayExpertDialog = true;
+      }
+  );
+}
+
+
+showClientInfo(clientId: string): void {
+  if (!clientId) {
+      console.error("Aucun ID client fourni.");
+      return;
+  }
+
+  this.authservice.getUserProfile(clientId).subscribe(
+      (client: any) => {
+          this.selectedClient = client; // Stocker les données du client
+          this.displayClientDialog = true; // Ouvrir le dialog
+      },
+      (error) => {
+          this.selectedClient = { error: "Erreur lors du chargement du client" };
+          this.displayClientDialog = true;
+      }
+  );
+}
+
 
 
 

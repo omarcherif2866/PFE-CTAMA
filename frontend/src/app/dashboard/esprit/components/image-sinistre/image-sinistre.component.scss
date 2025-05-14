@@ -85,4 +85,24 @@
   }
   
   
+  .pdf-icon {
+    font-size: 1.5rem;
+    color: red;
+    cursor: pointer;
+  }
   
+  .pdf-icon:hover {
+    color: darkred;
+  }
+  .pdf-link {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .pdf-link:hover {
+    color: darkblue;
+  }
+
+  .client-link{
+    text-decoration: underline;
+    cursor: pointer;
+  }

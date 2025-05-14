@@ -406,7 +406,9 @@ export class ConstatComponent {
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
-    link.download = 'constat-accident.pdf';
+    const { insuredNameA, insuredFirstNameA } = this.accidentForm.value;
+    const fileName = `constat-accident-${insuredNameA} ${insuredFirstNameA}.pdf`;
+    link.download = fileName;
     link.click();
 
 

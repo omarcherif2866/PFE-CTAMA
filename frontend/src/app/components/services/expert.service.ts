@@ -112,9 +112,43 @@ export class ExpertService {
     return this.http.get<any>(`http://localhost:9090/expert/count`);
   }
 
-// expert.service.ts
-ajouterImageAfterAccident(id: string, formData: FormData): Observable<any> {
-  return this.http.post(`http://localhost:9090/expert/ajouter-image-after-accident/${id}`, formData);
-}
+
+  ajouterImageAfterAccident(id: string, formData: FormData): Observable<any> {
+    return this.http.post(`http://localhost:9090/expert/ajouter-image-after-accident/${id}`, formData);
+  }
+
+
+  generateOrdeMission(id: string): Observable<Blob> {
+    return this.http.get(`http://localhost:9090/pdf/generate-pdf/${id}`, { 
+      responseType: 'blob',
+      observe: 'response'  // Ceci vous permet d'accéder aux headers si nécessaire
+    }).pipe(
+      map(response => response.body as Blob)
+    );
+  }
+
+
+  envoyerRapport(formData: any): Observable<Blob> {
+    // Utilisation de 'responseType' : 'blob' pour récupérer le PDF en tant que Blob
+    return this.http.post<Blob>('http://localhost:9090/pdf/', formData, {
+      responseType: 'blob' as 'json'  // Cas spécifique de Angular où vous devez caster en 'json'
+    });
+  }
+
+  uploadImages(formData: FormData): Observable<any> {
+    return this.http.post('http://localhost:9090/pdf/upload', formData);
+  }
+
+  getAllRapports(): Observable<any[]> {
+    return this.http.get<any[]>('http://localhost:9090/pdf',);
+  }
+
+  // Obtenir les rapports d'un expert
+  getRapportsByExpert(expertId: string): Observable<any[]> {
+    return this.http.get<any[]>(`http://localhost:9090/pdf/expert/${expertId}`);
+  }
+
+
+  
 
 }

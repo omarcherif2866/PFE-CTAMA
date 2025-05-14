@@ -79,7 +79,7 @@ import { SinistreModule } from './dashboard/esprit/components/sinistre/sinistre.
     ApricoleComponent,
     FrigoComponent,
     PecheComponent,
-    AgenceComponent
+    AgenceComponent,
   ],
   imports: [
     BrowserModule,

@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { AuthService } from '../../services/auth/auth.service';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
     selector: 'app-navbar-style-one',
@@ -13,7 +14,7 @@ export class NavbarStyleOneComponent implements OnInit {
     displaySigninDialog: boolean = false;
     displaySignupDialog: boolean = false;
 
-    constructor(private authService: AuthService,private router:Router
+    constructor(private authService: AuthService,private router:Router, private cdr: ChangeDetectorRef
     ) { }
 
     ngOnInit(): void {
@@ -63,6 +64,15 @@ export class NavbarStyleOneComponent implements OnInit {
         this.displaySigninDialog = true;
       }
 
+      onOpenSigninDialog() {
+        console.log("Événement reçu, affichage du dialog...");
+        this.displaySigninDialog = true;
+        this.cdr.detectChanges();  // Forcer la détection des changements
+
+      }
+      
+      
+      
       onSignInSuccess() {
         this.displaySigninDialog = false; // Fermer le dialogue
       }
@@ -71,6 +81,11 @@ export class NavbarStyleOneComponent implements OnInit {
         // Fermer le dialog de connexion et ouvrir celui d'inscription
         this.displaySigninDialog = false;
         this.displaySignupDialog = true;
+      }
+
+      onCloseDialogOnError() {
+        // Masquer le dialog de connexion
+        this.displaySigninDialog = false;
       }
 
       onSignUpSuccess() {

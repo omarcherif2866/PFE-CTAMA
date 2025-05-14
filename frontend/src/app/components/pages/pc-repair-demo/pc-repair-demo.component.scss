@@ -11,6 +11,12 @@
     filter: drop-shadow(3px 3px 1px var(--orangeColor));
 }
 
+.single-assurance-services-row {
+    display: flex;
+    justify-content: space-between; /* Espace entre les éléments */
+    align-items: center; /* Aligner verticalement */
+    flex-wrap: wrap; /* Permet de passer à la ligne suivante si nécessaire */
+}
 
 .single-assurance-services {
     border-radius: 10%;

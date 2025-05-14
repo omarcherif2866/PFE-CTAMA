@@ -8,6 +8,10 @@ import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { TimelineModule } from "primeng/timeline";
+import { SafeHtmlPipe } from '../../../api/safe-html-pipe';
+import { ToastModule } from 'primeng/toast';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
 	imports: [
@@ -18,8 +22,11 @@ import { TimelineModule } from "primeng/timeline";
         FormsModule,
         ButtonModule,
         TimelineModule,
-        CardModule
+        CardModule,
+		ToastModule,
+		ProgressSpinnerModule,
+		DialogModule
 		],
-	declarations: [ChartsDemoComponent]
+	declarations: [ChartsDemoComponent,SafeHtmlPipe  ]
 })
 export class ChartsDemoModule { }

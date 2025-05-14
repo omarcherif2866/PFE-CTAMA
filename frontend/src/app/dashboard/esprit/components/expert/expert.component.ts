@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { Expert } from 'src/app/components/models/expert';
+import { Expert, Gouvernorat } from 'src/app/components/models/expert';
 import { ExpertService } from 'src/app/components/services/expert.service';
 @Component({
   selector: 'app-expert',
@@ -19,6 +19,7 @@ export class ExpertComponent {
   submitted: boolean = false;
   cols!: any[];
   selectedExpert: Expert[] = [];
+  gouvernoratOptions: { label: string, value: Gouvernorat }[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -29,8 +30,18 @@ export class ExpertComponent {
   ngOnInit() {
     this.initForm();
     this.getAllExperts();
+    this.getGouvernaurat();
+
   }
   
+    getGouvernaurat(){
+      this.gouvernoratOptions = Object.values(Gouvernorat).map(gouv => ({
+        label: gouv,  // Ce qui est affiché dans le menu déroulant
+        value: gouv   // La valeur stockée dans `agence.Gouvernorat`
+      }));
+    
+    }
+
   initForm() {
     this.expertForm = this.fb.group({
       nom: ['', Validators.required],
@@ -49,7 +60,9 @@ export class ExpertComponent {
   }
   
   
-  
+  getUserRole(): string | null {
+    return localStorage.getItem('userRole');
+  }
 
   openNew() {
     this.expert = new Expert('', '', '', '', '', '', 0, '', '', []);
@@ -196,5 +209,7 @@ export class ExpertComponent {
   onGlobalFilter(table: any, event: Event) {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
   }
+
+
 
 }

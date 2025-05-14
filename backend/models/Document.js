@@ -9,6 +9,10 @@ const docSchema = new Schema({
     expert: { type: Schema.Types.ObjectId, ref: 'Experts'},
     status: { type: String, enum: ['En attente', 'Validé', 'Non Validé'], default: 'En attente' },
 
-});
+},
+{
+    timestamps: true
+}
+);
 
 export default model('Documents', docSchema);

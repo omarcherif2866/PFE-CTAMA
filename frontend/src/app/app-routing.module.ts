@@ -82,6 +82,7 @@ const routes: Routes = [
                 { path: 'devis_sinistres', loadChildren: () => import('./dashboard/esprit/components/devis-sinistre/devis-sinistre.module').then(m => m.DevisSinistreModule) },
                 { path: 'addEmplyee', loadChildren: () => import('./dashboard/esprit/components/gestionnaire/gestionnaire.module').then(m => m.GestionnaireModule) },
                 { path: 'rendez-vous', loadChildren: () => import('./dashboard/esprit/components/rdv/rdv.module').then(m => m.RdvModule) },
+                { path: 'expertise/:id', loadChildren: () => import('./dashboard/esprit/components/rapport-expertise/rapport-expertise.module').then(m => m.RapportExpertiseModule) },
 
 
 

@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
 import Sinistres from '../models/Sinistre.js'; // Assurez-vous que le chemin est correct
 import  {generateUniqueReference}  from './utils/reference.js'; // Importez la fonction
+import Clients from '../models/Client.js'; // Import des discriminators
+import Documents from '../models/Document.js';
+import { sendEmail, sendSMS } from './utils/mailing.js';
 
 export async function addOnceSinistres(req, res) {
     try {
@@ -201,3 +204,71 @@ export async function getSinistreByReference(req, res) {
         res.status(500).json({ message: "Erreur interne du serveur" });
     }
 };
+
+export const updateReference = async (req, res) => {
+  try {
+    const { id } = req.params;  // Récupération de l'ID du sinistre
+    const { reference } = req.body; // Nouvelle référence envoyée dans la requête
+
+    // Vérifier si la référence est fournie
+    if (!reference) {
+      return res.status(400).json({ message: "La nouvelle référence est requise." });
+    }
+
+    // Mettre à jour uniquement la référence
+    const updatedSinistre = await Sinistres.findByIdAndUpdate(
+      id,
+      { reference },
+      { new: true } // Retourner le sinistre mis à jour
+    );
+
+    if (!updatedSinistre) {
+      return res.status(404).json({ message: "Sinistre non trouvé." });
+    }
+
+    // Récupérer le document du sinistre pour obtenir l'ID du client
+    const sinistreDocument = updatedSinistre.documents;
+
+    // Trouver le document correspondant au sinistre
+    const document = await Documents.findById(sinistreDocument);
+    if (!document) {
+      return res.status(404).json({ message: "Document non trouvé." });
+    }
+
+    // Trouver le client qui est lié au document
+    const client = await Clients.findById(document.client); // Supposons que la relation client est dans la collection User
+    if (!client) {
+      return res.status(404).json({ message: "Client non trouvé." });
+    }
+
+    // Créer le message de notification
+    const refMessage = `Bonjour, \n\nVotre nouvelle référence de sinistre est ${reference}.\n\nVeuillez consulter votre espace pour plus d'informations.\n\nCordialement,\nL'équipe.`;
+
+    // Gestion des notifications par promesses concurrentes
+    const notificationPromises = [];
+
+    // Envoi de l'email
+    notificationPromises.push(
+      sendEmail(
+        client.email,
+        'Référence sinistre',
+        `${refMessage}`
+      )
+    );
+
+    // Envoi du SMS
+    notificationPromises.push(
+      sendSMS(client.phoneNumber, refMessage)
+    );
+
+    // Attendre toutes les notifications (emails + SMS)
+    await Promise.allSettled(notificationPromises);
+
+    // Retourner la réponse avec le sinistre mis à jour
+    res.status(200).json(updatedSinistre);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+};
+
+

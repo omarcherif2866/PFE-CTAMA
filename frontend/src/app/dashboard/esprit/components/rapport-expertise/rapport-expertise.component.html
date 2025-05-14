@@ -1,0 +1,450 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <!-- <p-messages></p-messages> -->
+
+            <p-toolbar styleClass="mb-4" *ngIf="getUserRole() === 'expert'">
+                <ng-template pTemplate="left">
+                    <div class="my-2" >
+                        <button pButton pRipple label="Rapport d'expertise" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()" ></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
+            <div class="table-container">
+                <p-table #dt [value]="documents" [columns]="cols" responsiveLayout="scroll" [rows]="5" [globalFilterFields]="['nom']" [paginator]="true" [rowsPerPageOptions]="[5,10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} entrées" [(selection)]="selectedDocuments" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                    <ng-template pTemplate="caption">
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                            <h5 class="m-0">Manage rapport</h5>
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
+                            </span>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="rapport">Rapport <p-sortIcon field="rapport"></p-sortIcon></th>
+                            <th pSortableColumn="montant">Montant <p-sortIcon field="montant"></p-sortIcon></th>
+                            <th pSortableColumn="expert" *ngIf="getUserRole() === 'admin' || getUserRole() === 'gestionnaire_sinistre'" >Expert <p-sortIcon field="expert"></p-sortIcon></th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-docs>
+                      <tr>
+                        <td>
+                          <i class="pi pi-file-pdf pdf-icon" (click)="openPdf(docs.rapport[0] )"></i>
+                          <span class="pdf-link" (click)="openPdf(docs.rapport[0] )">{{ docs.rapport[0] }}</span>
+                        </td>
+                        <td>{{ docs.montant }} Dt</td>
+                        <!-- <td>{{ docs.expert?.nom }} {{ docs.expert?.prenom }}</td> -->
+                        <td *ngIf="getUserRole() === 'admin' || getUserRole() === 'gestionnaire_sinistre'">
+                          <span *ngIf="docs.expert" 
+                                class="client-link" 
+                                (click)="showExpertInfo(docs.expert._id)">
+                            {{ docs.expert.nom }} {{ docs.expert.prenom }}
+                          </span>
+                        </td>
+                      </tr>
+                    </ng-template>
+                    
+
+                </p-table>
+            </div>
+        </div>
+
+        <p-dialog [(visible)]="documentDialog" [style]="{width: '600px'}" header="Détails du rapport" [modal]="true" class="p-fluid">
+          <ng-template pTemplate="header">
+            <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
+              <ng-container [ngSwitch]="activeIndex">
+                <i *ngSwitchCase="0" class="pi pi-user" style="font-size: 2.5rem; margin-right: 8px; color: var(--blue-500);"></i>
+                <i *ngSwitchCase="1" class="pi pi-users" style="font-size: 2.5rem; margin-right: 8px; color: var(--blue-500);"></i>
+                <i *ngSwitchCase="2" class="pi pi-car" style="font-size: 2.5rem; margin-right: 8px; color: var(--blue-500);"></i>
+                <i *ngSwitchCase="3" class="pi pi-info-circle" style="font-size: 2.5rem; margin-right: 8px; color: var(--blue-500);"></i>
+                <i *ngSwitchCase="4" class="fas fa-tools" style="font-size: 2.5rem; margin-right: 8px; color: var(--blue-500);"></i>
+                <i *ngSwitchCase="5" class="fas fa-hard-hat" style="font-size: 2.5rem; margin-right: 8px; color: var(--blue-500);"></i>                
+                <i *ngSwitchCase="6" class="fas fa-user-tie" style="font-size: 2.5rem; margin-right: 8px; color: var(--blue-500);"></i>                
+                <i *ngSwitchCase="7" class="pi pi-images" style="font-size: 2.5rem; margin-right: 8px; color: var(--blue-500);"></i>                
+              </ng-container>
+            </div>
+          </ng-template>
+            
+            <p-toast></p-toast>
+            <p-steps [model]="items" [readonly]="false" [activeIndex]="activeIndex" (activeIndexChange)="onActiveIndexChange($event)" class="mb-4" />
+            
+            <form [formGroup]="documentForm" class="p-fluid">
+            
+              <ng-container *ngIf="activeIndex === 0">
+                <!-- === Étape 1 : Assuré(e) & Tiers === -->
+            
+                <h4>Informations de l'Assuré(e)</h4>
+                <div class="p-field">
+                  <label for="assure">Assuré(e)</label>
+                  <input id="assure" type="text" pInputText formControlName="assure" />
+                </div>
+            
+                <div class="p-field">
+                  <label for="contratAssure">Contrat Assuré(e)</label>
+                  <input id="contratAssure" type="text" pInputText formControlName="contratAssure" />
+                </div>
+            
+                <div class="p-field">
+                  <label for="dossier">N° Dossier</label>
+                  <input id="dossier" type="text" pInputText formControlName="dossier" />
+                </div>
+            
+                <div class="p-field">
+                  <label for="immatriculation">Immatriculation</label>
+                  <input id="immatriculation" type="text" pInputText formControlName="immatriculation" />
+                </div>
+                <button pButton type="button" label="Suivant" (click)="nextStep()" class="mt-3"></button>
+              </ng-container>
+              
+              <ng-container *ngIf="activeIndex === 1">
+                <h4>Informations sur le Tiers</h4>
+                <div class="p-field">
+                  <label for="tiers">Tiers</label>
+                  <input id="tiers" type="text" pInputText formControlName="tiers" />
+                </div>
+            
+                <div class="p-field">
+                  <label for="contratTiers">Contrat Tiers</label>
+                  <input id="contratTiers" type="text" pInputText formControlName="contratTiers" />
+                </div>
+            
+                <div class="p-field">
+                  <label for="cieAdv">CIE Adv.</label>
+                  <input id="cieAdv" type="text" pInputText formControlName="cieAdv" />
+                </div>
+            
+                <div class="p-field">
+                  <label for="immatriculationTiers">Immatriculation Véhicule Tiers</label>
+                  <input id="immatriculationTiers" type="text" pInputText formControlName="immatriculationTiers" />
+                </div>
+            
+                <button pButton type="button" label="Suivant" (click)="nextStep()" class="mt-3"></button>
+              </ng-container>
+            
+              <ng-container *ngIf="activeIndex === 2">
+                <!-- === Étape 2 : Véhicule & Autres Infos === -->
+            
+                <h4>Informations sur le Véhicule Expertisé</h4>
+            
+                <div class="p-field">
+                  <label for="marque">Marque</label>
+                  <input id="marque" type="text" pInputText formControlName="marque" />
+                </div>
+            
+                <div class="p-field">
+                  <label for="type">Type</label>
+                  <input id="type" type="text" pInputText formControlName="type" />
+                </div>
+            
+                <div class="p-field">
+                  <label for="puissance">Puissance</label>
+                  <input id="puissance" type="text" pInputText formControlName="puissance" />
+                </div>
+            
+                <div class="p-field">
+                  <label for="indexKm">Index Km</label>
+                  <input id="indexKm" type="text" pInputText formControlName="indexKm" />
+                </div>
+            
+                <div class="p-field">
+                  <label for="genre">Genre</label>
+                  <input id="genre" type="text" pInputText formControlName="genre" />
+                </div>
+            
+                <div class="p-field">
+                  <label for="couleur">Couleur</label>
+                  <input id="couleur" type="text" pInputText formControlName="couleur" />
+                </div>
+            
+                <div class="p-field">
+                  <label for="etatVeh">État Véhicule</label>
+                  <input id="etatVeh" type="text" pInputText formControlName="etatVeh" />
+                </div>
+
+                <div class="p-field">
+                  <label for="energie">Énergie</label>
+                  <input id="energie" type="text" pInputText formControlName="energie" />
+                </div>
+            
+                <div class="p-field">
+                  <label for="numSerie">N° Série</label>
+                  <input id="numSerie" type="text" pInputText formControlName="numSerie" />
+                </div>
+            
+                <div class="p-field">
+                  <label for="date1MC">Date 1° Mise en Circulation</label>
+                  <input id="date1MC" type="date" pInputText formControlName="date1MC" />
+                </div>
+            
+                <div class="p-field">
+                  <label for="circonstance">Circonstance</label>
+                  <input id="circonstance" type="text" pInputText formControlName="circonstance" />
+                </div>
+            
+                <div class="p-field">
+                  <label for="vn">VN</label>
+                  <input id="vn" type="text" pInputText formControlName="vn" />
+                </div>
+            
+                <div class="p-field">
+                  <label for="vv">VV</label>
+                  <input id="vv" type="text" pInputText formControlName="vv" />
+                </div>
+                <button pButton type="button" label="Suivant" (click)="nextStep()" class="mt-3"></button>
+
+              </ng-container>
+              
+              <ng-container *ngIf="activeIndex === 3">
+              
+                <h4>Informations Supplémentaires</h4>
+                <div class="p-field">
+                  <label for="dateExamen">Date d'Examen</label>
+                  <input id="dateExamen" type="date" pInputText formControlName="dateExamen" />
+                </div>
+            
+                <div class="p-field">
+                  <label for="vehExpertise">Véhicule Expertisé</label>
+                  <input id="vehExpertise" type="text" pInputText formControlName="vehExpertise" />
+                </div>
+            
+                <div class="p-field">
+                  <label for="lieuExamen">Lieu d'Examen</label>
+                  <input id="lieuExamen" type="text" pInputText formControlName="lieuExamen" />
+                </div>
+
+                <div class="p-field">
+                  <label for="description">Description</label>
+                  <textarea
+                    id="description"
+                    pInputTextarea
+                    formControlName="description"
+                    rows="4"
+                    maxlength="999"
+                    (input)="onDescriptionChange($event)"></textarea>
+                              
+                  <!-- Affichage du compteur de caractères -->
+                  <div class="character-count">
+                    <small>{{ descriptionLength }} / 999 caractères</small>
+                    <div *ngIf="descriptionLength === 999" class="warning-message">
+                      Vous avez atteint la limite de caractères.
+                    </div>
+                  </div>
+                </div>
+                
+                
+            
+                <div class="p-field">
+                  <label for="mandant">Mandant</label>
+                  <input id="mandant" type="text" pInputText formControlName="mandant" />
+                </div>
+    
+                <div class="p-field">
+                  <label for="agence">Agence</label>
+                  <input id="agence" type="text" pInputText formControlName="agence" />
+                </div>
+
+                <div class="p-field">
+                  <label for="dateAccident"> Date Accident</label>
+                  <input id="dateAccident" type="date" pInputText formControlName="dateAccident" />
+                </div>
+
+                <button pButton type="button" label="Suivant" (click)="nextStep()" class="mt-3"></button>
+              </ng-container>
+            
+              <ng-container *ngIf="activeIndex === 4">
+                <h4>Fournitures</h4>
+              
+                <div class="p-field">
+                  <label for="fournitures">Liste des Fournitures</label>
+                  <ng-container formArrayName="fournitures">
+                    <div *ngFor="let fourniture of fournitures.controls; let i = index" [formGroupName]="i"
+                         class="p-d-flex p-ai-center p-mb-2" style="gap: 0.5rem;">
+              
+                         <input type="text" pInputText formControlName="nom" placeholder="Nom" style="width: 30%; margin-right: 0.5rem;" />
+                         <input type="number" pInputText formControlName="prix" placeholder="Prix (dt)" style="width: 20%; margin-right: 0.5rem;" />
+                         <input type="number" pInputText formControlName="remise" placeholder="Remise (%)" style="width: 20%; margin-right: 0.5rem;" />
+                         
+              
+                      <button type="button" pButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-sm"
+                              (click)="removeFourniture(i)"></button>
+              
+                    </div>
+                  </ng-container>
+                </div>
+              
+                <button type="button" pButton icon="pi pi-plus" label="Ajouter une fourniture"
+                        (click)="addFourniture()" class="p-mt-2 p-mb-3 p-button-sm"></button>
+                
+                <button pButton type="button" label="Suivant" (click)="nextStep()" class="mt-3"></button>
+
+              </ng-container>
+              
+              <ng-container *ngIf="activeIndex === 5">
+                <h4> Main D'oeuve</h4>
+              
+                <div class="p-field">
+                  <label for="mainOeuvres">Liste des Main D'oeuve</label>
+                  <ng-container formArrayName="mainOeuvres">
+                    <div *ngFor="let mainOeuvre of mainOeuvres.controls; let i = index" [formGroupName]="i"
+                         class="p-d-flex p-ai-center p-mb-2" style="gap: 0.5rem;">
+              
+                         <input type="text" pInputText formControlName="nom" placeholder="Nom" style="width: 30%; margin-right: 0.5rem;" />
+                         <input type="number" pInputText formControlName="prix" placeholder="Prix (dt)" style="width: 20%; margin-right: 0.5rem;" />
+                         
+              
+                      <button type="button" pButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-sm"
+                              (click)="removeMainOeuvres(i)"></button>
+              
+                    </div>
+                  </ng-container>
+                </div>
+              
+                <button type="button" pButton icon="pi pi-plus" label="Ajouter une main d'oeuve"
+                        (click)="addMainOeuvres()" class="p-mt-2 p-mb-3 p-button-sm"></button>
+                        
+                <button pButton type="button" label="Suivant" (click)="nextStep()" class="mt-3"></button>
+
+              </ng-container>   
+              
+              <ng-container *ngIf="activeIndex === 6">
+              
+                <h4>Informations Supplémentaires</h4>
+                <div class="p-field">
+                  <label for="OuvDossier"> Ouverture Dossier</label>
+                  <input id="OuvDossier" type="number" pInputText formControlName="OuvDossier" />
+                </div>
+            
+                <div class="p-field">
+                  <label for="enquête">Enquête</label>
+                  <input id="enquête" type="number" pInputText formControlName="enquête" />
+                </div>
+            
+                <div class="p-field">
+                  <label for="Déplacements">Déplacements</label>
+                  <input id="Déplacements" type="number" pInputText formControlName="Déplacements" />
+                </div>                   
+            
+                <div class="p-field">
+                  <label for="Frais2èmeExp">Frais 2ème Exp</label>
+                  <input id="Frais2èmeExp" type="number" pInputText formControlName="Frais2èmeExp" />
+                </div>
+    
+                <div class="p-field">
+                  <label for="Photos">Photos</label>
+                  <input id="Photos" type="number" pInputText formControlName="Photos" />
+                </div>
+
+                <div class="p-field">
+                  <label for="FraisPTTAutres"> Frais PTT et Autres</label>
+                  <input id="FraisPTTAutres" type="number" pInputText formControlName="FraisPTTAutres" />
+                </div>
+
+                <div class="p-field">
+                  <label for="Honoraires">Honoraires</label>
+                  <input id="Honoraires" type="number" pInputText formControlName="Honoraires" />
+                </div>
+                <button pButton type="button" label="Suivant" (click)="nextStep()" class="mt-3"></button>
+
+              </ng-container>
+
+              <ng-container *ngIf="activeIndex === 7">
+                <h4>Images</h4>
+              
+                <div class="mb-3">
+                  <label class="form-label fw-bold">Sélectionner les images :</label>
+                  <input type="file" class="form-control" multiple (change)="onFileSelected($event)" />
+                </div>
+              
+                <div *ngIf="documentForm.get('images')?.value?.length > 0" class="mb-3">
+                  <p class="fw-bold text-secondary"><i class="fas fa-file-image"></i> Fichiers sélectionnés :</p>
+                  <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center"
+                        *ngFor="let file of documentForm.get('images')?.value">
+                      {{ file.name }} ({{ (file.size / 1024).toFixed(2) }} Ko)
+                      <button class="btn btn-sm btn-outline-danger" (click)="removeFile(file)">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </ng-container>
+              
+
+            </form>
+            
+              
+          
+            
+            <ng-template pTemplate="footer">
+                <!-- <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button> -->
+                <button  pButton pRipple [label]="actionLabel" icon="pi pi-check" class="p-button-text" (click)="onSubmit()"></button>
+            </ng-template>
+        </p-dialog>
+          
+          
+        <p-dialog [(visible)]="displayPdfDialog" [modal]="true" [header]="'Aperçu du PDF - ' + selectedPdfName" [style]="{ width: '70vw' }">
+          <ng-container *ngIf="selectedPdf">
+            <iframe [src]="selectedPdf" width="100%" height="500px"></iframe>
+          </ng-container>
+        </p-dialog>
+        
+        <p-dialog header="Informations de l'expert" [(visible)]="displayExpertDialog" [modal]="true" [style]="{width: '50vw'}">
+          <div *ngIf="selectedExpert">
+              <p >
+                  <strong>Nom :</strong> {{ selectedExpert.nom }} <br>
+                  <strong>Prénom :</strong> {{ selectedExpert.prenom }} <br>
+                  <strong>Email :</strong> {{ selectedExpert.email }} <br>
+                  <strong>Téléphone :</strong> {{ selectedExpert.phoneNumber }} <br>
+                  <strong>Region :</strong> {{ selectedExpert.region }} <br>
+                  <strong>Taux :</strong> {{ selectedExpert.taux }} <br>
+
+
+              </p>
+
+          </div>
+        </p-dialog>
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

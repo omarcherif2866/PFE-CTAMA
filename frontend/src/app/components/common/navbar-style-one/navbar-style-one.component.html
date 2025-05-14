@@ -12,6 +12,7 @@
                     <span class="bottom-bar"></span>
                 </span>
             </button>
+
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a href="javascript:void(0)" class="nav-link dropdown-toggle" routerLink="/">Acceuil </a>
@@ -92,7 +93,9 @@
     <app-signin 
       (switchToSignup)="openSignupDialog()"
       (signInSuccess)="onSignInSuccess()" 
-    ></app-signin>
+      (closeDialogOnError)="onCloseDialogOnError()"
+      (onOpenSigninDialog)="onOpenSigninDialog()">
+  </app-signin>
   </ng-template>
 </p-dialog>
 

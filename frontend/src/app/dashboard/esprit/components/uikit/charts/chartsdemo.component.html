@@ -5,7 +5,7 @@
   [value]="gfg" 
   align="alternate"
   layout="horizontal"
-  styleClass="customized-timeline">
+  styleClass="customized-timeline" *ngIf="getUserRole() === 'PersonnePhysique'|| getUserRole() === 'PersonneMorale'">
 
   <ng-template pTemplate="marker" let-event>
     <span
@@ -20,12 +20,85 @@
       style="border-radius: 5%;"
       label="{{event.title}}"
       class="{{event.ButtonColor}}"
-      [routerLink]="event.link"> 
+      [routerLink]="event.link"
+      [ngStyle]="{
+        'background-color': event.color,
+        'border': 'none',
+        'color': 'white'
+      }"> 
+      
     </button>
   </ng-template>
   
 
 </p-timeline>
+
+<div class="flex-row" style="display: flex; flex-direction: row; gap: 1rem;" *ngIf="getUserRole() === 'admin' || getUserRole() === 'gestionnaire_sinistre'">
+    <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+      <div style="flex: 1; margin-bottom: 1rem;">
+        <div class="card flex flex-column align-items-center" style="background-color: #3801ec; height: 100%;">
+          <h5 class="text-left w-full" style="color: white;">Le nombre total de experts:</h5>
+          <h1 class="text-center w-full" style="color: white;">{{ expertsCount }}</h1>
+          <p *ngIf="errorMessage" class="error" style="color: white;">{{ errorMessage }}</p>
+        </div>
+      </div>
+    
+      <div style="flex: 1; margin-bottom: 1rem;">
+        <div class="card flex flex-column align-items-center" style="background-color: #109d00; height: 100%;">
+          <h5 class="text-left w-full" style="color: white;">Le nombre total des clients personnes physiques:</h5>
+          <h1 class="text-center w-full" style="color: white;">{{ ppCount }}</h1>
+          <p *ngIf="errorMessage" class="error" style="color: white;">{{ errorMessage }}</p>
+        </div>
+      </div>
+    
+      <div style="flex: 1; margin-bottom: 1rem;">
+        <div class="card flex flex-column align-items-center" style="background-color: #0088c7; height: 100%;">
+          <h5 class="text-left w-full" style="color: white;">Le nombre total des clients personnes morales:</h5>
+          <h1 class="text-center w-full" style="color: white;">{{ pmCount }}</h1>
+          <p *ngIf="errorMessage" class="error" style="color: white;">{{ errorMessage }}</p>
+        </div>
+      </div>
+    </div>     
+</div>
+<!-- <p-chart type="bar" [data]="chartData" [options]="chartOptions"></p-chart> -->
+
+<div id="chartdiv" style="width: 100%; height: 500px;" *ngIf="getUserRole() === 'admin' || getUserRole() === 'gestionnaire_sinistre'"></div>
+
+
+<div class="flex-row" style="display: flex; flex-direction: row; gap: 1rem;" *ngIf="getUserRole() === 'admin' || getUserRole() === 'gestionnaire_sinistre'">
+  <div style="flex: 0 0 50%; max-width: 50%;" class="chart-container">
+    <div class="card">
+      <h5>Nombre d’ordres de mission par expert</h5>
+      <p-chart type="bar" [data]="chartData" [options]="chartOptions"></p-chart>
+      <div style="width: 100%; text-align: right; margin-top: 1rem;">
+        <button pButton type="button" label="" icon="pi pi-file-excel" (click)="exportOrdresMissionToExcel()" class="p-button-success"></button>
+      </div>
+    </div>
+  </div>
+  
+  <div style="flex: 0 0 50%; max-width: 50%;" class="chart-container">
+    <div class="card flex flex-column align-items-center">
+      <h5 class="text-left w-full">Piéces les plus detectés </h5>
+      <p-chart *ngIf="chartFournitureData" type="pie" [data]="chartFournitureData" [options]="chartFournitureOptions"></p-chart>
+      <div style="width: 100%; text-align: right; margin-top: 1rem;">
+        <button pButton type="button" label="" icon="pi pi-file-excel" (click)="exportFournituresToExcel()" class="p-button-success"></button>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+
+<p-dialog header="Détails de la région" [(visible)]="displayDialog" [modal]="true" [style]="{width: '400px'}">
+  <div *ngIf="selectedRegion">
+    <h3>{{ selectedRegion.name }}</h3>
+    <p><strong>Nombre d'experts :</strong> {{ selectedRegion.count }}</p>
+    <p><strong>Noms :</strong></p>
+    <ul>
+      <li *ngFor="let expert of selectedRegion.experts">{{ expert.nom }}</li>
+    </ul>
+  </div>
+</p-dialog>
 
 
 

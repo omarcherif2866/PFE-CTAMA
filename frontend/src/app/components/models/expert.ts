@@ -1,6 +1,34 @@
 import { Clients } from "./clients";
 import { Documents } from "./documents";
 
+
+export enum Gouvernorat {
+    Ariana = "Ariana",
+    Béja = "Béja",
+    BenArous = "Ben Arous",
+    Bizerte = "Bizerte",
+    Gabès = "Gabès",
+    Gafsa = "Gafsa",
+    Jendouba = "Jendouba",
+    Kairouan = "Kairouan",
+    Kasserine = "Kasserine",
+    Kébili = "Kébili",
+    LeKef = "Le Kef",
+    Mahdia = "Mahdia",
+    LaManouba = "La Manouba",
+    Médenine = "Médenine",
+    Monastir = "Monastir",
+    Nabeul = "Nabeul",
+    Sfax = "Sfax",
+    SidiBouzid = "Sidi Bouzid",
+    Siliana = "Siliana",
+    Sousse = "Sousse",
+    Tataouine = "Tataouine",
+    Tozeur = "Tozeur",
+    Tunis = "Tunis",
+    Zaghouan = "Zaghouan"
+}
+
 export class Expert {
     private _id: string;
     private email: string;
@@ -8,7 +36,7 @@ export class Expert {
     private confirmPassword?: string;
     private image: string;
     private phoneNumber: string;
-    private region: string;
+    private region: Gouvernorat | string;
     private taux: number;
     private nom: string;
     private prenom: string;

@@ -73,7 +73,7 @@
                         <td>
                             <div class="flex">
                                 <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editExpert(expert)"></button>
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteExpert(expert)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteExpert(expert)" *ngIf="getUserRole() === 'admin'"></button>
                             </div>
                         </td>
                     </tr>
@@ -118,10 +118,15 @@
                         </small>
                     </div>
                     <div class="field">
-                        <label for="region">Region</label>
-                        <input type="text" pInputText id="region" formControlName="region" required autofocus 
-                               [ngClass]="{'ng-invalid ng-dirty': submitted && expertForm.get('region')!.invalid}"/>
-                        <small class="ng-dirty ng-invalid" *ngIf="submitted && expertForm.get('region')!.invalid">region est requis.</small>
+                        <label for="gouvernorat">Gouvernorat</label>
+                        <p-dropdown 
+                            id="gouvernorat"
+                            [options]="gouvernoratOptions"
+                            formControlName="region"
+                            placeholder="Sélectionner un gouvernorat"
+                            [showClear]="true"
+                            [filter]="true">
+                        </p-dropdown>
                     </div>
                     <div class="field">
                         <label for="taux">taux</label>

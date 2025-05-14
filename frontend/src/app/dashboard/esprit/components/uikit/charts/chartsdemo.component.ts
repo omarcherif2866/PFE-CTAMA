@@ -1,58 +1,314 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription, debounceTime, forkJoin } from 'rxjs';
-import { LayoutService } from 'src/app/dashboard/layout/service/app.layout.service';
-import { PrimeIcons } from "primeng/api";
+import { Component, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
+import { ExpertService } from 'src/app/components/services/expert.service';
+import { ChartsService } from 'src/app/components/services/charts.service';
+import * as am4core from "@amcharts/amcharts4/core";
+import * as am4maps from "@amcharts/amcharts4/maps";
+import am4geodata_tunisiaHigh from "@amcharts/amcharts4-geodata/tunisiaHigh";
+import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import { AuthService } from 'src/app/components/services/auth/auth.service';
 
+am4core.useTheme(am4themes_animated);
 
 @Component({
     templateUrl: './chartsdemo.component.html',
     styleUrl: './chartsdemo.component.scss'
 
 })
-export class ChartsDemoComponent {
+export class ChartsDemoComponent implements  AfterViewInit, OnDestroy{
 gfg!: any[];
- 
+chartData: any;
+chartOptions: any;
+private chart: am4maps.MapChart | undefined;
+expertsByRegion: any[] = [];
+selectedRegion: any = null;
+displayDialog: boolean = false;
+ppCount: number = 0;
+pmCount: number = 0;
+expertsCount: number = 0;
+chartFournitureData: any;
+chartFournitureOptions: any;
+errorMessage: string | null = null;
+userRole: string | null = null;
+
 ngOnInit() {
   this.gfg = [
       {
           title: "1. Déclarer votre constat",
           Icon: "pi pi-file-edit",
-          color: "#9C27B0",
-          ButtonColor: "p-button-rounded p-button-secondary",
+          color: "#4874ad",
+
            link: "/constat"
       },
       {
           title: "2. Déposer votre constat",
           Icon: "pi pi-file-pdf",
-          color: "#673AB7",
-          ButtonColor: "p-button-rounded p-button-primary",
+          color: "#3f70af",
+
            link: "/documents"
       },
       {
           title: "3. Votre Expert Affecté",
           Icon: "fas fa-user-tie",
-          color: "#FF9800",
-          ButtonColor: "p-button-rounded p-button-success",
+          color: "#2863b1",
+
            link: "/documents"
       },
       {
           title: "4. Rendez-vous avec l'expert",
           Icon: "pi pi-fw pi-calendar-plus",
-          color: "#607D8B",
-          ButtonColor: "p-button-rounded p-button-danger",
+          color: "#1559b3",
+
            link: "/rendez-vous"
       },
       {
           title: "5. Déposer vos devis",
           Icon: "pi pi-file-pdf",
-          color: "#99e2ff",
-          ButtonColor: "p-button-rounded p-button-warning",
+          color: "#0550b3",
+
            link: "/devis_sinistres"
       },
 
   ];
+  this.userRole = this.getUserRole();
+  this.fournitureChart()
+  this.loadChartData(); // pour le graphique
+  this.countClients()
+  this.countExperts()
 }
 
+ngAfterViewInit() {
+    this.chartsService.getExpertsGroupedByRegion().subscribe(data => {
+      this.expertsByRegion = data;
+      this.createMap(data);
+    });
+  }
+
+  constructor(   
+          private expertService: ExpertService,
+          private chartsService: ChartsService,          
+          private UserService: AuthService,          
+          private cdr: ChangeDetectorRef,
+          
+          
+  ) { }
+
+  getUserRole(): string | null {
+    return localStorage.getItem('userRole');
+  }
+
+loadChartData() {
+    this.chartsService.getOrdreMissionStats().subscribe(data => {
+      const labels = data.map(item => item.expert);
+      const counts = data.map(item => item.total);
+  
+      this.chartData = {
+        labels,
+        datasets: [
+          {
+            label: 'Ordres de mission',
+            data: counts,
+            backgroundColor: '#42A5F5'
+          }
+        ]
+      };
+  
+      this.chartOptions = {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top'
+          },
+          title: {
+            display: true,
+            // text: 'Nombre d’ordres de mission par expert'
+          }
+        }
+      };
+    });
+  }
+
+  createMap(data: any[]) {
+    const regionMap: { [key: string]: string } = {
+      'Tunis': 'TN-11',
+      'Ariana': 'TN-12',
+      'Ben Arous': 'TN-13',
+      'Manouba': 'TN-14',
+      'Nabeul': 'TN-21',
+      'Zaghouan': 'TN-22',
+      'Bizerte': 'TN-23',
+      'Béja': 'TN-31',
+      'Jendouba': 'TN-32',
+      'Kef': 'TN-33',
+      'Siliana': 'TN-34',
+      'Kairouan': 'TN-41',
+      'Kasserine': 'TN-42',
+      'Sidi Bouzid': 'TN-43',
+      'Sousse': 'TN-51',
+      'Monastir': 'TN-52',
+      'Mahdia': 'TN-53',
+      'Sfax': 'TN-61',
+      'Gafsa': 'TN-71',
+      'Tozeur': 'TN-72',
+      'Kebili': 'TN-73',
+      'Gabès': 'TN-82',
+      'Médenine': 'TN-83',
+      'Tataouine': 'TN-84'
+    };
+
+    const chart = am4core.create("chartdiv", am4maps.MapChart);
+    chart.geodata = am4geodata_tunisiaHigh as any;
+    chart.projection = new am4maps.projections.Miller();
+    chart.chartContainer.wheelable = false;
+    chart.seriesContainer.draggable = false;
+    chart.seriesContainer.resizable = false;
+    chart.maxZoomLevel = 1; // Empêche le zoom
+    
+    const polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
+    polygonSeries.useGeodata = true;
+
+    polygonSeries.data = data
+      .filter(region => regionMap[region._id])
+      .map(region => ({
+        id: regionMap[region._id],
+        name: region._id,
+        value: region.count,
+        customData: region.experts
+      }));
+
+    polygonSeries.mapPolygons.template.tooltipText = "{name}: {value} experts";
+    polygonSeries.mapPolygons.template.fill = am4core.color("#74B266");
+
+    const hs = polygonSeries.mapPolygons.template.states.create("hover");
+    hs.properties.fill = am4core.color("#367B25");
+
+// Remplacer alert par un dialog
+polygonSeries.mapPolygons.template.events.on("hit", (ev) => {
+    const data = ev.target.dataItem?.dataContext as any;
+    if (data && data.customData && data.customData.length > 0) {
+      this.selectedRegion = {
+        name: data.name,
+        count: data.value,
+        experts: data.customData
+      };
+      this.displayDialog = true;
+    }
+  });
+  
+
+    this.chart = chart;
+  }
+
+  ngOnDestroy() {
+    if (this.chart) {
+      this.chart.dispose();
+    }
+  }
+
+
+  fournitureChart(){
+    this.chartsService.compterFournitures().subscribe(data => {
+      this.prepareChartData(data);
+    });
+  }
+
+  prepareChartData(data: any) {
+    // Préparer les données pour le graphique
+    const labels = Object.keys(data); // Les noms des fournitures
+    const values = Object.values(data); // Le nombre de chaque fourniture
+  
+    // Fonction pour générer une couleur aléatoire
+    const generateRandomColor = () => {
+      const randomColor = Math.floor(Math.random()*16777215).toString(16);
+      return `#${randomColor}`;
+    }
+  
+    // Générer un tableau de couleurs pour chaque option (fourniture)
+    const colors = labels.map(() => generateRandomColor());
+  
+    this.chartFournitureData = {
+      labels: labels,
+      datasets: [
+        {
+          data: values,
+          label: 'Comptage des fournitures',
+          backgroundColor: colors, // Attribution dynamique des couleurs
+          borderColor: '#ffffff',  // Bordure blanche autour des segments (facultatif)
+          borderWidth: 2
+        }
+      ]
+    };
+  
+    this.chartFournitureOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top'
+        }
+      }
+    };
+  }
+  
+
+  countClients() {
+    this.UserService.getClientsCount().subscribe({
+      next: (data) => {
+        this.ppCount = data.PPCount; // Ensure this matches the API response
+        this.pmCount = data.PMCount; // Ensure this matches the API response
+        this.cdr.detectChanges(); // Manually trigger change detection
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération du nombre de clients:', err);
+      }
+    });
+  }
+
+  countExperts() {
+    this.expertService.getExpertsCount().subscribe({
+      next: (data) => {
+        this.expertsCount = data.expertsCount; // Ensure this matches the API response
+        this.cdr.detectChanges(); // Manually trigger change detection
+        console.log(this.expertsCount)
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération du nombre d\'experts:', err);
+      }
+    });
+  }
+
+  exportOrdresMissionToExcel(): void {
+    if (!this.chartData || !this.chartData.labels) return;
+  
+    const wsData = [["Ordres de mission par expert"]];
+    this.chartData.labels.forEach((label: string, index: number) => {
+      wsData.push([label, this.chartData.datasets[0].data[index]]);
+    });
+  
+    this.generateExcel(wsData, 'ordres-mission-experts.xlsx');
+  }
+  
+  exportFournituresToExcel(): void {
+    if (!this.chartFournitureData || !this.chartFournitureData.labels) return;
+  
+    const wsData = [["Pièces détectées"]];
+    this.chartFournitureData.labels.forEach((label: string, index: number) => {
+      wsData.push([label, this.chartFournitureData.datasets[0].data[index]]);
+    });
+  
+    this.generateExcel(wsData, 'pieces-detectees.xlsx');
+  }
+  
+  private generateExcel(data: any[][], filename: string): void {
+    const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(data);
+    const workbook: XLSX.WorkBook = { Sheets: { 'Rapport': worksheet }, SheetNames: ['Rapport'] };
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    FileSaver.saveAs(blob, filename);
+  }
+  
 // implements OnInit, OnDestroy 
 
 //     isSmallScreen = window.innerWidth < 768;

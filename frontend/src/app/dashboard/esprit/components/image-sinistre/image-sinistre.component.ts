@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MessageService } from 'primeng/api';
 import { forkJoin } from 'rxjs';
 import { Clients } from 'src/app/components/models/clients';
@@ -8,6 +9,7 @@ import { ImageSinistre } from 'src/app/components/models/image-sinistre';
 import { AuthService } from 'src/app/components/services/auth/auth.service';
 import { DocumentService } from 'src/app/components/services/document.service';
 import { ExpertService } from 'src/app/components/services/expert.service';
+import { ImagesinistreService } from 'src/app/components/services/imagesinistre.service';
 
 @Component({
   selector: 'app-image-sinistre',
@@ -39,10 +41,24 @@ export class ImageSinistreComponent implements OnInit {
 
   cols: any[] = [];
   rowsPerPageOptions = [5, 10, 20];
+
+  expertInfos: { [key: string]: string } = {};  // Stocke les infos par document ID
+  selectedExpert: any = null;
+  displayExpertDialog: boolean = false;
+
+  selectedPdf: SafeResourceUrl | null = null;
+  selectedPdfName: string = ''; // Stocke le nom du PDF
+  displayPdfDialog: boolean = false;
+  
+  displayClientDialog: boolean = false;
+  selectedClient: any = null;
   constructor(private expertService: ExpertService,
               private authservice : AuthService,
               private documentService : DocumentService,
-              private messageService: MessageService
+              private messageService: MessageService,
+              private imageService: ImagesinistreService,
+              private sanitizer: DomSanitizer,
+
 
 
   ) {}
@@ -276,6 +292,20 @@ export class ImageSinistreComponent implements OnInit {
         console.error('Erreur lors de la récupération des images:', error);
       }
     );
+  } else if (this.getUserRole()==='admin' || this.getUserRole()==='gestionnaire_sinistre') {
+    this.imageService.getImagesSinistres().subscribe(
+      images => {
+        console.log("Raw API response:", JSON.stringify(images));
+
+        this.imageSinistres = images;
+  
+  
+        console.log("imageSinistres: ", this.imageSinistres);
+      },
+      error => {
+        console.error('Erreur lors de la récupération des images:', error);
+      }
+    );
   }
   }
   
@@ -338,5 +368,77 @@ onImageSelect(event: any, imageSinistre: any) {
 }
 
 
+getExpertInfo(expertId: string | null | undefined, docId: string): void {
+  if (!expertId) {
+    console.error("Aucun ID d'expert fourni.");
+    this.expertInfos[docId] = "Il n'y a pas encore un expert affecté";
+    return;
+  }
 
+  this.expertService.getExpertById(expertId).subscribe(
+    (expert: any) => {  
+      if (expert) {
+        this.expertInfos[docId] = `${expert.nom} ${expert.prenom} `;
+      } else {
+        this.expertInfos[docId] = "Expert introuvable";
+      }
+    },
+    (error) => {
+      this.expertInfos[docId] = "Il n'y a pas d'expert affecté pour le moment";
+    }
+  );
+}
+
+showExpertInfo(expertId: string): void {
+  console.log("ID de l'expert reçu :", expertId); // Vérification
+  if (!expertId) {
+      console.error("Aucun ID Expert fourni.");
+      return;
+  }
+
+  this.expertService.getExpertById(expertId).subscribe(
+      (expert: any) => {
+          console.log("Données de l'expert reçues :", expert); // Vérification
+          this.selectedExpert = expert; 
+          this.displayExpertDialog = true; 
+      },
+      (error) => {
+          console.error("Erreur lors du chargement de l'expert :", error);
+          this.selectedExpert = { error: "Erreur lors du chargement du client" };
+          this.displayExpertDialog = true;
+      }
+  );
+}
+
+
+showClientInfo(clientId: string): void {
+  if (!clientId) {
+      console.error("Aucun ID client fourni.");
+      return;
+  }
+
+  this.authservice.getUserProfile(clientId).subscribe(
+      (client: any) => {
+          this.selectedClient = client; // Stocker les données du client
+          this.displayClientDialog = true; // Ouvrir le dialog
+      },
+      (error) => {
+          this.selectedClient = { error: "Erreur lors du chargement du client" };
+          this.displayClientDialog = true;
+      }
+  );
+}
+
+openPdf(pdfPath: string): void {
+  if (!pdfPath) {
+    console.error("Aucun chemin de PDF fourni !");
+    return;
+  }
+
+  const fullPath = `http://localhost:9090/pdf/${pdfPath}`;
+  
+  this.selectedPdf = this.sanitizer.bypassSecurityTrustResourceUrl(fullPath);
+  this.selectedPdfName = pdfPath; 
+  this.displayPdfDialog = true;
+}
 }

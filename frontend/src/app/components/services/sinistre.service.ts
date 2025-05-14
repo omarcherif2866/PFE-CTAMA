@@ -63,4 +63,8 @@ getAllSinistre() {
     return this.http.get<Sinistre>(`http://localhost:9090/sinistre/document/${documentId}`);
   }
 
+  updateReference(id: string, reference: string): Observable<any> {
+    return this.http.put(`http://localhost:9090/sinistre/update-reference/${id}`, { reference });
+  }
+
 }

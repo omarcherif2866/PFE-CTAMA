@@ -61,6 +61,8 @@ export class AuthService {
         let userRole;
         if (user.isEmployee && user.poste === 'admin') {
           userRole = 'admin';
+        } else if (user.isEmployee && user.poste === 'gestionnaire sinistre') {
+          userRole = 'gestionnaire_sinistre';
         } else if (user.isExpert) {
           userRole = 'expert';
         } else {
@@ -103,13 +105,18 @@ export class AuthService {
         case 404:
           errorMessage = 'Adresse email incorrecte. L\'adresse email que vous avez saisie est incorrecte ou n\'existe pas.';
           break;
+          case 403:
+            errorMessage = 'Compte temporairement verrouillé. Réessayez dans 15 minutes.';
+
+            break;
         default:
           errorMessage = `Erreur code ${error.status}: ${error.message}`;
           break;
       }
     }
   
-
+    const customError: any = new Error(errorMessage);
+    customError.status = error.status;
   
     // Throw the error so that the observable chain can be properly handled
     return throwError(() => new Error(errorMessage));
@@ -139,13 +146,18 @@ export class AuthService {
 
   forget(email: string): Observable<any> {
     const credentials = { email };
-    return this.http.post<any>('http://localhost:9090/clients/user/forgotPassword', credentials);
+    return this.http.post<any>('http://localhost:9090/user/forgotPassword', credentials);
   }
 
   resetPassword(userId: string, password: string): Observable<any> {
-    return this.http.put<any>(`http://localhost:9090/clients/api/user/password/${userId}`, { password });
+    return this.http.put<any>(`http://localhost:9090/user/password/${userId}`, { password });
   }
 
+
+  verifyCode(userId: string, code: string) {
+    return this.http.post('http://localhost:9090/user/verify-code', { userId, code });
+  }
+  
 
   getClientsCount(): Observable<any> {
     return this.http.get<any>(`http://localhost:9090/clients/count`);

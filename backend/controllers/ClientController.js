@@ -114,87 +114,8 @@ const signup = async (req, res) => {
 
 
 
-// const signin = async (req, res) => {
-//   const { email, password } = req.body;
-  
-//   try {
-//     // Vérifiez si la clé secrète JWT est définie
-//     if (!process.env.jwt_Secret) {
-//       return res.status(500).json({ message: 'JWT secret key is missing' });
-//     }
-
-//     // Essayer de trouver l'utilisateur en tant que client d'abord
-//     let user = await Clients.findOne({ email });
-//     let isExpert = false;
-    
-//     // Si aucun client n'est trouvé, essayer de trouver en tant qu'expert
-//     if (!user) {
-//       user = await Experts.findOne({ email });
-//       isExpert = true;
-      
-//       // Si l'utilisateur n'existe ni comme client ni comme expert
-//       if (!user) {
-//         return res.status(404).send({ message: 'Utilisateur non trouvé.' });
-//       }
-//     }
-
-//     // Vérifiez si le mot de passe est valide
-//     const passwordIsValid = bcrypt.compareSync(password, user.password);
-    
-//     if (!passwordIsValid) {
-//       return res.status(401).send({ message: 'Mot de passe invalide!' });
-//     }
-
-//     // Génération d'un jeton JWT avec l'information client/expert incluse
-//     const token = jwt.sign(
-//       { 
-//         id: user._id,
-//         isExpert: isExpert 
-//       }, 
-//       process.env.jwt_Secret, 
-//       {
-//         expiresIn: 31557600, // 1 an
-//       }
-//     );
-
-//     // Stockez le jeton dans la session
-//     req.session.token = token;
-
-//     // Préparation de la réponse avec les champs communs
-//     const response = {
-//       _id: user._id,
-//       email: user.email,
-//       token: token,
-//       isExpert: isExpert,
-//       userType: user.typeClient
-//     };
-
-//     // Ajouter des champs spécifiques en fonction du type d'utilisateur
-//     if (!isExpert) {
-//       // Champs spécifiques aux clients
-//       response.typeClient = user.typeClient || "PersonnePhysique"; // Type de client par défaut
-//       response.adresse = user.adresse || null;
-//       response.phoneNumber = user.phoneNumber || null;
-//       response.image = user.image || null;
-//     } else {
-//       // Champs spécifiques aux experts
-//       response.nom = user.nom || null;
-//       response.prenom = user.prenom || null;
-//       response.region = user.region || null;
-//       response.taux = user.taux || null;
-//       response.phoneNumber = user.phoneNumber || null;
-//       response.image = user.image || null;
-//     }
-
-//     // Réponse avec les détails de l'utilisateur et le jeton
-//     res.status(200).json(response);
-    
-//   } catch (error) {
-//     console.error('Error during sign in:', error);
-//     res.status(500).json({ message: 'Erreur lors de la connexion' });
-//   }
-// };
-
+const loginAttempts = {};
+const loginLocks = {};
 
 const signin = async (req, res) => {
   const { email, password } = req.body;
@@ -205,37 +126,58 @@ const signin = async (req, res) => {
       return res.status(500).json({ message: 'JWT secret key is missing' });
     }
 
+    // Vérifier si le compte est verrouillé
+    if (loginLocks[email] && loginLocks[email] > Date.now()) {
+      const remainingLockTime = Math.ceil((loginLocks[email] - Date.now()) / 60000);
+      return res.status(403).json({ 
+        message: `Compte temporairement verrouillé. Réessayez dans ${remainingLockTime} minutes.` 
+      });
+    }
+  
+    // Récupérer le nombre de tentatives (initialiser à 0 si non existant)
+    loginAttempts[email] = loginAttempts[email] || 0;
+
     // Variables pour stocker le type d'utilisateur
     let user = null;
     let isExpert = false;
     let isEmployee = false;
     
-    // Essayer de trouver l'utilisateur en tant que client d'abord
-    user = await Clients.findOne({ email });
-    
-    // Si aucun client n'est trouvé, essayer de trouver en tant qu'expert
+    // Essayer de trouver l'utilisateur dans tous les modèles
+    user = await Clients.findOne({ email }) ||
+           await Experts.findOne({ email }) ||
+           await Employees.findOne({ email });
+
     if (!user) {
-      user = await Experts.findOne({ email });
-      if (user) {
-        isExpert = true;
-      } else {
-        // Si aucun expert n'est trouvé, essayer de trouver en tant qu'employé
-        user = await Employees.findOne({ email });
-        if (user) {
-          isEmployee = true;
-        } else {
-          // Si l'utilisateur n'existe dans aucune catégorie
-          return res.status(404).send({ message: 'Utilisateur non trouvé.' });
-        }
-      }
+      return res.status(404).send({ message: 'Utilisateur non trouvé.' });
+    }
+
+    // Définir le type d'utilisateur
+    if (user instanceof Experts) {
+      isExpert = true;
+    } else if (user instanceof Employees) {
+      isEmployee = true;
     }
 
     // Vérifiez si le mot de passe est valide
     const passwordIsValid = bcrypt.compareSync(password, user.password);
     
     if (!passwordIsValid) {
-      return res.status(401).send({ message: 'Mot de passe invalide!' });
+      // Incrémenter les tentatives de connexion
+      loginAttempts[email]++;
+
+      // Si 3 tentatives atteintes, verrouiller
+      if (loginAttempts[email] >= 3) {
+        loginLocks[email] = Date.now() + 15 * 60 * 1000; // 15 minutes
+      }
+
+      return res.status(401).send({ 
+        message: `Mot de passe invalide! Tentative ${loginAttempts[email]}/3` 
+      });
     }
+
+    // Connexion réussie : réinitialiser les tentatives
+    delete loginAttempts[email];
+    delete loginLocks[email];
 
     // Génération d'un jeton JWT avec l'information utilisateur incluse
     const token = jwt.sign(
@@ -287,7 +229,6 @@ const signin = async (req, res) => {
       response.image = user.image || null;
     }
 
-    // Réponse avec les détails de l'utilisateur et le jeton
     res.status(200).json(response);
     
   } catch (error) {
@@ -295,6 +236,18 @@ const signin = async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de la connexion' });
   }
 };
+
+
+// Nettoyage périodique des tentatives expirées
+setInterval(() => {
+  const now = Date.now();
+  Object.keys(loginLocks).forEach(email => {
+    if (loginLocks[email] < now) {
+      delete loginLocks[email];
+      delete loginAttempts[email];
+    }
+  });
+}, 60000);
 
 
 export function getClientById(req, res) {

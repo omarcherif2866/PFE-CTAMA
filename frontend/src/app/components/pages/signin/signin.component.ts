@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/components/services/auth/auth.service';
 import Swal from 'sweetalert2';
 import { Clients } from '../../models/clients';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-signin',
@@ -17,15 +18,21 @@ export class SigninComponent implements OnInit{
   user!: Clients;
 
   displaySignupDialog: boolean = false;
+  emailError: string = '';
+  passwordError: string = '';
+
   isSwapVisible: boolean = false; // Contrôle la visibilité du swap
   @Output() switchToSignup = new EventEmitter<void>();
   @Output() signInSuccess = new EventEmitter<void>(); // Nouvel événement
+  @Output() closeDialogOnError = new EventEmitter<void>();  // Nouvel événement
+  @Output() onOpenSigninDialog = new EventEmitter<void>();  // Émetteur d'événements
 
 
 
 
   constructor( private formBuilder: FormBuilder, private service: AuthService, private router: Router,
-    private route: ActivatedRoute  ) { }
+    private route: ActivatedRoute, private messageService: MessageService,
+      ) { }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
@@ -35,76 +42,100 @@ export class SigninComponent implements OnInit{
 
   }
 
+  // async signin() {
+  //   if (this.form.valid) {
+  //     const t = {
+  //       email: this.form.value.email,
+  //       password: this.form.value.password,
+  //     };
+  
+  //     try {
+  //       const data = await this.service.signIn(t).toPromise();
+  //       console.log('Sign-in response:', data);
+  
+  //       this.signInSuccess.emit();
+  
+  //       Swal.fire({
+  //         icon: 'success',
+  //         title: 'Vous êtes connecté',
+  //         showConfirmButton: false,
+  //         timer: 1500
+  //       });
 
+  //       // window.location.reload();
+  //       // Rediriger après la connexion réussie
+  //       const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+  //       this.router.navigateByUrl(returnUrl);
+  
+  //     } catch (error) {
+  //       // Stocker le message d'erreur pour l'afficher sous le champ mot de passe
+  //       this.errorMessage = error instanceof Error ? error.message : String(error);
+  //     }
+  //   }
+  // }
+  
+
+  
+  
+  
+  
+  
+  
+  
 
   signin() {
+    // Réinitialiser les messages d'erreur
+    this.emailError = '';
+    this.passwordError = '';
+    
     if (this.form.valid) {
-      const t = {
+      const credentials = {
         email: this.form.value.email,
         password: this.form.value.password,
       };
   
-      this.service.signIn(t).subscribe(
-        (data) => {
-          console.log('Sign-in response:', data);
-          this.user = new Clients(
-            data._id,
-            data.email,
-            "", 
-            "",
-            "", 
-            "", 
-            data.typeClient // Make sure your constructor maps this correctly
-          );
-  
-          localStorage.setItem('user_id', this.user.Id);
-          localStorage.setItem('user_email', this.user.Email);
-          
-          // Determine userRole based on flags
-          let userRole;
-          if (data.isEmployee && data.poste === 'admin') {
-            userRole = 'admin';
-          } else if (data.isExpert) {
-            userRole = 'expert';
-          } else {
-            // Use data.typeClient directly instead of this.user.Type
-            userRole = data.typeClient ;
-          }
-          
-          localStorage.setItem('userRole', userRole);
-          localStorage.setItem('loggedIn', 'true');
-  
-          this.service.setLoggedIn(true);
-  
-          // Émettre l'événement de succès
+      this.service.signIn(credentials).subscribe({
+        next: (data) => {
           this.signInSuccess.emit();
-  
           Swal.fire({
             icon: 'success',
             title: 'Vous êtes connecté',
             showConfirmButton: false,
             timer: 1500
           });
-  
-          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-          this.router.navigateByUrl(returnUrl);
         },
-        (error) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Erreur',
-            text: error,
-          });
+        error: (error) => {
+          const errorMessage = error.message || 'Une erreur est survenue';
+          
+          // Déterminer le type d'erreur en fonction du message
+          if (errorMessage.includes('Mot de passe incorrect')) {
+            this.passwordError = errorMessage;
+          } else if (errorMessage.includes('Adresse email incorrecte')) {
+            this.emailError = errorMessage;
+          } else if (errorMessage.includes('Compte temporairement verrouillé')) {
+            this.signInSuccess.emit();
+            Swal.fire({
+              icon: 'error',
+              title: 'Erreur',
+              text: errorMessage,
+              confirmButtonText: 'OK'
+            });
+          } 
         }
-      );
+      });
+    } else {
+      // Formulaire invalide - marquer les champs comme touchés pour afficher les validations
+      this.form.markAllAsTouched();
     }
   }
+
+  
+  
 
     onSignupClick(): void {
       // Émettre l'événement pour dire au parent d'ouvrir le dialog d'inscription
       this.switchToSignup.emit();
     }
 
-
-
+    
 }

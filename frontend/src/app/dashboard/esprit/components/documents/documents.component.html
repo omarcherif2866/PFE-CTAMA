@@ -1,4 +1,4 @@
-  <div class="grid">
+<div class="grid">
     <div class="col-12">
         <div class="card px-6 py-6">
             <p-toast></p-toast>
@@ -31,7 +31,9 @@
                             <th pSortableColumn="decription">Description  <p-sortIcon field="decription"></p-sortIcon></th>
                             <th pSortableColumn="status" *ngIf=" getUserRole() === 'admin'">Statut <p-sortIcon field="status"></p-sortIcon></th>
                             <th >Modifier etat du sinistre <p-sortIcon ></p-sortIcon></th>
+                            <th pSortableColumn="reference phoenix">reference phoenix <p-sortIcon field="reference phoenix"></p-sortIcon></th>
                             <th >Affecter expert <p-sortIcon ></p-sortIcon></th>
+                            <th *ngIf=" getUserRole() === 'admin'">Ordre de mission <p-sortIcon ></p-sortIcon></th>
 
                         </tr>
                     </ng-template>
@@ -65,10 +67,16 @@
                                 {{document.status}}
                             </span>
                         </td>
+
+                        
                         <td *ngIf=" getUserRole() === 'admin'">
                             <span class="p-column-title">Modifier le statut</span>
                             <p-dropdown [options]="statusOptions" [(ngModel)]="selectedStatuses[document._id]" optionLabel="label"
                                         optionValue="value" (onChange)="onStatusChange(document, $event)" appendTo="body"></p-dropdown>
+                        </td>
+                        <td>
+                            <input pInputText type="text" [(ngModel)]="referenceSinistres[document._id]" placeholder="Nouvelle référence" (keydown.enter)="modifierReference(document._id)" />
+                            <!-- <button (click)="modifierReference(document._id)">Modifier</button> -->
                         </td>
                         <td>
                             <p-dropdown [options]="experts" [(ngModel)]="selectedExperts[document._id]" optionLabel="nom"
@@ -77,7 +85,15 @@
                                         [disabled]="document.status !== 'Validé'">
                             </p-dropdown>
                         </td>
-                        
+                        <td *ngIf=" getUserRole() === 'admin'">
+                            <div class="my-2" >
+                                <button pButton pRipple label="Ordre de mission" icon="pi pi-plus" 
+                                    class="p-button-success mr-2" 
+                                    (click)="generateOrdreMission(document._id,document.Doc)"
+                                    [disabled]="document.status !== 'Validé'">
+                                </button>                            
+                            </div>
+                        </td>
                         
                       </tr>
 
@@ -189,7 +205,6 @@
 
     </div>
 </div>
-
 
 
 

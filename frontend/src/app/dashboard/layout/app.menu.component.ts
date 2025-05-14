@@ -71,7 +71,13 @@ export class AppMenuComponent implements OnInit {
                 
                 ]
                 });
-
+                const userId = localStorage.getItem('user_id');
+                this.model.splice(5, 0, {
+                  label: 'Expertise',
+                  items: [
+                    { label: 'Rapports d\'expertise', icon: 'pi pi-file-pdf', routerLink: [`/expertise`, userId] }
+                  ]
+                });
         } else if (userRole === 'expert'){
             this.model.splice(2, 0,{
                 label: 'Dépôt des documents',
@@ -82,6 +88,13 @@ export class AppMenuComponent implements OnInit {
                 
                 ]
                 });
+                this.model.splice(5, 0,{
+                    label: 'Emplyees',
+                    items: [
+                        { label: 'Ajouter Emplyees', icon: 'fas fa-user-tie', routerLink: ['/addEmplyee'] },
+    
+                    ]
+                },);
             this.model.splice(2, 0,{
                 label: 'Sinistres',
                 items: [
@@ -96,6 +109,14 @@ export class AppMenuComponent implements OnInit {
                         { label: 'Rendez-vous', icon: 'pi pi-fw pi-calendar-plus', routerLink: ['/rendez-vous'] }
                     ]
                 });
+                const expertId = localStorage.getItem('user_id');
+                this.model.splice(5, 0, {
+                  label: 'Expertise',
+                  items: [
+                    { label: 'Rapports d\'expertise', icon: 'pi pi-file-pdf', routerLink: [`/expertise`, expertId] }
+                  ]
+                });
+                
         } else if (userRole === 'PersonnePhysique') {
             this.model.splice(2, 0,{
                 label: 'Déclaration de Sinistres',
@@ -160,7 +181,26 @@ export class AppMenuComponent implements OnInit {
                         { label: 'Rendez-vous', icon: 'pi pi-fw pi-calendar-plus', routerLink: ['/rendez-vous'] }
                     ]
                 });
-        }
+        }        if (userRole === 'gestionnaire_sinistre') {
+
+            this.model.splice(5, 0,{
+                label: 'Expert',
+                items: [
+                    { label: 'Ajouter Expert', icon: 'fas fa-user-tie', routerLink: ['/addExpert'] },
+                    { label: 'Affecter Expert à un Client', icon: 'fas fa-user-tie', routerLink: ['/affectExpertToClient'] }
+
+                ]
+            },);
+
+            this.model.splice(2, 0,{
+                label: 'Constats',
+                items: [
+                    { label: 'Constat', icon: 'pi pi-file-pdf', routerLink: ['/documents'] },
+                
+                ]
+                });
+
+        } 
         
     }
 }

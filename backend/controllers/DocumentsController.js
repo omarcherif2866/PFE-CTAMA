@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 import Documents from '../models/Document.js'; // Assurez-vous que le chemin est correct
+import Clients from '../models/Client.js';
+import { sendEmail, sendSMS } from './utils/mailing.js';
 
 export const createDoc = async (req, res) => {
     try {
@@ -90,6 +92,36 @@ export const updateDocStatus = async (req, res) => {
     if (!doc) {
       return res.status(404).json({ message: 'document non trouvé' });
     }
+
+
+    const client = await Clients.findById(doc.client); // Supposons que la relation client est dans la collection User
+    if (!client) {
+      return res.status(404).json({ message: "Client non trouvé." });
+    }
+
+    // Créer le message de notification
+    const refMessage = `Bonjour, \n\nVotre constat est ${status}.\n\nVeuillez consulter votre espace pour plus d'informations.\n\nCordialement,\nL'équipe.`;
+
+    // Gestion des notifications par promesses concurrentes
+    const notificationPromises = [];
+
+    // Envoi de l'email
+    notificationPromises.push(
+      sendEmail(
+        client.email,
+        'Etat du constat',
+        `${refMessage}`
+      )
+    );
+
+    // Envoi du SMS
+    notificationPromises.push(
+      sendSMS(client.phoneNumber, refMessage)
+    );
+
+    // Attendre toutes les notifications (emails + SMS)
+    await Promise.allSettled(notificationPromises);
+
 
     res.status(200).json(doc);
   } catch (error) {

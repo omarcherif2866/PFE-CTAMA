@@ -58,3 +58,25 @@ export async function sendSMS(phoneNumber, message) {
     throw error; // Propagation de l'erreur pour la gestion dans la fonction appelante
   }
 }
+
+
+export async function sendEmailWithAttachment(to, subject, text, attachment) {
+  // Configuration du transporteur (exemple avec nodemailer)
+  const transporter = nodemailer.createTransport({
+      service: 'gmail', // ou autre service
+      auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASSWORD
+      }
+  });
+
+  const mailOptions = {
+      from: process.env.EMAIL_FROM,
+      to,
+      subject,
+      text,
+      attachments: [attachment]
+  };
+
+  return transporter.sendMail(mailOptions);
+}

@@ -1,0 +1,42 @@
+::ng-deep .p-steps-item {
+
+    text-align: center;
+  }
+
+::ng-deep .p-steps .p-steps-item .p-menuitem-link {
+
+
+  display: flex;
+  cursor: pointer;
+  justify-content: center;
+}
+
+
+.warning-message {
+  color: red;
+  font-weight: bold;
+}
+
+
+
+.pdf-icon {
+  font-size: 1.5rem;
+  color: red;
+  cursor: pointer;
+}
+
+.pdf-icon:hover {
+  color: darkred;
+}
+.pdf-link {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.pdf-link:hover {
+  color: darkblue;
+}
+
+.client-link{
+  text-decoration: underline;
+  cursor: pointer;
+}
