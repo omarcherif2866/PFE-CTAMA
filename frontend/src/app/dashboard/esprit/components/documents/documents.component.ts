@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MessageService } from 'primeng/api';
 import { switchMap } from 'rxjs';
+import { Gouvernorat } from 'src/app/components/models/agence';
 import { Clients } from 'src/app/components/models/clients';
 import { Documents } from 'src/app/components/models/documents';
 import { Expert } from 'src/app/components/models/expert';
@@ -64,6 +65,7 @@ export class DocumentsComponent implements OnInit {
   selectedExpert: any = null;
   selectedExperts: { [key: string]: string } = {}; // Stocke les experts sélectionnés par document
   referenceSinistres: { [key: string]: string } = {};
+  gouvernoratOptions: { label: string, value: Gouvernorat }[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -85,7 +87,8 @@ export class DocumentsComponent implements OnInit {
     this.documentForm = this.fb.group({
       client: [userId, Validators.required], // Assigner l'ID directement
       description: ['', Validators.required],
-      reference: ['', Validators.required]
+      reference: ['', Validators.required],
+      gouvernorat: ['', Validators.required]
 
     });
 
@@ -102,6 +105,8 @@ export class DocumentsComponent implements OnInit {
       // this.getClientInfo();
     // this.loadClients();
     this.getAllExperts();
+    this.getGouvernaurat();
+
   }
 
   openNew() {
@@ -176,7 +181,9 @@ export class DocumentsComponent implements OnInit {
           doc.description,
           doc.status,
           doc.client?.$oid || doc.client,  // Extraction de l'ID du client
-          doc.expert?.$oid || doc.expert   // Extraction de l'ID de l'expert
+          doc.expert?.$oid || doc.expert,   // Extraction de l'ID de l'expert
+          doc.gouvernorat,
+
         ));
   
         console.log("Documents après mapping :", this.documents); // Vérification
@@ -237,6 +244,7 @@ export class DocumentsComponent implements OnInit {
     formData.append('client', this.documentForm.value.client);
     formData.append('description', this.documentForm.value.description);
     formData.append('reference', this.documentForm.value.reference);
+    formData.append('gouvernorat', this.documentForm.value.gouvernorat);
   
     console.log('Référence envoyée:', this.documentForm.value.reference);
   
@@ -531,5 +539,12 @@ generateOrdreMission(documentId: string, docName: string) {
   });
 }
 
+  getGouvernaurat(){
+    this.gouvernoratOptions = Object.values(Gouvernorat).map(gouv => ({
+      label: gouv,  // Ce qui est affiché dans le menu déroulant
+      value: gouv   // La valeur stockée dans `agence.Gouvernorat`
+    }));
+  
+  }
 
 }

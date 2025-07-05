@@ -139,7 +139,7 @@
   position: absolute;
   width: 140px;
   height: auto;
-  left: 41%;
+  left: 48%;
   top: 50%;
   transform: translate(-50%, -50%);
 }
@@ -148,7 +148,7 @@
   position: absolute;
   width: 100px;
   height: auto;
-  left: 35%;
+  left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
 }
@@ -159,7 +159,7 @@
   position: absolute;
   width: 140px;
   height: auto;
-  left: 55%;
+  left: 48%;
   top: 50%;
   transform: translate(-50%, -50%);
 }
@@ -168,7 +168,7 @@
   position: absolute;
   width: 100px;
   height: auto;
-  left: 55%;
+  left: 52%;
   top: 50%;
   transform: translate(-50%, -50%);
 }
@@ -396,28 +396,34 @@ p{
   }
   
   .car-container{
-    display: flex;
-    justify-content: center; /* 🔹 Centre l'image dans son conteneur */
-    align-items: center; /* 🔹 Centre verticalement */
-    width: 100%;
-    max-width: 350px; /* 🔹 Limite la largeur */
-    margin-left: 40%;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    width: 100%; 
+    max-width: 350px;
+    height: 300px;
+    margin-left: 106px ;
+    margin-bottom: 20px;
+    background-color: rgba(255, 255, 255, 0.081);
+    
   }
   
-  .moto-container {
-    display: flex;
-    justify-content: center; /* 🔹 Centre l'image dans son conteneur */
-    align-items: center; /* 🔹 Centre verticalement */
-    width: 100%;
-    max-width: 350px; /* 🔹 Limite la largeur */
-    margin-left: 50%;
-    margin-top: -20%;
-  }
+  .moto-container { /* Fixed the class name from moto-containeB to moto-containerB */
+    display: flex; 
+    justify-content: center; 
+    align-items: center;  
+    width: 100%; 
+    max-width: 350px;
+    height: 300px;
+    margin-left: 100px ;
+    margin-top: -30%;
+    background-color: rgba(255, 255, 255, 0.081);
+  } 
   .car-image {
     position: absolute;
     width: 120px;
     height: auto;
-    left: 30%;
+    left: 33%;
     top: 50%;
     transform: translate(-50%, -50%);
   }
@@ -425,7 +431,7 @@ p{
     position: absolute;
     width: 100px;
     height: auto;
-    left: 26%;
+    left: 36%;
     top: 50%;
     transform: translate(-50%, -50%);
   }
@@ -456,7 +462,7 @@ p{
     width: 100%; 
     max-width: 350px;
     height: 300px;
-    margin-left: 70px ;
+    margin-left: 90px ;
     margin-top: -30%;
     background-color: rgba(255, 255, 255, 0.081);
   } 
@@ -473,9 +479,508 @@ p{
     position: absolute;
     width: 100px;
     height: auto;
-    left: 38%;
+    left: 35%;
     top: 50%;
     transform: translate(-50%, -50%);
   }
 }
+
+
+
+
+// /* Conteneur des véhicules */
+// .vehicles {
+//     display: flex;
+//     justify-content: space-between;
+//   }
+  
+//   /* Style pour le Véhicule A avec fond jaune */
+//   .vehicleA {
+//     width: 110%; /* Ajustez la largeur si nécessaire */
+//     background-color: rgb(253, 252, 232); /* Fond jaune */
+//     padding: 15px; /* Espacement interne */
+//     border-radius: 8px; /* Coins arrondis pour un effet plus doux */
+//     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre légère */
+//   }
+  
+//   /* Style pour le Véhicule B avec fond vert */
+//   .vehicleB {
+//     width: 110%; /* Ajustez la largeur si nécessaire */
+//     background-color: rgb(224, 251, 238); /* Fond vert */
+//     padding: 15px; /* Espacement interne */
+//     border-radius: 8px; /* Coins arrondis pour un effet plus doux */
+//     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre légère */
+//   }
+  
+  
+//   fieldset {
+//     border: 2px solid #ccc;
+//     padding: 15px;
+//     margin-bottom: 15px;
+//     border-radius: 5px;
+//   }
+  
+//   legend {
+//     font-weight: bold;
+//     font-size: 1.2rem;
+//   }
+  
+//   .field-container {
+//     display: flex;
+//     gap: 20px;
+//     align-items: center;
+//     flex-wrap: wrap;
+//   }
+  
+//   .field {
+//     display: flex;
+//     flex-direction: column;
+//     min-width: 200px; /* Largeur minimale pour un bon alignement */
+//   }
+  
+//   label {
+//     font-weight: bold;
+//     margin-bottom: 5px;
+//   }
+  
+//   input,
+//   select {
+//     width: 90%; /* S'assure que l'input prend toute la largeur du conteneur */
+//     padding: 10px;
+//     border: 1px solid #ccc;
+//     border-radius: 5px;
+//     font-size: 1rem;
+//   }
+  
+
+  
+  
+//   .btn-primary {
+//     background: var(--orangeColor);
+//     border: none; /* Supprimez la bordure si nécessaire */
+//     color: white; /* Couleur du texte */
+//     text-transform: uppercase; /* Met le texte en majuscules */
+//     text-align: center;
+//     display: inline-block;
+//     border-radius: 5px; /* Ajustez le radius selon vos besoins */
+//     transition: background 0.3s ease; /* Transition douce pour le hover */
+// }
+
+
+
+
+// .vehiclesB-container { 
+//   display: flex;
+//   justify-content: center;
+//   gap: 20px;
+// } 
+
+
+// .vehiclesA-container { 
+//   display: flex; 
+//   justify-content: center; 
+//   gap: 20px; 
+//   width: 100%;
+// } 
+
+// .car-container { 
+//   position: relative;
+//   overflow: visible;
+//   width: 320px;         /* ⬅️ élargi pour contenir les click-zones */
+//   height: 300px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   background-color: rgba(255, 255, 255, 0.081);
+//   margin: auto; 
+
+// } 
+
+// .moto-container {
+//   position: relative;
+//   overflow: visible;
+//   width: 320px;         /* ⬅️ élargi pour contenir les click-zones */
+//   height: 300px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   background-color: rgba(255, 255, 255, 0.081);
+//   margin: auto;         /* centré horizontalement si besoin */
+// }
+
+
+
+// .car-containerB { 
+//   position: relative;
+//   overflow: visible;
+//   width: 320px;         /* ⬅️ élargi pour contenir les click-zones */
+//   height: 300px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   background-color: rgba(255, 255, 255, 0.081);
+//   margin: auto; 
+
+// } 
+ 
+// .moto-containerB { 
+//   position: relative;
+//   overflow: visible;
+//   width: 320px;         /* ⬅️ élargi pour contenir les click-zones */
+//   height: 300px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   background-color: rgba(255, 255, 255, 0.081);
+//   margin: auto; 
+
+// } 
+
+
+
+
+// .car-image {
+//   position: absolute;
+//   width: 140px;
+//   height: auto;
+//   left: 48%;
+//   top: 50%;
+//   transform: translate(-50%, -50%);
+// }
+
+// .moto-image {
+//   position: absolute;
+//   width: 100px;
+//   height: auto;
+//   left: 51%;
+//   top: 50%;
+//   transform: translate(-50%, -50%);
+// }
+
+
+
+// .car-imageB {
+//   position: absolute;
+//   width: 140px;
+//   height: auto;
+//   left: 48%;
+//   top: 50%;
+//   transform: translate(-50%, -50%);
+// }
+
+// .moto-imageB {
+//   position: absolute;
+//   width: 100px;
+//   height: auto;
+//   left: 50%;
+//   top: 50%;
+//   transform: translate(-50%, -50%);
+// }
+
+// .click-zone {
+//   position: absolute;
+//   width: 60px;
+//   height: 60px;
+//   background: rgba(255, 0, 0, 0.3);
+//   cursor: pointer;
+//   border: 1px dashed black;
+
+// }
+
+// .cross {
+//   position: absolute;
+//   font-size: 20px;
+//   color: red;
+//   left: 50%;
+//   top: 50%;
+//   transform: translate(-50%, -50%);
+  
+// }
+
+
+// .checkbox {
+//   width: 20px;
+//   height: 20px;
+//   margin: 0;
+//   align-self: flex-end; /* Aligne la checkbox avec le bas */
+//   margin-bottom: 13px; /* Ajuste la position verticale pour s'aligner avec l'input */
+// }
+
+// p{
+//   align-self: flex-end; /* Aligne la checkbox avec le bas */
+//   margin-bottom: 11px; /* Ajuste la position verticale pour s'aligner avec l'input */
+// }
+
+// .input-group-A, .input-group-B {
+//   display: flex;
+//   align-items: center;
+//   margin-bottom: 10px;
+//   gap: 10px;
+// }
+
+// .input-group-A {
+//   flex-direction: row;
+// }
+
+// /* Style spécifique pour véhicule B (checkbox à gauche) */
+// .input-group-B {
+//   flex-direction: row;
+// }
+
+// .input-wrapper {
+//   flex: 1;
+//   display: flex;
+//   flex-direction: column;
+// }
+
+
+
+// .texts-between p {
+//   text-align: center;
+// }
+
+
+// .drag-drop-container {
+//   display: flex;
+//   justify-content: space-around;
+//   padding: 20px;
+// }
+
+// .container {
+//   display: flex;  /* ✅ Aligner les éléments côte à côte */
+//   gap: 20px; /* ✅ Espacement entre les panneaux */
+//   align-items: flex-start; /* ✅ Aligner les éléments en haut */
+//   margin-bottom: 20px; /* ✅ Espacement entre la zone de dépôt et le bouton */
+
+// }
+
+// .elements-panell {
+//   width: 150px;
+//   height: calc(3 * 100px); /* Hauteur pour afficher exactement 3 éléments */
+//   border: 1px solid #ccc;
+//   padding: 10px;
+//   background: #f9f9f9;
+//   overflow-y: auto; /* Active le défilement vertical */
+//   overflow-x: hidden; /* Désactive le défilement horizontal */
+//   display: flex;
+//   flex-direction: column;
+//   gap: 10px; /* Espacement entre les éléments */
+// }
+
+
+
+
+// .drag-item {
+//   cursor: grab;
+//   margin: 5px;
+// }
+
+// .elements-panel {
+//   width: 850px;
+//   border: 1px solid #ccc;
+//   padding: 10px;
+//   background: #f9f9f9;
+//   border: 2px dashed #ccc;
+//   display: flex;
+//   flex-wrap: wrap;
+//   align-items: center;
+//   justify-content: center;
+//   min-height: 300px; /* ✅ Ajout d'une hauteur minimale */
+//   position: relative; /* Ajoutez ceci pour positionner les éléments correctement */
+
+// }
+
+
+// .elements-panel h3 {
+//   position: absolute;
+//   top: 5px;
+//   left: 5px;
+//   margin: 0;
+//   padding: 5px 10px;
+//   background: rgba(255, 255, 255, 0.8);
+//   font-size: 16px;
+//   font-weight: bold;
+//   border-radius: 5px;
+// }
+
+
+// .dropped-item {
+//   position: absolute; 
+//   // width: 50px;
+//   // height: 50px;
+//   cursor: move; /* Indication visuelle que l'élément peut être déplacé */
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+
+// // .dropped-item img {
+// //   max-width: 100%;
+// //   max-height: 100%;
+// // }
+
+// .item-container {
+//   display: flex;
+//   flex-direction: row;  /* Afficher l'image et les boutons horizontalement */
+//   align-items: center;  /* Centrer l'image et les boutons verticalement */
+//   // background-color: aqua;
+// }
+
+// .bouttons {
+//   display: flex;
+//   flex-direction: column;  /* Afficher les boutons verticalement */
+//   justify-content: center; /* Centrer les boutons */
+//   align-items: center;
+//   margin-left: 5px;  /* Espacement entre l'image et les boutons */
+// }
+
+
+
+// .rotate-left-button, .remove-button {
+//   background-color: white;
+//   border: 1px solid #ccc;
+//   border-radius: 50%;
+//   padding: 5px;
+//   cursor: pointer;
+//   font-size: 12px;
+//   margin: 2px 0;            /* Espacement vertical entre les boutons */
+// }
+
+// .rotate-left-button:hover, .remove-button:hover {
+//   background-color: #e0e0e0;
+// }
+
+// @media (max-width: 768px) {
+//   .vehicles {
+//     display: flex;
+//     flex-direction: column;
+//   }
+
+//   .vehicleA {
+//     order: 1;
+//     width: 100%;
+//     max-width: 350px;
+//     margin: 0 auto;
+//   }
+
+//   .texts-between p::before {
+//     content: counter(item) ". "; /* Ajouter un numéro automatique */
+//     counter-increment: item; /* Incrémenter le compteur */
+//     position: absolute;
+//     left: 0;
+//     font-size: 14px;
+//     font-weight: bold;
+//     color: #333;
+//   }
+
+//   .texts-between {
+//     order: 2; /* 🔹 Positionner entre A et B */
+//     width: 100%;
+//     max-width: 350px;
+//     margin: 10px auto; /* Espacement pour la lisibilité */
+//     text-align: center;
+//     background: #f8f9fa; /* Optionnel : couleur légère */
+//     padding: 10px;
+//     border-radius: 10px;
+//     counter-reset: item;
+
+//   }
+
+//   .vehicleB {
+//     order: 3;
+//     width: 100%;
+//     max-width: 350px;
+//     margin: 0 auto;
+//   }
+
+//   .vehiclesA-container {
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center; /* 🔹 Centre horizontalement */
+//     width: 100%;
+//   }
+  
+//   .car-container{
+//     display: flex;
+//     justify-content: center; /* 🔹 Centre l'image dans son conteneur */
+//     align-items: center; /* 🔹 Centre verticalement */
+//     width: 100%;
+//     max-width: 350px; /* 🔹 Limite la largeur */
+//     margin-left: 40%;
+//   }
+  
+//   .moto-container {
+//     display: flex;
+//     justify-content: center; /* 🔹 Centre l'image dans son conteneur */
+//     align-items: center; /* 🔹 Centre verticalement */
+//     width: 100%;
+//     max-width: 350px; /* 🔹 Limite la largeur */
+//     margin-left: 50%;
+//     margin-top: -20%;
+//   }
+//   .car-image {
+//     position: absolute;
+//     width: 120px;
+//     height: auto;
+//     left: 30%;
+//     top: 50%;
+//     transform: translate(-50%, -50%);
+//   }
+//   .moto-image {
+//     position: absolute;
+//     width: 100px;
+//     height: auto;
+//     left: 26%;
+//     top: 50%;
+//     transform: translate(-50%, -50%);
+//   }
+
+//   .vehiclesB-container { 
+//     display: flex; 
+//     flex-direction: column; 
+//     align-items: center;
+//     width: 100%; 
+//   } 
+   
+//   .car-containerB { /* Fixed the class name from car-containeB to car-containerB */
+//     display: flex; 
+//     justify-content: center; 
+//     align-items: center; 
+//     width: 100%; 
+//     max-width: 350px;
+//     height: 300px;
+//     margin-left: 101px ;
+//     margin-bottom: 20px;
+//     background-color: rgba(255, 255, 255, 0.081);
+//   } 
+   
+//   .moto-containerB { /* Fixed the class name from moto-containeB to moto-containerB */
+//     display: flex; 
+//     justify-content: center; 
+//     align-items: center;  
+//     width: 100%; 
+//     max-width: 350px;
+//     height: 300px;
+//     margin-left: 70px ;
+//     margin-top: -30%;
+//     background-color: rgba(255, 255, 255, 0.081);
+//   } 
+
+//   .car-imageB {
+//     position: absolute;
+//     width: 120px;
+//     height: auto;
+//     left: 33%;
+//     top: 50%;
+//     transform: translate(-50%, -50%);
+//   }
+//   .moto-imageB {
+//     position: absolute;
+//     width: 100px;
+//     height: auto;
+//     left: 38%;
+//     top: 50%;
+//     transform: translate(-50%, -50%);
+//   }
+// }
 

@@ -149,9 +149,14 @@ export class AuthService {
     return this.http.post<any>('http://localhost:9090/user/forgotPassword', credentials);
   }
 
-  resetPassword(userId: string, password: string): Observable<any> {
-    return this.http.put<any>(`http://localhost:9090/user/password/${userId}`, { password });
-  }
+resetPassword(userId: string, password: string): Observable<any> {
+  return this.http.put<any>(
+    `http://localhost:9090/user/reset-password/${userId}`,
+    { password }, // corps avec clé `password`
+    { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
+  );
+}
+
 
 
   verifyCode(userId: string, code: string) {

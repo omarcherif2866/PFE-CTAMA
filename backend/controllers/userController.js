@@ -31,6 +31,7 @@ const forgotPassword = async (req, res) => {
       return res.status(404).json({ message: 'Utilisateur non trouvé.' });
     }
 
+
     // Générer un code de vérification sécurisé
     const verificationCode = crypto.randomInt(100000, 999999).toString();
 
@@ -39,6 +40,8 @@ const forgotPassword = async (req, res) => {
       code: verificationCode,
       expiresAt: Date.now() + 10 * 60 * 1000 // 10 minutes
     });
+
+    const resetPasswordLink = `http://localhost:4200/resetPassword/${user._id}`;
 
     // Envoi du mail avec le code
     const transporter = nodemailer.createTransport({
@@ -58,6 +61,7 @@ const forgotPassword = async (req, res) => {
         <p>Vous avez demandé la réinitialisation de votre mot de passe.</p>
         <p>Votre code de vérification est : <strong>${verificationCode}</strong></p>
         <p>Ce code est valide pendant 10 minutes.</p>
+        <a href="${resetPasswordLink}">${resetPasswordLink}</a>
         <p>Si vous n'avez pas demandé cette réinitialisation, veuillez ignorer cet e-mail.</p>`
     };
 
@@ -166,6 +170,27 @@ export async function getExpertsGroupedByRegion(req, res) {
   }
 }
 
+export async function getDocumentsGroupedByGouvernorat(req, res) {
+  try {
+    const documents = await Documents.aggregate([
+      {
+        $group: {
+          _id: '$gouvernorat',
+          experts: { $push: '$$ROOT' },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { _id: 1 } // Trier par région (ordre alphabétique)
+      }
+    ]);
+
+    res.status(200).json(documents);
+  } catch (err) {
+    console.error("Erreur lors de la récupération des documents par région :", err);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+}
 
 export async function compterFournitures(req, res) {
   try {
@@ -194,62 +219,41 @@ export async function compterFournitures(req, res) {
 
 
 
-
 const resetPassword = async (req, res) => {
   try {
-    const { resetToken, newPassword, userModel } = req.body; // userModel spécifie le modèle utilisateur (Client, Expert, Employee)
+    const password = req.body.password;
+    const userId = req.params.id;
 
-    if (!resetToken) {
-      return res.status(400).json({ message: 'Le token de réinitialisation est requis.' });
-    }
-    if (!newPassword) {
-      return res.status(400).json({ message: 'Le nouveau mot de passe est requis.' });
-    }
-    if (!userModel) {
-      return res.status(400).json({ message: 'Le modèle utilisateur est requis.' });
+    if (!userId || !password) {
+      return res.status(400).json({ message: 'Champs requis manquants.' });
     }
 
-    // Déterminer le modèle approprié en fonction de userModel
-    let Model;
-    switch (userModel) {
-      case 'Client':
-        Model = require('../models/Client.js'); // Chemin vers votre modèle Client
-        break;
-      case 'Expert':
-        Model = require('../models/Expert.js'); // Chemin vers votre modèle Expert
-        break;
-      case 'Employee':
-        Model = require('../models/Employees.js'); // Chemin vers votre modèle Employee
-        break;
-      default:
-        return res.status(400).json({ message: "Modèle utilisateur invalide." });
-    }
+    console.log('Recherche utilisateur avec ID =', userId);
 
-    // Rechercher l'utilisateur dans le modèle approprié avec le token de réinitialisation
-    const user = await Model.findOne({
-      resetPasswordToken: resetToken,
-      resetPasswordExpires: { $gt: Date.now() },
-    });
+    const models = [Client, Expert, Employee];
+    let user = null;
+
+    for (const Model of models) {
+      user = await Model.findById(userId);
+      if (user) break;
+    }
 
     if (!user) {
-      return res.status(400).json({ message: 'Token de réinitialisation invalide ou expiré.' });
+      return res.status(404).json({ message: 'Utilisateur non trouvé.' });
     }
 
-    console.log("Utilisateur trouvé =>", user.nom);
-    console.log("Nouveau mot de passe =>", newPassword);
-
-    // Mettre à jour le mot de passe de l'utilisateur
-    user.password = bcrypt.hashSync(newPassword, 8);
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpires = undefined;
+    user.password = bcrypt.hashSync(password, 8);
     await user.save();
 
-    res.json({ message: 'Réinitialisation du mot de passe réussie.' });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: 'Erreur lors de la réinitialisation du mot de passe.' });
+    res.json({ message: 'Mot de passe réinitialisé avec succès.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erreur serveur.' });
   }
 };
+
+
+
 
 
 

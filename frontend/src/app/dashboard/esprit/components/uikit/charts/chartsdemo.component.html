@@ -37,6 +37,14 @@
     <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
       <div style="flex: 1; margin-bottom: 1rem;">
         <div class="card flex flex-column align-items-center" style="background-color: #3801ec; height: 100%;">
+          <h5 class="text-left w-full" style="color: white;">Le nombre total de sinistres:</h5>
+          <h1 class="text-center w-full" style="color: white;">{{ documentsCount }}</h1>
+          <p *ngIf="errorMessage" class="error" style="color: white;">{{ errorMessage }}</p>
+        </div>
+      </div>
+
+      <div style="flex: 1; margin-bottom: 1rem;">
+        <div class="card flex flex-column align-items-center" style="background-color: #3801ec; height: 100%;">
           <h5 class="text-left w-full" style="color: white;">Le nombre total de experts:</h5>
           <h1 class="text-center w-full" style="color: white;">{{ expertsCount }}</h1>
           <p *ngIf="errorMessage" class="error" style="color: white;">{{ errorMessage }}</p>
@@ -60,10 +68,21 @@
       </div>
     </div>     
 </div>
+
+
+
 <!-- <p-chart type="bar" [data]="chartData" [options]="chartOptions"></p-chart> -->
+<div class="flex-row" style="display: flex; flex-direction: row; gap: 1rem;" *ngIf="getUserRole() === 'admin' || getUserRole() === 'gestionnaire_sinistre'">
+  <div class="card" style="width: 100%; height: 500px;">
+      <h5>Expert par région</h5>
+      <div id="chartdiv" style="width: 100%; height: 500px;" *ngIf="getUserRole() === 'admin' || getUserRole() === 'gestionnaire_sinistre'"></div>
+  </div>
+    <div class="card" style="width: 100%; height: 500px;">
+      <h5>Sinistre par gouvernaurat</h5>
+      <div id="chartdivSinistre" style="width: 100%; height: 500px;" *ngIf="getUserRole() === 'admin' || getUserRole() === 'gestionnaire_sinistre'"></div>
+  </div>
 
-<div id="chartdiv" style="width: 100%; height: 500px;" *ngIf="getUserRole() === 'admin' || getUserRole() === 'gestionnaire_sinistre'"></div>
-
+</div>
 
 <div class="flex-row" style="display: flex; flex-direction: row; gap: 1rem;" *ngIf="getUserRole() === 'admin' || getUserRole() === 'gestionnaire_sinistre'">
   <div style="flex: 0 0 50%; max-width: 50%;" class="chart-container">
@@ -79,7 +98,7 @@
   <div style="flex: 0 0 50%; max-width: 50%;" class="chart-container">
     <div class="card flex flex-column align-items-center">
       <h5 class="text-left w-full">Piéces les plus detectés </h5>
-      <p-chart *ngIf="chartFournitureData" type="pie" [data]="chartFournitureData" [options]="chartFournitureOptions"></p-chart>
+      <p-chart class="pie-size" *ngIf="chartFournitureData" type="pie" [data]="chartFournitureData" [options]="chartFournitureOptions"></p-chart>
       <div style="width: 100%; text-align: right; margin-top: 1rem;">
         <button pButton type="button" label="" icon="pi pi-file-excel" (click)="exportFournituresToExcel()" class="p-button-success"></button>
       </div>
@@ -100,7 +119,40 @@
   </div>
 </p-dialog>
 
+<div *ngIf="getUserRole() === 'admin' || getUserRole() === 'gestionnaire_sinistre'" style="width: 90%; height: 500px;">
+<!-- <div class="flex gap-2 mb-3">
+  <button (click)="resetFilter()" 
+          class="px-3 py-1 rounded bg-gray-500 text-white hover:bg-gray-700"
+          [ngClass]="{'bg-gray-700': !selectedYear}">
+    Tous
+  </button>
 
+  <button *ngFor="let year of availableYears" 
+          (click)="filterByYear(year)" 
+          class="px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-700"
+          [ngClass]="{'bg-blue-700': selectedYear === year}">
+    {{ year }}
+  </button>
+</div> -->
+
+<div class="mb-3 " style="text-align: right; margin-top: 5%;">
+  <select 
+    (change)="onYearChange($any($event.target).value)" 
+    [value]="selectedYear || ''"
+    style="width: 150px;"
+    class="text-sm px-2 py-1 rounded border border-orange-500 text-orange-600 bg-white hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-orange-400">
+    
+    <option value="">Tous</option>
+    <option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
+  </select>
+</div>
+
+
+
+
+
+<p-chart type="line" [data]="fournitureData" [options]="fournitureOptions" class="h-[30rem]"></p-chart>
+</div>
 
 
 <!-- <div style="display: flex; flex-direction: column; padding: 1rem;">

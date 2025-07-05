@@ -8,6 +8,10 @@ import * as am4maps from "@amcharts/amcharts4/maps";
 import am4geodata_tunisiaHigh from "@amcharts/amcharts4-geodata/tunisiaHigh";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import { AuthService } from 'src/app/components/services/auth/auth.service';
+import { FournituresService } from 'src/app/components/services/fournitures.service';
+import { FournitureEval } from 'src/app/components/models/fourniture-eval';
+import { Gouvernorat } from 'src/app/components/models/agence';
+import { DocumentService } from 'src/app/components/services/document.service';
 
 am4core.useTheme(am4themes_animated);
 
@@ -22,8 +26,10 @@ chartData: any;
 chartOptions: any;
 private chart: am4maps.MapChart | undefined;
 expertsByRegion: any[] = [];
+documentsByGouv: any[] = [];
 selectedRegion: any = null;
 displayDialog: boolean = false;
+documentsCount: number = 0;
 ppCount: number = 0;
 pmCount: number = 0;
 expertsCount: number = 0;
@@ -31,6 +37,12 @@ chartFournitureData: any;
 chartFournitureOptions: any;
 errorMessage: string | null = null;
 userRole: string | null = null;
+
+fournitureData: any;
+fournitureOptions: any;
+availableYears: number[] = [];
+selectedYear: number | null = null;
+originalData: any[] = []; // pour conserver les données originales
 
 ngOnInit() {
   this.gfg = [
@@ -76,6 +88,9 @@ ngOnInit() {
   this.loadChartData(); // pour le graphique
   this.countClients()
   this.countExperts()
+  this.loadChartFournitureEval();
+  this.countSinistre()
+
 }
 
 ngAfterViewInit() {
@@ -83,13 +98,20 @@ ngAfterViewInit() {
       this.expertsByRegion = data;
       this.createMap(data);
     });
+
+    this.chartsService.getDocumentsGroupedByGouvernorat().subscribe(data => {
+      this.documentsByGouv = data;
+      this.createMapSinistre(data);
+    });
   }
 
   constructor(   
           private expertService: ExpertService,
+          private fournitureService: FournituresService,
           private chartsService: ChartsService,          
           private UserService: AuthService,          
           private cdr: ChangeDetectorRef,
+          private documentService: DocumentService,          
           
           
   ) { }
@@ -128,6 +150,84 @@ loadChartData() {
       };
     });
   }
+
+createMapSinistre(data: any[]) {
+  const regionMap: { [key: string]: string } = {
+    'Tunis': 'TN-11',
+    'Ariana': 'TN-12',
+    'Ben Arous': 'TN-13',
+    'Manouba': 'TN-14',
+    'Nabeul': 'TN-21',
+    'Zaghouan': 'TN-22',
+    'Bizerte': 'TN-23',
+    'Béja': 'TN-31',
+    'Jendouba': 'TN-32',
+    'Kef': 'TN-33',
+    'Siliana': 'TN-34',
+    'Kairouan': 'TN-41',
+    'Kasserine': 'TN-42',
+    'Sidi Bouzid': 'TN-43',
+    'Sousse': 'TN-51',
+    'Monastir': 'TN-52',
+    'Mahdia': 'TN-53',
+    'Sfax': 'TN-61',
+    'Gafsa': 'TN-71',
+    'Tozeur': 'TN-72',
+    'Kebili': 'TN-73',
+    'Gabès': 'TN-82',
+    'Médenine': 'TN-83',
+    'Tataouine': 'TN-84'
+  };
+
+  const chart = am4core.create("chartdivSinistre", am4maps.MapChart);
+  chart.geodata = am4geodata_tunisiaHigh as any;
+  chart.projection = new am4maps.projections.Miller();
+  chart.chartContainer.wheelable = false;
+  chart.seriesContainer.draggable = false;
+  chart.seriesContainer.resizable = false;
+  chart.maxZoomLevel = 1;
+
+  const polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
+  polygonSeries.useGeodata = true;
+
+  polygonSeries.data = data
+    .filter(gouvernorat => regionMap[gouvernorat._id])
+    .map(gouvernorat => ({
+      id: regionMap[gouvernorat._id],
+      name: gouvernorat._id,
+      value: gouvernorat.count,
+      customData: gouvernorat.documents
+    }));
+
+  polygonSeries.mapPolygons.template.tooltipText = "{name}: {value} sinistres";
+  polygonSeries.mapPolygons.template.fill = am4core.color("#74B266");
+
+  // 🎨 Dégradé automatique : clair → foncé selon la valeur
+  polygonSeries.heatRules.push({
+    property: "fill",
+    target: polygonSeries.mapPolygons.template,
+    min: am4core.color("#f58f8f"), // clair (peu de sinistres)
+    max: am4core.color("#ff0000")  // foncé (bcp de sinistres)
+  });
+
+  const hs = polygonSeries.mapPolygons.template.states.create("hover");
+  hs.properties.fill = am4core.color("#ff0000");
+
+  polygonSeries.mapPolygons.template.events.on("hit", (ev) => {
+    const data = ev.target.dataItem?.dataContext as any;
+    if (data && data.customData && data.customData.length > 0) {
+      this.selectedRegion = {
+        name: data.name,
+        count: data.value,
+        experts: data.customData
+      };
+      this.displayDialog = true;
+    }
+  });
+
+  this.chart = chart;
+}
+
 
   createMap(data: any[]) {
     const regionMap: { [key: string]: string } = {
@@ -240,15 +340,34 @@ polygonSeries.mapPolygons.template.events.on("hit", (ev) => {
       ]
     };
   
-    this.chartFournitureOptions = {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'top'
+this.chartFournitureOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      position: 'top',
+      onClick: (e: any, legendItem: any, legend: any) => {
+        const index = legendItem.index;
+        const ci = legend.chart;
+        const meta = ci.getDatasetMeta(0);
+        const alreadyActive = meta.data[index].hidden === false;
+
+        // Masquer tous les autres sauf celui cliqué
+        meta.data.forEach((item: any, i: number) => {
+          item.hidden = i === index ? false : true;
+        });
+
+        // Si l'élément était déjà actif seul, tout réafficher
+        if (alreadyActive) {
+          meta.data.forEach((item: any) => item.hidden = false);
         }
+
+        ci.update();
       }
-    };
+    }
+  }
+};
+
   }
   
 
@@ -274,6 +393,19 @@ polygonSeries.mapPolygons.template.events.on("hit", (ev) => {
       },
       error: (err) => {
         console.error('Erreur lors de la récupération du nombre d\'experts:', err);
+      }
+    });
+  }
+
+  countSinistre() {
+    this.documentService.getDocumentsCount().subscribe({
+      next: (data) => {
+        this.documentsCount = data.documentsCount; // Ensure this matches the API response
+        this.cdr.detectChanges(); // Manually trigger change detection
+        console.log(this.documentsCount)
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération du nombre de sinistres:', err);
       }
     });
   }
@@ -309,6 +441,186 @@ polygonSeries.mapPolygons.template.events.on("hit", (ev) => {
     FileSaver.saveAs(blob, filename);
   }
   
+   
+    
+    
+loadChartFournitureEval(): void {
+  this.fournitureService.getFournituresEval().subscribe((res: any[]) => {
+    this.originalData = res;
+
+    // Extraire les années disponibles
+    this.availableYears = [...new Set(res.map(item => 
+      new Date(item.createdAt?.$date || item.createdAt).getFullYear()
+    ))].sort((a, b) => a - b);
+
+    // Grouper les données
+    const groupedData: {
+      [fournitureName: string]: { dates: string[], prix: number[] }
+    } = {};
+
+    res.forEach(item => {
+      const fournitureName = item.fourniture?.nom || 'Inconnu';
+      const dateStr = item.createdAt?.$date || item.createdAt;
+      const dateObj = new Date(dateStr);
+      const date = dateObj.toLocaleDateString();
+      const prix = parseFloat(item.prix);
+
+      // Filtrage par année sélectionnée
+      if (this.selectedYear && dateObj.getFullYear() !== this.selectedYear) {
+        return;
+      }
+
+      if (!groupedData[fournitureName]) {
+        groupedData[fournitureName] = { dates: [], prix: [] };
+      }
+
+      groupedData[fournitureName].dates.push(date);
+      groupedData[fournitureName].prix.push(prix);
+    });
+
+    // Fusion et tri des dates
+    const allDatesSet = new Set<string>();
+    Object.values(groupedData).forEach(group => {
+      group.dates.forEach(date => allDatesSet.add(date));
+    });
+    const sortedLabels = Array.from(allDatesSet).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
+    // Création des datasets
+    const datasets = Object.entries(groupedData).map(([fournitureName, group]) => {
+      const color = this.getColorFromString(fournitureName);
+
+      const dataAligned = sortedLabels.map(label => {
+        const indexInGroup = group.dates.indexOf(label);
+        return indexInGroup !== -1 ? group.prix[indexInGroup] : null;
+      });
+
+      return {
+        label: fournitureName,
+        data: dataAligned,
+        fill: false,
+        borderColor: color,
+        tension: 0.4
+      };
+    });
+
+    this.fournitureData = {
+      labels: sortedLabels,
+      datasets
+    };
+
+    this.fournitureOptions = {
+      responsive: true,
+      plugins: {
+        legend: { display: true },
+        tooltip: {
+          mode: 'nearest',
+          intersect: true,
+          callbacks: {
+            label: (tooltipItem: any) => {
+              const value = tooltipItem.formattedValue;
+              const label = tooltipItem.dataset.label;
+              return `${label}: ${value} DT`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { title: { display: true, text: 'Date' } },
+        y: { title: { display: true, text: 'Prix (DT)' } }
+      }
+    };
+  });
+}
+
+
+
+
+getColorFromString(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = '#';
+  for (let i = 0; i < 3; i++) {
+    const value = (hash >> (i * 8)) & 0xFF;
+    color += ('00' + value.toString(16)).slice(-2);
+  }
+
+  return color;
+}
+
+filterByYear(year: number): void {
+  this.selectedYear = year;
+  const filtered = this.originalData.filter(item => {
+    const date = new Date(item.createdAt?.$date || item.createdAt);
+    return date.getFullYear() === year;
+  });
+  this.buildChartData(filtered);
+}
+
+resetFilter(): void {
+  this.selectedYear = null;   // ou undefined selon ton initialisation
+  this.buildChartData(this.originalData);
+}
+
+
+buildChartData(data: any[]): void {
+  const groupedData: { [fournitureName: string]: { dates: string[], prix: number[] } } = {};
+
+  data.forEach(item => {
+    const fournitureName = item.fourniture?.nom || 'Inconnu';
+    const dateStr = item.createdAt?.$date || item.createdAt;
+    const date = new Date(dateStr).toLocaleDateString();
+    const prix = parseFloat(item.prix);
+
+    if (!groupedData[fournitureName]) {
+      groupedData[fournitureName] = { dates: [], prix: [] };
+    }
+
+    groupedData[fournitureName].dates.push(date);
+    groupedData[fournitureName].prix.push(prix);
+  });
+
+  const allDatesSet = new Set<string>();
+  Object.values(groupedData).forEach(group => {
+    group.dates.forEach(date => allDatesSet.add(date));
+  });
+  const sortedLabels = Array.from(allDatesSet).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
+  const datasets = Object.entries(groupedData).map(([fournitureName, group]) => {
+    const color = this.getColorFromString(fournitureName);
+    const dataAligned = sortedLabels.map(label => {
+      const index = group.dates.indexOf(label);
+      return index !== -1 ? group.prix[index] : null;
+    });
+
+    return {
+      label: fournitureName,
+      data: dataAligned,
+      fill: false,
+      borderColor: color,
+      tension: 0.4
+    };
+  });
+
+  this.fournitureData = {
+    labels: sortedLabels,
+    datasets
+  };
+}
+
+onYearChange(value: string): void {
+  if (value === '') {
+    this.selectedYear = null;
+    this.buildChartData(this.originalData);
+  } else {
+    this.selectedYear = +value;  // convertir en number
+    this.filterByYear(this.selectedYear);
+  }
+}
+
+
 // implements OnInit, OnDestroy 
 
 //     isSmallScreen = window.innerWidth < 768;
@@ -1069,11 +1381,7 @@ polygonSeries.mapPolygons.template.events.on("hit", (ev) => {
 //   });
 // }
 
-
-    
-    
-    
-  }
+}
     
 
     

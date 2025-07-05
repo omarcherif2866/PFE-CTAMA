@@ -5,7 +5,7 @@
             <p-toolbar styleClass="mb-4">
                 <ng-template pTemplate="left">
                     <div class="my-2">
-                        <button pButton pRipple label="Ajouter un employee" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+                        <button pButton pRipple label="Ajouter un employé" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
                     </div>
                 </ng-template>
 
@@ -86,7 +86,12 @@
 
 
 
-        <p-dialog [(visible)]="employeeDialog" [style]="{width: '450px'}" header="Détails du commercial" [modal]="true" class="p-fluid">
+        <p-dialog [(visible)]="employeeDialog" [style]="{width: '450px'}" header="Détails de l'employé" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="header">
+                <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
+                    <i class="fas fa-user-tie" style="font-size: 2.5rem; margin-right: 8px; color: var(--orangeColor);"></i>
+                </div>
+            </ng-template>
             <ng-template pTemplate="content">
                 <form [formGroup]="employeeForm" (ngSubmit)="saveEmloyees()">
                     <div class="field">
@@ -160,7 +165,7 @@
         <p-dialog [(visible)]="deleteEmployeeDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
               <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-              <span *ngIf="employee">Vous voulez supprimer ce employee ?</span>
+              <span *ngIf="employee">Vous voulez supprimer cet employé ?</span>
             </div>
             <ng-template pTemplate="footer">
               <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Non" (click)="deleteEmployeeDialog = false"></button>

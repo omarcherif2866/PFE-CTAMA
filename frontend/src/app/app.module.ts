@@ -51,6 +51,7 @@ import { GestionnaireModule } from './dashboard/esprit/components/gestionnaire/g
 import { DocumentsModule } from './dashboard/esprit/components/documents/documents.module';
 import { ConstatModule } from './dashboard/esprit/components/constat/constat.module';
 import { SinistreModule } from './dashboard/esprit/components/sinistre/sinistre.module';
+import { FaqComponent } from './components/pages/faq/faq.component';
 
 @NgModule({
   declarations: [
@@ -80,6 +81,7 @@ import { SinistreModule } from './dashboard/esprit/components/sinistre/sinistre.
     FrigoComponent,
     PecheComponent,
     AgenceComponent,
+    FaqComponent
   ],
   imports: [
     BrowserModule,

@@ -33,7 +33,7 @@ export class AppMenuComponent implements OnInit {
 
         ];
 
-        if (userRole === 'admin') {
+        if (userRole === 'admin' || userRole === 'gestionnaire_sinistre') {
             this.model.splice(5, 0,{
                 label: 'Actualites',
                 items: [
@@ -57,7 +57,7 @@ export class AppMenuComponent implements OnInit {
             this.model.splice(5, 0,{
                 label: 'Emplyees',
                 items: [
-                    { label: 'Ajouter Emplyees', icon: 'fas fa-user-tie', routerLink: ['/addEmplyee'] },
+                    { label: 'Ajouter Employé', icon: 'fas fa-user-tie', routerLink: ['/addEmplyee'] },
 
                 ]
             },);
@@ -78,6 +78,13 @@ export class AppMenuComponent implements OnInit {
                     { label: 'Rapports d\'expertise', icon: 'pi pi-file-pdf', routerLink: [`/expertise`, userId] }
                   ]
                 });
+                this.model.splice(2, 0,{
+                label: 'Sinistres',
+                items: [
+                    { label: 'Sinistres', icon: 'fas fa-skull-crossbones', routerLink: ['/sinistres'] },
+]
+    
+                },);
         } else if (userRole === 'expert'){
             this.model.splice(2, 0,{
                 label: 'Dépôt des documents',
@@ -181,7 +188,7 @@ export class AppMenuComponent implements OnInit {
                         { label: 'Rendez-vous', icon: 'pi pi-fw pi-calendar-plus', routerLink: ['/rendez-vous'] }
                     ]
                 });
-        }        if (userRole === 'gestionnaire_sinistre') {
+        } if (userRole === 'gestionnaire_sinistre') {
 
             this.model.splice(5, 0,{
                 label: 'Expert',

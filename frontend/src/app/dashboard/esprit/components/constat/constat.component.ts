@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { PDFDocument, PDFFont, PDFPage, RGB, rgb, StandardFonts } from 'pdf-lib'; // Importez StandardFonts pour les polices standard
 import html2canvas from 'html2canvas';
 import Swal from 'sweetalert2';
@@ -37,24 +37,24 @@ export class ConstatComponent {
 
   vehiclesZones: Record<VehicleKey, { x: number; y: number; clicked: boolean }[]> = {
     vehicleA_car: [
-      { x: -9, y: 40, clicked: false },
-      { x: 60, y: 40, clicked: false },
-      { x: 130, y: 40, clicked: false },
-      { x: -9, y: 120, clicked: false },
-      { x: 130, y: 120, clicked: false },
-      { x: -9, y: 200, clicked: false },
-      { x: 60, y: 200, clicked: false },
-      { x: 130, y: 200, clicked: false },
+      { x: 0, y: 40, clicked: false },
+      { x: 70, y: 40, clicked: false },
+      { x: 140, y: 40, clicked: false },
+      { x: 0, y: 120, clicked: false },
+      { x: 140, y: 120, clicked: false },
+      { x: 0, y: 200, clicked: false },
+      { x: 70, y: 200, clicked: false },
+      { x: 140, y: 200, clicked: false },
     ],
     vehicleA_moto: [
-      { x: -26, y: 40, clicked: false },
-      { x: 44, y: 40, clicked: false },
-      { x: 114, y: 40, clicked: false },
-      { x: -26, y: 120, clicked: false },
-      { x: 114, y: 120, clicked: false },
-      { x: -26, y: 200, clicked: false },
-      { x: 44, y: 200, clicked: false },
-      { x: 114, y: 200, clicked: false },
+      { x: 0, y: 40, clicked: false },
+      { x: 75, y: 40, clicked: false },
+      { x: 149, y: 40, clicked: false },
+      { x: 0, y: 120, clicked: false },
+      { x: 149, y: 120, clicked: false },
+      { x: 0, y: 200, clicked: false },
+      { x: 75, y: 200, clicked: false },
+      { x: 149, y: 200, clicked: false },
     ],
     
     vehicleB_car: [
@@ -68,14 +68,14 @@ export class ConstatComponent {
       { x: 140, y: 200, clicked: false },
     ],
     vehicleB_moto: [
-      { x: 16, y: 40, clicked: false },
-      { x: 85, y: 40, clicked: false },
-      { x: 155, y: 40, clicked: false },
-      { x: 16, y: 120, clicked: false },
-      { x: 155, y: 120, clicked: false },
-      { x: 16, y: 200, clicked: false },
-      { x: 85, y: 200, clicked: false },
-      { x: 155, y: 200, clicked: false },
+      { x: 5, y: 40, clicked: false },
+      { x: 75, y: 40, clicked: false },
+      { x: 148, y: 40, clicked: false },
+      { x: 5, y: 120, clicked: false },
+      { x: 148, y: 120, clicked: false },
+      { x: 5, y: 200, clicked: false },
+      { x: 75, y: 200, clicked: false },
+      { x: 148, y: 200, clicked: false },
     ],
   };
 
@@ -115,7 +115,7 @@ export class ConstatComponent {
       driverLicenseIssuedDateA: ['', Validators.required], // ✅ Date de délivrance du permis ajoutée
       // Informations sur le véhicule A
       vehicleRegistrationA: ['', Validators.required],
-      vehicleBrandA: ['', Validators.required],
+      vehicleBrandA: ['', [Validators.required, this.containsCommaValidator]],
       vehicleModelA: ['', Validators.required], // ✅ Modèle du véhicule ajouté
       vehicleColorA: ['', Validators.required], // ✅ Couleur du véhicule ajoutée    
       // Informations sur l'assuré
@@ -145,7 +145,8 @@ export class ConstatComponent {
       driverLicenseIssuedDateB: ['', Validators.required], // ✅ Date de délivrance du permis ajoutée
       // Informations sur le véhicule A
       vehicleRegistrationB: ['', Validators.required],
-      vehicleBrandB: ['', Validators.required],
+      vehicleBrandB: ['', [Validators.required, this.containsCommaValidator]],
+
       vehicleModelB: ['', Validators.required], // ✅ Modèle du véhicule ajouté
       vehicleColorB: ['', Validators.required], // ✅ Couleur du véhicule ajoutée    
       // Informations sur l'assuré
@@ -187,31 +188,6 @@ export class ConstatComponent {
 
 
   async createPdf() {
-
-    // const validation = this.dateValidator(this.accidentForm);
-  
-    // if (validation !== null) {
-    //   // Si la validation échoue, afficher un message d'erreur dans Swal
-    //   const validationMessages = [];
-  
-    //   if (validation.invalidDateRange) {
-    //     validationMessages.push('La date de l’accident ne respecte pas les plages de validité de votre contrat.');
-    //   }
-  
-    //   // Afficher le message d'erreur avec Swal
-    //   Swal.fire({
-    //     icon: 'error',
-    //     title: 'Erreur de validation',
-    //     text: validationMessages.join(', '),
-    //   });
-    //   return; // Empêcher la génération du PDF si la validation échoue
-    // }
-
-
-
-    // console.log('Données du formulaire avant partage:', this.accidentForm.value); // Journal de débogage
-    // this.sharedService.updateFormData(this.accidentForm.value);
-
 
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([600, 800]);
@@ -641,12 +617,12 @@ async captureVehicleImage(page: PDFPage, pdfDoc: PDFDocument) {
 
   // Capture et ajout des images pour les containers A
   for (const container of Array.from(vehicleAContainers)) {
-      await captureAndDrawImage(container as HTMLElement, 60, 24); // Coordonnées pour A
+      await captureAndDrawImage(container as HTMLElement, 58, 24); // Coordonnées pour A
   }
 
   // Capture et ajout des images pour les containers B
   for (const container of Array.from(vehicleBContainers)) {
-      await captureAndDrawImage(container as HTMLElement, 400, 24); // Coordonnées pour B
+      await captureAndDrawImage(container as HTMLElement, 420, 24); // Coordonnées pour B
   }
 }
 
@@ -831,17 +807,16 @@ async captureCroquiImage(page: PDFPage, pdfDoc: PDFDocument) {
       const height = img.height * heightScale;
 
       // Calculer la position X pour centrer l'image sur la page (600px est la largeur de la page)
-      const centerX = (590 - width) / 2;
 
       // Placer l'image sur la page, plus haut avec y ajusté
       page.drawImage(img, { 
-        x: centerX,  // Centrer horizontalement
+        x: 190,  // Centrer horizontalement
         y: 70,       // Ajuster la position verticale (plus haut)
         width,
         height
       });
 
-      console.log(`✅ Image placée aux coordonnées x: ${centerX}, y: 30`);
+      
     } catch (error) {
       console.error("❌ Erreur détaillée lors de la capture:", error);
     }
@@ -849,7 +824,7 @@ async captureCroquiImage(page: PDFPage, pdfDoc: PDFDocument) {
 
   // Capture et dessin de toutes les images des éléments trouvés
   for (const container of Array.from(Croqui)) {
-    await captureAndDrawImage(container as HTMLElement, 10, -25);
+    await captureAndDrawImage(container as HTMLElement, 10, 25);
   }
 }
 
@@ -868,5 +843,20 @@ mapApiResponseToSinistre(data: any): Sinistre {
   );
 }
 
+containsCommaValidator(control: AbstractControl): ValidationErrors | null {
+  const value = control.value;
+  if (value && !value.includes(',')) {
+    return { missingComma: true };
+  }
+  return null;
+}
   
+get vehicleBrandB() {
+  return this.accidentForm.get('vehicleBrandB');
+}
+
+get vehicleBrandA() {
+  return this.accidentForm.get('vehicleBrandA');
+}
+
 }

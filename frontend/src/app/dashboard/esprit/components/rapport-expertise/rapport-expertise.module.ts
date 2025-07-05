@@ -19,6 +19,8 @@ import { MessagesModule } from 'primeng/messages';
 import { RapportExpertiseRoutingModule } from './rapport-expertise-routing.module';
 import { RapportExpertiseComponent } from './rapport-expertise.component';
 import { StepsModule } from 'primeng/steps';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { CheckboxModule } from 'primeng/checkbox';
 
 
 @NgModule({
@@ -42,6 +44,8 @@ import { StepsModule } from 'primeng/steps';
     DropdownModule,
     MessagesModule,
     StepsModule,
+    AutoCompleteModule,
+    CheckboxModule,
     RapportExpertiseRoutingModule
   ],    providers: [MessageService]  // Add MessageService here
   

@@ -1,0 +1,160 @@
+<app-navbar-style-one></app-navbar-style-one>
+
+<div class="page-title-area">
+    <div class="d-table">
+        <div class="d-table-cell">
+            <div class="section-title">
+                <h2>FAQ</h2>
+                <p class="bar"></p>
+            </div>
+        </div>
+    </div>
+    <div class="shape1"><img src="assets/img/shape11.png" alt="shape"></div>
+    <div class="shape2 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+    <div class="shape3"><img src="assets/img/shape3.png" alt="shape"></div>
+    <div class="shape4"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape5"><img src="assets/img/shape5.png" alt="shape"></div>
+    <div class="shape6 rotateme"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape7"><img src="assets/img/shape4.png" alt="shape"></div>
+    <div class="shape8 rotateme"><img src="assets/img/shape22.png" alt="shape"></div>
+</div>
+
+
+
+    
+    <div class="container">
+        <div class="service-path">
+            <a routerLink="/" class="service-link">Accueil</a> 
+        </div>
+    </div>
+
+
+
+<div class="faq-area ptb-80">
+    <div class="container">
+        <div class="faq-accordion">
+            <div class="accordion">
+                <div class="accordion-section">
+                    <div class="accordion-header" (click)="toggleSection(0)" [ngClass]="{ 'open': isSectionOpen(0) }">
+                        Qu'elle est le de l'assurance contre la grêle et l'incendie récolte ?
+                    </div>
+                    <div class="accordion-content" [ngClass]="{ 'open': isSectionOpen(0) }">
+                        <p>Ils varient d’une région à une autre selon les caractéristiques climatiques de chaque région, la nature des cultures, la superficie des parcelles, le rendement, le prix….</p>
+                    </div>
+                </div>
+                <div class="accordion-section">
+                    <div class="accordion-header" (click)="toggleSection(1)" [ngClass]="{ 'open': isSectionOpen(1) }">
+                        Que faire en cas de sinistre grêle ?
+                    </div>
+                    <div class="accordion-content" [ngClass]="{ 'open': isSectionOpen(1) }">
+                        <p>Décaler la survenance du sinistre dans un délai ne dépassant pas les 05 jours
+Prendre des mesures de sauvetage pour les arbres jusqu’à ce que les experts arrivent.</p>
+                    </div>
+                </div>
+                <div class="accordion-section">
+                    <div class="accordion-header" (click)="toggleSection(2)" [ngClass]="{ 'open': isSectionOpen(2) }">
+                        Comment se passe l'indemnisation suite à un sinistre grêle ?
+                    </div>
+                    <div class="accordion-content" [ngClass]="{ 'open': isSectionOpen(2) }">
+                        <p>
+                            <li><span><i-feather name="check"></i-feather>L’évaluation des dégâts est effectuée par un expert</span></li>
+                            <li><span><i-feather name="check"></i-feather>L’indemnisation se fait dans délai d’un mois à partir de la date de survenance du sinistre</span></li>
+                            <li><span><i-feather name="check"></i-feather>L’indemnisation ne doit pas dépasser la valeur assurée après déduction de la franchise appliquée dans le contrat</span></li>
+                        </p>
+                       </div>
+                </div>
+                <div class="accordion-section">
+                    <div class="accordion-header" (click)="toggleSection(3)" [ngClass]="{ 'open': isSectionOpen(3) }">
+                        Que faire en cas d'incendie récolte ?
+                    </div>
+                    <div class="accordion-content" [ngClass]="{ 'open': isSectionOpen(3) }">
+                        <p>Informer l’assurance CTAMA dans un délai ne dépassant les cinq jours et présenter les pièces suivantes :
+Attestation de la protection civile
+Procès verbal auprès des autorités
+* Suite à la déclaration, l’expert évalue les dégâts</p>
+                    </div>
+                </div>
+                <div class="accordion-section">
+                    <div class="accordion-header" (click)="toggleSection(4)" [ngClass]="{ 'open': isSectionOpen(4) }">
+                        Quelle est le tarif de l'assurance corps navire de pêche ?
+                    </div>
+                    <div class="accordion-content" [ngClass]="{ 'open': isSectionOpen(4) }">
+                        <p>Il dépend de :
+                            <li><span><i-feather name="check"></i-feather>La nature de la coque (bois, acier, polyester)</span></li>
+                            <li><span><i-feather name="check"></i-feather>Date de construction</span></li>
+                            <li><span><i-feather name="check"></i-feather>Date de mise en service</span></li>
+                            <li><span><i-feather name="check"></i-feather>Zone de navigation autorisée</span></li>
+
+                        </p>
+                    </div>
+                </div>
+                <div class="accordion-section">
+                    <div class="accordion-header" (click)="toggleSection(5)" [ngClass]="{ 'open': isSectionOpen(3) }">
+                        Quels sont les conditions pour souscrire un contrat d'assurance das chambres frigorifiques ?
+                    </div>
+                    <div class="accordion-content" [ngClass]="{ 'open': isSectionOpen(5) }">
+                        <p>
+                            <li><span><i-feather name="check"></i-feather>Evaluer la valeur des bâtiments et des matériels</span></li>
+                            <li><span><i-feather name="check"></i-feather>Présenter les factures</span></li>
+                            <li><span><i-feather name="check"></i-feather>Visite préalable effectué par un expert.</span></li>
+                        </p>
+                    </div>
+                </div>
+                <div class="accordion-section">
+                    <div class="accordion-header" (click)="toggleSection(6)" [ngClass]="{ 'open': isSectionOpen(3) }">
+                        Qu'est ce que la franchise ?
+                    </div>
+                    <div class="accordion-content" [ngClass]="{ 'open': isSectionOpen(6) }">
+                        <p>C’est la part du dommage (en % ou en montant) qui restera à la charge du sociétaire en cas de sinistre.</p>
+                    </div>
+                </div>
+                <div class="accordion-section">
+                    <div class="accordion-header" (click)="toggleSection(7)" [ngClass]="{ 'open': isSectionOpen(3) }">
+                        Quelle sont les pièces à fournir pour souscrire un contrat d'assurance bétail ? ?
+                    </div>
+                    <div class="accordion-content" [ngClass]="{ 'open': isSectionOpen(7) }">
+                        <p>
+                            <li><span><i-feather name="check"></i-feather>Liste du cheptel à assurer identifiée (tableau de marquage)</span></li>
+                            <li><span><i-feather name="check"></i-feather>Attestation des vaccins</span></li>
+                            <li><span><i-feather name="check"></i-feather>Visite préalable du vétérinaire</span></li>
+                        </p>
+                    </div>
+                </div>
+                <div class="accordion-section">
+                    <div class="accordion-header" (click)="toggleSection(8)" [ngClass]="{ 'open': isSectionOpen(3) }">
+                        Qu'elle est la durée pour déclarer un sinistre bétail ?
+                    </div>
+                    <div class="accordion-content" [ngClass]="{ 'open': isSectionOpen(8) }">
+                        <p>24H à compter de la date de survenance du sinistre</p>
+                    </div>
+                </div>
+                <div class="accordion-section">
+                    <div class="accordion-header" (click)="toggleSection(9)" [ngClass]="{ 'open': isSectionOpen(3) }">
+                        Qu'elle est la durée pour déclarer un sinistre corps navire de pêche ou multirisques serres ?
+                    </div>
+                    <div class="accordion-content" [ngClass]="{ 'open': isSectionOpen(9) }">
+                        <p>05 jours à compter de la date de survenance du sinistre.</p>
+                    </div>
+                </div>                
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="secondBloc">
+    <h3>Des garanties complémentaires pour compléter votre couverture</h3>
+    <p> <strong>Des personnes transportées à titre gratuit :</strong> Garantit le remboursement des frais pharmaceutiques, médicaux, chirurgicaux et d’hospitalisation, et le versement d’un capital en cas de décès ou d’incapacité suite à un accident.
+
+<br>
+    <strong> L’individuelle conducteur </strong>lorsque celui-ci est blessé suite à un accident de la circulation dans lequel il est responsable ou non. En cas de décès du conducteur, l’indemnité est reversée aux ayants droit.</p>
+</div>
+
+<div class="secondBloc">
+    <h3>En cas de panne : L’Assistance Dépannage automobile
+    </h3>
+    <p> Les Services d’assistance sont accessibles 24h/24 et 7j/7. La garantie assistance dépannage comprend généralement le remorquage du véhicule, l’hébergement du conducteur et sa famille ou encore une voiture de remplacement le temps des réparations.
+
+<br>
+Aussi en cas de sinistre un réseau de professionnels de notre partenaire est à votre disposition pour la réparation de votre véhicule sans avance de fonds.</p>
+</div>

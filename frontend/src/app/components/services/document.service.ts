@@ -30,4 +30,8 @@ getAllDocuments() {
   getDocById(id: any): Observable<Documents> {
     return this.http.get<Documents>('http://localhost:9090/documents/' + id);
   } 
+
+    getDocumentsCount(): Observable<any> {
+    return this.http.get<any>(`http://localhost:9090/documents/count`);
+  }
 }

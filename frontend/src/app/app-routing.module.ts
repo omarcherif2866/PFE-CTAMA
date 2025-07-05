@@ -24,6 +24,7 @@ import { ApricoleComponent } from './components/pages/agriculteurs/apricole/apri
 import { FrigoComponent } from './components/pages/agriculteurs/frigo/frigo.component';
 import { PecheComponent } from './components/pages/agriculteurs/peche/peche.component';
 import { AgenceComponent } from './components/pages/agence/agence.component';
+import { FaqComponent } from './components/pages/faq/faq.component';
 
 const routes: Routes = [
     { path: '', component: PcRepairDemoComponent },
@@ -47,6 +48,7 @@ const routes: Routes = [
     { path: 'agriculteurs/assurance-multirisques-apicole', component: ApricoleComponent },
     { path: 'agriculteurs/assurance-chambres-frigorifiques', component: FrigoComponent },
     { path: 'agriculteurs/assurance-corp-navire-de-peche', component: PecheComponent },
+    { path: 'faq', component: FaqComponent },
 
 
 

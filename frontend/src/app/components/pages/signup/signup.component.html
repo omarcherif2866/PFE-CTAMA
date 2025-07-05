@@ -329,14 +329,21 @@
                                                 <input type="tel" id="inputTel" pInputText class="form-style" placeholder="Votre Numéro de téléphone" formControlName="phoneNumber" required>
                                             </div>
                                             <div class="form-group mt-2">
+                                                    <input type="text" id="inputAdresse" pInputText class="form-style" placeholder="Votre adresse" formControlName="adresse" required>
+                                            </div>
+                                            <div class="form-group mt-2">
                                                 <input type="password" id="signupPassword" placeholder="Votre Mot de passe" formControlName="password" class="form-style" required>
                                             </div>
                                             <div class="form-group mt-2">
                                                 <input type="password" id="inputConfirmPassword" class="form-style" placeholder="Confirmer le mot de passe" formControlName="confirmPassword" required>
                                             </div>
                                             <div class="form-group mt-2" style=" min-width: 200px; height: 50px;">
-                                                <input type="file" class="form-style custom-file-input" id="inputImage" (change)="onFileChangePM($event)" required>
-                                                <label for="inputImage" class="custom-file-label">Choisir un fichier</label>
+                                            <input 
+                                                    type="file" 
+                                                    class="form-control" 
+                                                    id="inputImage" 
+                                                    (change)="onFileChange($event)"
+                                                    accept="image/*"> 
                                             </div>
                                             <div class="form-group mt-2">
                                                 <input type="text" id="inputnumeroPermis" pInputText class="form-style" placeholder="Numéro de Permis" formControlName="numeroPermis" required>

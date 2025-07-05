@@ -54,7 +54,7 @@
             </div>
         </div>
 
-        <p-dialog [(visible)]="documentDialog" [style]="{width: '600px'}" header="Détails du rapport" [modal]="true" class="p-fluid">
+        <p-dialog [(visible)]="documentDialog" [style]="{width: '800px'}" header="Détails du rapport" [modal]="true" class="p-fluid">
           <ng-template pTemplate="header">
             <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
               <ng-container [ngSwitch]="activeIndex">
@@ -62,10 +62,11 @@
                 <i *ngSwitchCase="1" class="pi pi-users" style="font-size: 2.5rem; margin-right: 8px; color: var(--blue-500);"></i>
                 <i *ngSwitchCase="2" class="pi pi-car" style="font-size: 2.5rem; margin-right: 8px; color: var(--blue-500);"></i>
                 <i *ngSwitchCase="3" class="pi pi-info-circle" style="font-size: 2.5rem; margin-right: 8px; color: var(--blue-500);"></i>
-                <i *ngSwitchCase="4" class="fas fa-tools" style="font-size: 2.5rem; margin-right: 8px; color: var(--blue-500);"></i>
-                <i *ngSwitchCase="5" class="fas fa-hard-hat" style="font-size: 2.5rem; margin-right: 8px; color: var(--blue-500);"></i>                
-                <i *ngSwitchCase="6" class="fas fa-user-tie" style="font-size: 2.5rem; margin-right: 8px; color: var(--blue-500);"></i>                
-                <i *ngSwitchCase="7" class="pi pi-images" style="font-size: 2.5rem; margin-right: 8px; color: var(--blue-500);"></i>                
+                <i *ngSwitchCase="4" class="pi pi-info-circle" style="font-size: 2.5rem; margin-right: 8px; color: var(--blue-500);"></i>
+                <i *ngSwitchCase="5" class="fas fa-tools" style="font-size: 2.5rem; margin-right: 8px; color: var(--blue-500);"></i>
+                <i *ngSwitchCase="6" class="fas fa-hard-hat" style="font-size: 2.5rem; margin-right: 8px; color: var(--blue-500);"></i>                
+                <i *ngSwitchCase="7" class="fas fa-user-tie" style="font-size: 2.5rem; margin-right: 8px; color: var(--blue-500);"></i>                
+                <i *ngSwitchCase="8" class="pi pi-images" style="font-size: 2.5rem; margin-right: 8px; color: var(--blue-500);"></i>                
               </ng-container>
             </div>
           </ng-template>
@@ -201,6 +202,35 @@
               
               <ng-container *ngIf="activeIndex === 3">
               
+                <h4>Informations Propres à l'expert</h4>
+                <div class="p-field">
+                  <label for="references">Références</label>
+                  <input id="references" type="text" pInputText formControlName="references" />
+                </div>
+                <div class="p-field">
+                  <label for="nomExpert">Nom de l'éxpert </label>
+                  <input id="nomExpert" type="text" pInputText formControlName="nomExpert" />
+                </div>
+                <div class="p-field">
+                  <label for="emailExpert">Email de l'éxpert </label>
+                  <input id="emailExpert" type="email" pInputText formControlName="emailExpert" />
+                </div>                
+                 <div class="p-field">
+                  <label for="nomSocieteExpert">Nom de la Société </label>
+                  <input id="nomSocieteExpert" type="text" pInputText formControlName="nomSocieteExpert" />
+                </div>
+                 <div class="p-field">
+                  <label for="adresseSocieteExpert">Adresse de la Société </label>
+                  <input id="adresseSocieteExpert" type="text" pInputText formControlName="adresseSocieteExpert" />
+                </div>  
+                 <div class="p-field">
+                  <label for="patente">Patente </label>
+                  <input id="patente" type="text" pInputText formControlName="patente" />
+                </div>               
+                <button pButton type="button" label="Suivant" (click)="nextStep()" class="mt-3"></button>
+              </ng-container>
+
+              <ng-container *ngIf="activeIndex === 4">              
                 <h4>Informations Supplémentaires</h4>
                 <div class="p-field">
                   <label for="dateExamen">Date d'Examen</label>
@@ -256,62 +286,132 @@
                 <button pButton type="button" label="Suivant" (click)="nextStep()" class="mt-3"></button>
               </ng-container>
             
-              <ng-container *ngIf="activeIndex === 4">
+              <ng-container *ngIf="activeIndex === 5">
                 <h4>Fournitures</h4>
-              
-                <div class="p-field">
-                  <label for="fournitures">Liste des Fournitures</label>
-                  <ng-container formArrayName="fournitures">
-                    <div *ngFor="let fourniture of fournitures.controls; let i = index" [formGroupName]="i"
-                         class="p-d-flex p-ai-center p-mb-2" style="gap: 0.5rem;">
-              
-                         <input type="text" pInputText formControlName="nom" placeholder="Nom" style="width: 30%; margin-right: 0.5rem;" />
-                         <input type="number" pInputText formControlName="prix" placeholder="Prix (dt)" style="width: 20%; margin-right: 0.5rem;" />
-                         <input type="number" pInputText formControlName="remise" placeholder="Remise (%)" style="width: 20%; margin-right: 0.5rem;" />
-                         
-              
-                      <button type="button" pButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-sm"
-                              (click)="removeFourniture(i)"></button>
-              
-                    </div>
-                  </ng-container>
+                
+              <form [formGroup]="formGroup"> 
+              <div class="p-field">
+                <label for="fournitureSearch">Rechercher une fourniture de type Pièces</label>
+
+                <div class="p-inputgroup">
+                  <p-autoComplete 
+                    [suggestions]="filteredFournitures" 
+                    (completeMethod)="searchFournitures($event)" 
+                    [field]="'nom'" 
+                    [dropdown]="true" 
+                    placeholder="Rechercher ou ajouter une fourniture" 
+                    formControlName="selectedFourniture" 
+                    [forceSelection]="false" 
+                    (onSelect)="onFournitureSelect($event)" 
+                    (onClear)="onFournitureClear()" 
+                    [style]="{'width':'100%'}" 
+                    [inputStyle]="{'width':'100%'}"
+                    [appendTo]="'body'">
+                      <ng-template let-fourniture pTemplate="item">
+                          {{fourniture.nom || fourniture.Nom}}
+                      </ng-template>
+                  </p-autoComplete>
+
+                  <span class="p-inputgroup-addon" style="cursor: pointer; background: transparent; border: none;">
+                    <i class="pi pi-info-circle" 
+                      pTooltip="Si vous n'avez pas trouvé la pièce, saisissez son nom puis cliquez sur le bouton Ajouter"
+                      tooltipPosition="top" 
+                      style="color: red; font-size: 1.5em;">
+                    </i>
+                  </span>
                 </div>
-              
-                <button type="button" pButton icon="pi pi-plus" label="Ajouter une fourniture"
-                        (click)="addFourniture()" class="p-mt-2 p-mb-3 p-button-sm"></button>
+              </div>
+
+
+
+                <div *ngIf="showAddNewButton" class="p-mt-2"> 
+                  <button type="button" pButton icon="pi pi-plus" label="Ajouter cette fourniture" (click)="addNewFourniture()" class="p-button-sm"></button> 
+                </div>
+
+                <div class="p-field" *ngIf="showFournitureForm"> 
+                  <ng-container formArrayName="fournitures"> 
+                    <div *ngFor="let fourniture of fournitures.controls; let i = index" [formGroupName]="i" class="p-d-flex p-ai-center p-mb-2" style="gap: 0.5rem;"> 
+                      <input type="text" pInputText formControlName="nom" readonly style="width: 18%; margin-right: 0.5rem;" /> 
+                      <input type="number" pInputText formControlName="prix" placeholder="Prix (dt)" style="width: 18%; margin-right: 0.5rem;" /> 
+                      <input type="number" pInputText formControlName="remise" placeholder="Remise (%)" style="width: 18%; margin-right: 0.5rem;" />
+                      <input type="number" pInputText formControlName="VET" placeholder="VET (%)" style="width: 18%; margin-right: 0.7rem;" />
+                      <p-checkbox
+                          binary="true"
+                          [value]="19"
+                          formControlName="tva"
+                          [style]="{ 'margin-right': '0.2rem' }"
+                          [label]="'Tva'">
+                      </p-checkbox>
+                      <button type="button" pButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-sm" (click)="removeFourniture(i)" style="margin-left: 1rem;"></button> 
+                    </div> 
+                  </ng-container>                    
+                </div> 
+              </form>
                 
                 <button pButton type="button" label="Suivant" (click)="nextStep()" class="mt-3"></button>
-
               </ng-container>
               
-              <ng-container *ngIf="activeIndex === 5">
+              <ng-container *ngIf="activeIndex === 6">
                 <h4> Main D'oeuve</h4>
-              
-                <div class="p-field">
-                  <label for="mainOeuvres">Liste des Main D'oeuve</label>
-                  <ng-container formArrayName="mainOeuvres">
-                    <div *ngFor="let mainOeuvre of mainOeuvres.controls; let i = index" [formGroupName]="i"
-                         class="p-d-flex p-ai-center p-mb-2" style="gap: 0.5rem;">
-              
-                         <input type="text" pInputText formControlName="nom" placeholder="Nom" style="width: 30%; margin-right: 0.5rem;" />
-                         <input type="number" pInputText formControlName="prix" placeholder="Prix (dt)" style="width: 20%; margin-right: 0.5rem;" />
-                         
-              
-                      <button type="button" pButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-sm"
-                              (click)="removeMainOeuvres(i)"></button>
-              
+                <form [formGroup]="mainOeuvreGroup"> 
+                  <div class="p-field">
+                    <label for="fournitureSearch">Rechercher une main d'oeuvre</label>
+
+                    <div class="p-inputgroup">
+                      <p-autoComplete 
+                        [suggestions]="filteredMainOeuvre" 
+                        (completeMethod)="searchMainOeuvres($event)" 
+                        [field]="'nom'" 
+                        [dropdown]="true" 
+                        placeholder="Rechercher ou ajouter une main d'oeuvre" 
+                        formControlName="selectedMainOeuvre" 
+                        [forceSelection]="false" 
+                        (onSelect)="onMainOeuvresSelect($event)" 
+                        (onClear)="onMainOeuvresClear()" 
+                        [style]="{'width':'100%'}" 
+                        [inputStyle]="{'width':'100%'}"
+                        [appendTo]="'body'">
+                          <ng-template let-mainOeuvre pTemplate="item">
+                              {{mainOeuvre.nom || mainOeuvre.Nom}}
+                          </ng-template>
+                      </p-autoComplete>
+
+                      <span class="p-inputgroup-addon" style="cursor: pointer; background: transparent; border: none;">
+                        <i class="pi pi-info-circle" 
+                          pTooltip="Si vous n'avez pas trouvé la pièce, saisissez son nom puis cliquez sur le bouton Ajouter"
+                          tooltipPosition="top" 
+                          style="color: red; font-size: 1.5em;">
+                        </i>
+                      </span>
                     </div>
-                  </ng-container>
-                </div>
-              
-                <button type="button" pButton icon="pi pi-plus" label="Ajouter une main d'oeuve"
-                        (click)="addMainOeuvres()" class="p-mt-2 p-mb-3 p-button-sm"></button>
-                        
+                  </div>
+                  <div *ngIf="showAddNewButtonMO" class="p-mt-2"> 
+                    <button type="button" pButton icon="pi pi-plus" label="Ajouter cette main d'ouvre" (click)="addNewMainOeuvre()" class="p-button-sm"></button> 
+                  </div>
+                  <div class="p-field" *ngIf="showMainOeuvreForm"> 
+                    <ng-container formArrayName="mainOeuvres"> 
+                      <div *ngFor="let mainOeuvre of mainOeuvres.controls; let i = index" [formGroupName]="i" class="p-d-flex p-ai-center p-mb-2" style="gap: 0.5rem;"> 
+                        <input type="text" pInputText formControlName="nom" readonly style="width: 30%; margin-right: 0.5rem;" /> 
+                        <input type="number" pInputText formControlName="prix" placeholder="Prix (dt)" style="width: 20%; margin-right: 0.5rem;" /> 
+                        <input type="number" pInputText formControlName="R" placeholder="R (%)" style="width: 18%; margin-right: 0.7rem;" />
+                        <p-checkbox
+                            binary="true"
+                            [value]="19"
+                            formControlName="tva"
+                            [style]="{ 'margin-right': '0.2rem' }"
+                            [label]="'Tva'">
+                        </p-checkbox>
+                        <button type="button" pButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-sm" (click)="removeMainOeuvres(i)"></button> 
+                      </div> 
+                    </ng-container> 
+                  </div> 
+                </form>
+  
                 <button pButton type="button" label="Suivant" (click)="nextStep()" class="mt-3"></button>
 
               </ng-container>   
               
-              <ng-container *ngIf="activeIndex === 6">
+              <ng-container *ngIf="activeIndex === 7">
               
                 <h4>Informations Supplémentaires</h4>
                 <div class="p-field">
@@ -352,7 +452,7 @@
 
               </ng-container>
 
-              <ng-container *ngIf="activeIndex === 7">
+              <ng-container *ngIf="activeIndex === 8">
                 <h4>Images</h4>
               
                 <div class="mb-3">

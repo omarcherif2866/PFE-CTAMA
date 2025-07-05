@@ -50,7 +50,7 @@ export class ResetPasswordComponent {
           showConfirmButton: false,
           timer: 1500
         })
-        this.router.navigate(['/signin']);
+        this.router.navigate(['/']);
       },
       error => {
         console.error(error);

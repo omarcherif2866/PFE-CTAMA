@@ -187,10 +187,21 @@
           <div class="input-group-A">
             <div class="input-wrapper">
               <label for="vehicleBrandA">Marque et Type du Véhicule</label>
-              <input id="vehicleBrandA" type="text" formControlName="vehicleBrandA" required>
+              <input
+                id="vehicleBrandA"
+                type="text"
+                formControlName="vehicleBrandA"
+                required
+                title="Assurez-vous de mettre une virgule entre la marque et le type" />
+
+              <!-- Message d'erreur si la virgule est absente -->
+              <div *ngIf="vehicleBrandA?.touched && vehicleBrandA?.errors?.missingComma" class="text-danger">
+                Le champ doit contenir une virgule (`,`) entre la marque et le type.
+              </div>
             </div>
             <input type="checkbox" class="checkbox left-checkbox"><p>15</p>
           </div>
+
 
           <div class="input-group-A">
             <div class="input-wrapper">
@@ -396,9 +407,20 @@
             <p>15</p><input type="checkbox" class="checkbox right-checkbox">
             <div class="input-wrapper">
               <label for="vehicleBrandB">Marque et Type du Véhicule</label>
-              <input id="vehicleBrandB" type="text" formControlName="vehicleBrandB" required>
+              <input
+                id="vehicleBrandB"
+                type="text"
+                formControlName="vehicleBrandB"
+                required
+                title="Assurez-vous de mettre une virgule entre la marque et le type" />
+              
+              <!-- Affichage conditionnel de l'erreur -->
+              <div *ngIf="vehicleBrandB?.touched && vehicleBrandB?.errors?.missingComma" class="text-danger">
+                Le champ doit contenir une virgule (`,`) entre la marque et le type.
+              </div>
             </div>
           </div>
+
         
           <div class="input-group-B">
             <p>16</p><input type="checkbox" class="checkbox right-checkbox">

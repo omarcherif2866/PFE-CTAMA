@@ -254,6 +254,12 @@ export async function addEmployee(req, res) {
       return res.status(400).json({ message: 'Please upload an image' });
     }
 
+
+    const existingUser = await Employees.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email exist déja' });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 8);
 
 

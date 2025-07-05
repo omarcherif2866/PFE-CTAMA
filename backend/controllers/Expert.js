@@ -202,6 +202,14 @@ export async function addExpert(req, res) {
 
     const { nom, prenom, email, password, phoneNumber, region, taux, clients, documents } = req.body;
 
+
+    // Vérification si l'utilisateur existe déjà
+    const existingUser = await Experts.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email exist déja' });
+    }
+
+
     const imageFile = req.file;
     if (!imageFile) {
       return res.status(400).json({ message: 'Veuillez télécharger une image' });

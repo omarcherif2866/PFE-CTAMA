@@ -34,7 +34,7 @@ router.route('/user/profile/:id')
     updateUserProfile)
 
 
-router.route('/user/delete/:id')
+router.route('/delete/:id')
 .delete(DeleteUser)
 
 

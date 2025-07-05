@@ -27,7 +27,7 @@
                     <li class="nav-item"><a href="javascript:void(0)" class="nav-link dropdown-toggle" routerLink="/agence">Agences </a>
 
                     </li>
-                    <li class="nav-item"><a href="javascript:void(0)" class="nav-link dropdown-toggle" routerLink="/products">FAQ </a>
+                    <li class="nav-item"><a href="javascript:void(0)" class="nav-link dropdown-toggle" routerLink="/faq">FAQ </a>
 
                     </li>
 
@@ -36,7 +36,7 @@
                 
                 <div class="others-option" *ngIf="!isLoggedIn">
 
-                    <a (click)="openSigninDialog()" class="btn-icon">
+                    <a (click)="openSigninDialog()" class="btn-icon" >
                         <i class="fa fa-user"></i>
                     </a>
                     
@@ -78,7 +78,7 @@
 </div>
 
 
-<p-dialog [(visible)]="displaySigninDialog" [modal]="true" [closable]="true" [style]="{width: '50%'}" [responsive]="true" class="signin">
+<p-dialog [(visible)]="displaySigninDialog" [modal]="true" [closable]="true" [style]="{width: '600px'}" [responsive]="true" class="signin">
   <ng-template pTemplate="content">
     <div class="shape-container">
       <div class="shape1"><img src="assets/img/shape11.png" alt="shape"></div>

@@ -66,30 +66,46 @@ export class ExpertComponent {
 
   openNew() {
     this.expert = new Expert('', '', '', '', '', '', 0, '', '', []);
+    this.submitted = false;
     this.expertForm.reset();
     this.expertDialog = true;
   }
 
-  editExpert(expert: any) {
-    const expertInstance = new Expert(
-      expert._id,
-      expert.email,
-      expert.image,
-      expert.phoneNumber,
-      expert.region,
-      expert.taux,
-      expert.nom,
-      expert.prenom,
-      '',
-      []
+editExpert(expert: any) {
+  const expertInstance = new Expert(
+    expert._id,
+    expert.email,
+    '', // password vide
+    expert.image,
+    expert.phoneNumber,
+    expert.region,
+    expert.taux,
+    expert.nom,
+    expert.prenom,
+    [],
+    []
+  );
 
-    );
-    if (expertInstance && expertInstance.Id) {
-      this.expertDialog = true;
-      this.expert = expertInstance;
-    }    
+  if (expertInstance && expertInstance.Id) {
+    this.expertDialog = true;
+    this.expert = expertInstance;
+
+    // ✅ Mise à jour du formulaire avec les données de l'expert
+    this.expertForm.patchValue({
+      nom: expert.nom,
+      prenom: expert.prenom,
+      email: expert.email,
+      phoneNumber: expert.phoneNumber,
+      region: expert.region,
+      taux: expert.taux,
+      password: '', // Optionnel : laisser vide
+    });
+
+    this.uploadedFiles = []; // Optionnel : réinitialiser le fichier
     this.actionLabel = 'Modifier';
   }
+}
+
   
 
   deleteExpert(expert: any) {
@@ -120,8 +136,8 @@ export class ExpertComponent {
           this.experts = this.experts.filter(val => val.Id !== this.expert.Id);
           this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Expert supprimé', life: 3000 });
           this.expert = new Expert('', '', '', '', '', '', 0, '', '', []);
-
           this.deleteexpertDialog = false;
+          window.location.reload();
         },
         error => {
           console.error('Erreur lors de la suppression du expert:', error);
@@ -190,8 +206,10 @@ export class ExpertComponent {
         window.location.reload(); // Recharger la page
       },
       (error) => {
-        this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Échec de l\'ajout de l\'expert' });
+        const errorMsg = error?.error?.message || 'Échec de l\'ajout de l\'expert';
+        this.messageService.add({ severity: 'error', summary: 'Erreur', detail: errorMsg });
       }
+
     );
   }
   

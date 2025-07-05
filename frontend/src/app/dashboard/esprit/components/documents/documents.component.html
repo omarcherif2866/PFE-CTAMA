@@ -6,7 +6,7 @@
 
             <p-toolbar styleClass="mb-4" >
                 <ng-template pTemplate="left">
-                    <div class="my-2" >
+                    <div class="my-2" *ngIf="getUserRole() === 'PersonnePhysique'|| getUserRole() === 'PersonneMorale'">
                         <button pButton pRipple label="Deposer votre constat" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
                     </div>
                 </ng-template>
@@ -27,12 +27,13 @@
                         <tr>
                             <th pSortableColumn="doc">Documents <p-sortIcon field="doc"></p-sortIcon></th>
                             <th pSortableColumn="cliens">Clients <p-sortIcon field="cliens"></p-sortIcon></th>
+                            <th pSortableColumn="gouvernorat">Gouvernorat <p-sortIcon field="gouvernorat"></p-sortIcon></th>                           
                             <th pSortableColumn="expert">Expert <p-sortIcon field="expert"></p-sortIcon></th>
                             <th pSortableColumn="decription">Description  <p-sortIcon field="decription"></p-sortIcon></th>
                             <th pSortableColumn="status" *ngIf=" getUserRole() === 'admin'">Statut <p-sortIcon field="status"></p-sortIcon></th>
                             <th >Modifier etat du sinistre <p-sortIcon ></p-sortIcon></th>
-                            <th pSortableColumn="reference phoenix">reference phoenix <p-sortIcon field="reference phoenix"></p-sortIcon></th>
-                            <th >Affecter expert <p-sortIcon ></p-sortIcon></th>
+                            <th pSortableColumn="reference phoenix" *ngIf=" getUserRole() === 'admin'">reference phoenix <p-sortIcon field="reference phoenix"></p-sortIcon></th>
+                            <th *ngIf=" getUserRole() === 'admin'">Affecter expert <p-sortIcon ></p-sortIcon></th>
                             <th *ngIf=" getUserRole() === 'admin'">Ordre de mission <p-sortIcon ></p-sortIcon></th>
 
                         </tr>
@@ -50,6 +51,8 @@
                                 {{ clientInfos[document._id] }}
                             </span>
                         </td> <!-- Affichage du client -->
+                        <td>{{document.gouvernorat}}</td>
+                    
                         <td>
                             <span class="client-link" (click)="showExpertInfo(document.expert)">
                             {{ expertInfos[document._id] }}
@@ -74,11 +77,11 @@
                             <p-dropdown [options]="statusOptions" [(ngModel)]="selectedStatuses[document._id]" optionLabel="label"
                                         optionValue="value" (onChange)="onStatusChange(document, $event)" appendTo="body"></p-dropdown>
                         </td>
-                        <td>
+                        <td *ngIf=" getUserRole() === 'admin'">
                             <input pInputText type="text" [(ngModel)]="referenceSinistres[document._id]" placeholder="Nouvelle référence" (keydown.enter)="modifierReference(document._id)" />
                             <!-- <button (click)="modifierReference(document._id)">Modifier</button> -->
                         </td>
-                        <td>
+                        <td *ngIf=" getUserRole() === 'admin'">
                             <p-dropdown [options]="experts" [(ngModel)]="selectedExperts[document._id]" optionLabel="nom"
                                         optionValue="_id" placeholder="Sélectionner un expert"
                                         appendTo="body" (onChange)="affecterExpert(document._id, document.client, $event.value)"
@@ -152,6 +155,18 @@
                             placeholder="Entrez une description...">
                         </textarea>
                     </div>
+                    <div class="field">
+                        <label for="gouvernorat">Gouvernorat</label>
+                            <p-dropdown 
+                                id="gouvernorat"
+                                [options]="gouvernoratOptions"
+                                formControlName="gouvernorat"
+                                placeholder="Sélectionner un gouvernorat"
+                                [showClear]="true"
+                                [filter]="true"
+                                [appendTo]="'body'">
+                            </p-dropdown>
+                    </div> 
                 </form>
             </ng-template>
           

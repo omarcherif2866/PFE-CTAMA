@@ -25,10 +25,11 @@ export class ExpertService {
   addExpert(data: any): Observable<Expert> {
     return this.http.post<Expert>("http://localhost:9090/expert/", data)
       .pipe(
-        catchError((error: any) => {
-          console.error('Erreur lors de l\'ajout du Expert:', error);
-          return throwError('Une erreur s\'est produite lors de l\'ajout du Expert. Veuillez réessayer.');
-        })
+      catchError((error: HttpErrorResponse) => {
+        console.error('Erreur lors de l\'ajout du Expert:', error);
+        return throwError(() => error); // ✅ On renvoie l'erreur complète
+      })
+
       );
   }
 
@@ -57,7 +58,7 @@ export class ExpertService {
 
   deleteExpert(id:any):Observable<Expert>{
    
-    return this.http.delete<Expert>("http://localhost:9090/expert/"+id)
+    return this.http.delete<Expert>("http://localhost:9090/expert/delete/"+id)
 
   }
 

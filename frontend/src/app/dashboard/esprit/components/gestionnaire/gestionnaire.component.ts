@@ -76,6 +76,17 @@ export class GestionnaireComponent {
       this.employeeDialog = true;
       this.employee = employeeInstance;
     }    
+
+      this.employeeForm.patchValue({
+      nom: employee.nom,
+      prenom: employee.prenom,
+      email: employee.email,
+      phoneNumber: employee.phoneNumber,
+      poste: employee.poste,
+      departement: employee.departement,
+      password: '', // Optionnel : laisser vide
+    });
+
     this.actionLabel = 'Modifier';
   }
   
@@ -108,8 +119,8 @@ export class GestionnaireComponent {
           this.employees = this.employees.filter(val => val.Id !== this.employee.Id);
           this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Emloyees supprimé', life: 3000 });
           this.employee = new Emloyees('', '', '', '', '', '', '', '', '', );
-
           this.deleteEmployeeDialog = false;
+          window.location.reload();
         },
         error => {
           console.error('Erreur lors de la suppression du employee:', error);

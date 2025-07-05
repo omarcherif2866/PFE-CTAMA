@@ -55,6 +55,11 @@
                         <input type="date" id="inputBirthDate" [(ngModel)]="form.birthDate" name="birthDate" pInputText class="w-full" style="padding: 1rem">
                     </div>
 
+
+                </div>
+
+                <!-- Right Column -->
+                <div class="right-column">
                     <div *ngIf="getUserRole() === 'PersonnePhysique'">
                         <label for="inputNumeroPermis" class="block text-900 text-xl font-medium mb-2">Numéro de permis</label>
                         <input type="text" id="inputNumeroPermis" [(ngModel)]="form.numeroPermis" name="numeroPermis" pInputText class="w-full" style="padding: 1rem">
@@ -84,10 +89,7 @@
                         <label for="inputProfession" class="block text-900 text-xl font-medium mb-2">Profession</label>
                         <input type="text" id="inputProfession" [(ngModel)]="form.profession" name="profession" pInputText class="w-full" style="padding: 1rem">
                     </div>
-                </div>
 
-                <!-- Right Column -->
-                <div class="right-column">
                     <div *ngIf="getUserRole() === 'expert'">
                         <label for="inputregion" class="block text-900 text-xl font-medium mb-2">Région</label>
                         <input type="text" id="inputregion" placeholder="Région" [(ngModel)]="form.region" name="region" pInputText class="w-full" style="padding: 1rem">

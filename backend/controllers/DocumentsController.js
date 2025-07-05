@@ -5,7 +5,7 @@ import { sendEmail, sendSMS } from './utils/mailing.js';
 
 export const createDoc = async (req, res) => {
     try {
-      const { client, expert, description } = req.body;
+      const { client, expert, description, gouvernorat } = req.body;
     
       console.log('Client:', client);
       console.log('Expert:', expert);
@@ -20,6 +20,7 @@ export const createDoc = async (req, res) => {
         description: description,
         doc: pdfName,  // Pas une liste, juste un fichier
         status: 'En attente', // Par défaut, en attente
+        gouvernorat: gouvernorat,
 
       });
     
@@ -139,5 +140,17 @@ export const getDocumentById = async (req, res) => {
   } catch (error) {
     console.error('Erreur lors de la récupération du document:', error);
     res.status(500).json({ error: 'Erreur lors de la récupération du document' });
+  }
+};
+
+
+export async function countDocument (req, res){
+  try {
+    const documentsCount = await Documents.countDocuments({});
+    console.log("le nombre total de sinistres : ", documentsCount)
+    res.json({ documentsCount });
+  } catch (error) {
+    console.error('Error counting documents:', error);
+    res.status(500).json({ message: 'Error counting documents' });
   }
 };

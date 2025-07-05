@@ -23,10 +23,11 @@ constructor(private http: HttpClient, private router: Router) { }
   addEmloyees(data: any): Observable<Emloyees> {
     return this.http.post<Emloyees>("http://localhost:9090/employees/", data)
       .pipe(
-        catchError((error: any) => {
-          console.error('Erreur lors de l\'ajout du Emloyees:', error);
-          return throwError('Une erreur s\'est produite lors de l\'ajout du Emloyees. Veuillez réessayer.');
-        })
+      catchError((error: HttpErrorResponse) => {
+        console.error('Erreur lors de l\'ajout du Emloyees:', error);
+        return throwError(() => error); // ✅ On renvoie l'erreur complète
+      })
+
       );
   }
 
@@ -55,7 +56,7 @@ constructor(private http: HttpClient, private router: Router) { }
 
   deleteEmloyees(id:any):Observable<Emloyees>{
    
-    return this.http.delete<Emloyees>("http://localhost:9090/employees/"+id)
+    return this.http.delete<Emloyees>("http://localhost:9090/employees/delete/"+id)
 
   }
 }

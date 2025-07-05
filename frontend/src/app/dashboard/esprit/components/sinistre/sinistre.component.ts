@@ -100,6 +100,8 @@ export class SinistreComponent {
     
                 // Charger les documents pour chaque sinistre
                 this.sinistres.forEach(sinistre => {
+                this.selectedStatuses[sinistre.Id] = sinistre.Status;
+
                     if (sinistre.Documents) {
                         this.loadDocuments(sinistre);
                     }
@@ -141,7 +143,9 @@ export class SinistreComponent {
   
     
       
-      
+getUserRole(): string | null {
+  return localStorage.getItem('userRole');
+}      
           
 
   onStatusChange(document: Sinistre, event: any) {
@@ -172,7 +176,9 @@ export class SinistreComponent {
           }
           this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Statut modifié', life: 1000 });
 
-          this.getAllSinistre();
+          window.location.reload()
+
+          
 
     },
     

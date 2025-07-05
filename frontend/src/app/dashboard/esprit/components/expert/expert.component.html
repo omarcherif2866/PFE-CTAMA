@@ -86,7 +86,12 @@
 
 
 
-        <p-dialog [(visible)]="expertDialog" [style]="{width: '450px'}" header="Détails du commercial" [modal]="true" class="p-fluid">
+        <p-dialog [(visible)]="expertDialog" [style]="{width: '450px'}" header="Détails d'expert" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="header">
+                <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
+                    <i class="fas fa-user-tie" style="font-size: 2.5rem; margin-right: 8px; color: var(--orangeColor);"></i>
+                </div>
+            </ng-template>
             <ng-template pTemplate="content">
                 <form [formGroup]="expertForm" (ngSubmit)="saveExpert()">
                     <div class="field">
@@ -165,7 +170,7 @@
         <p-dialog [(visible)]="deleteexpertDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
               <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-              <span *ngIf="expert">Vous voulez supprimer ce expert ?</span>
+              <span *ngIf="expert">Vous voulez supprimer cet expert ?</span>
             </div>
             <ng-template pTemplate="footer">
               <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Non" (click)="deleteexpertDialog = false"></button>

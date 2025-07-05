@@ -14,7 +14,7 @@ import bodyParser from 'body-parser';
 
 // Import des routes
 import EmployeesRoutes from './routes/Employees.js';
-import UsersRoutes from './routes/User.js';
+import FournitureRoutes from './routes/fournitures.js';
 import ExpertRoutes from './routes/ExpertRoute.js';
 import ClientsRoutes from './routes/Client.js';
 import ActualiteRoutes from './routes/actualite.js';
@@ -27,6 +27,8 @@ import RDVRoutes from './routes/RDV.js';
 import ImagesRoutes from './routes/Imagesinistres.js';
 import DevisRoutes from './routes/Devis.js';
 import ExpertiseRoutes from './routes/Expertise.js';
+import FournitureEvalRoutes from './routes/evaluationFournitures.js';
+import EmailRoutes from './routes/emailRoute.js';
 
 
 
@@ -117,6 +119,9 @@ app.use('/rendez-vous', RDVRoutes);
 app.use('/imagessinistre', ImagesRoutes);
 app.use('/devissinistre', DevisRoutes);
 app.use('/pdf', ExpertiseRoutes);
+app.use('/fourniture', FournitureRoutes);
+app.use('/fournitureEval', FournitureEvalRoutes);
+app.use('/mailing', EmailRoutes);
 
 
 

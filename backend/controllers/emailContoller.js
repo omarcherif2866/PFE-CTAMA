@@ -29,18 +29,20 @@ const sendContactEmail = async (req, res) => {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-              user: 'comar2866@gmail.com',
-              pass: 'xnnp ifoj fujq skyt',
+                user: process.env.EMAIL_USER, 
+                pass: process.env.EMAIL_PASSWORD 
             },
         });
 
         //  Configuration de l'email
         const mailOptions = {
-            from: 'comar2866@gmail.com',
-            to: adresse,
+            from: process.env.EMAIL_USER, // Toujours ton compte SMTP
+            to: 'comar2866@gmail.com', // Le destinataire
+            replyTo: email, // <-- Très important
             subject: subject,
             html: `Email envoyé par : ${email}<br><p>${message}</p>`,
         };
+
 
         // Envoi de l'email
         const info = await transporter.sendMail(mailOptions);

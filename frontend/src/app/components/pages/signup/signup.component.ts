@@ -15,7 +15,8 @@ export class SignupComponent {
   formPM!: FormGroup;
   showPPForm: boolean = false; // Déclaration et initialisation de showPPForm à false
   showPMForm: boolean = false; // Déclaration et initialisation de showPPForm à false
-
+selectedFile: File | null = null;
+selectedFileName: string = '';
   hoveredElement: string | null = null;
 
   text: string = 'Bonjour Monsieur';
@@ -42,7 +43,7 @@ export class SignupComponent {
       sex: ['', Validators.required],  // Le sexe (homme/femme)
       nationalite: ['', Validators.required],  // La nationalité
       profession: ['', Validators.required],  // La profession
-      image: [null, Validators.required],  // L'image de profil
+      image: [null, this.fileRequiredValidator.bind(this)],
       typeClient: ['PersonnePhysique'],  // Définir le type de client (par défaut 'client')
       birthDate: ['', Validators.required],
 
@@ -66,6 +67,13 @@ export class SignupComponent {
 
   }
 
+  fileRequiredValidator(control: AbstractControl): { [key: string]: any } | null {
+  const file = control.value;
+  if (file && file instanceof File) {
+    return null; // Valide
+  }
+  return { fileRequired: true }; // Invalide
+}
 
 
   onHover(element: string | null) {
@@ -94,79 +102,97 @@ export class SignupComponent {
     return null;
   }
 
-  creerCompte() {
-    if (this.form.valid) {
-      const formData = new FormData();
+creerCompte() {
+  console.log('creerCompte appelé');
+  console.log('selectedFile:', this.selectedFile);
+  console.log('Form valid:', this.form.valid);
+  console.log('Form values:', this.form.value);
   
-      // Ajouter les champs généraux
-      formData.append('nom', this.form.value.nom);
-      formData.append('prenom', this.form.value.prenom); // Ajout du champ prénom
-      formData.append('email', this.form.value.email);
-      formData.append('phoneNumber', this.form.value.phoneNumber);
-      formData.append('password', this.form.value.password);
-      formData.append('confirmPassword', this.form.value.confirmPassword);
-      formData.append('adresse', this.form.value.adresse); // Ajout du champ adresse
-      formData.append('typeClient', this.form.value.typeClient); // Par défaut 'client'
-      formData.append('birthDate', this.form.value.birthDate);
+  // Vérification manuelle pour l'image
+  if (!this.selectedFile) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Image manquante',
+      text: 'Veuillez sélectionner une image de profil.',
+      showConfirmButton: true,
+    });
+    return;
+  }
 
-      // Champs spécifiques à PersonnePhysique
-      formData.append('numeroPermis', this.form.value.numeroPermis);
-      formData.append('identifiant_national', this.form.value.identifiant_national);
-      formData.append('CIN_Pass', this.form.value.CIN_Pass);
-      formData.append('sex', this.form.value.sex);
-      formData.append('nationalite', this.form.value.nationalite);
-      formData.append('profession', this.form.value.profession);
-  
-      // Ajout de l'image
-      if (this.form.value.image instanceof File) {
-        formData.append('image', this.form.value.image);
-      } else {
-        console.error('Le champ image doit être un fichier');
-      }
-  
-      // Appel du service pour créer un compte
-      this.userService.createAcount(formData).subscribe(
-        res => {
-          this.signUpSuccess.emit();
-          Swal.fire({
-            icon: 'success',
-            title: 'Vous êtes inscrit avec succès',
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          window.location.reload();
-        },
-        error => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Vérifiez vos données',
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        }
-      );
-    } else {
-      // Collecte des champs invalides
-      const invalidFields = Object.keys(this.form.controls).filter(field => this.form.get(field)?.invalid);
-    
-      // Créer une liste de messages d'erreur
-      let errorMessages = '';
-      invalidFields.forEach(field => {
-        const errorMessage = this.getErrorMessage(field);
-        errorMessages += `- ${errorMessage}\n`;  // Ajouter un saut de ligne pour chaque message
-      });
-    
-      // Affichage du Swal avec tous les messages d'erreur
-      if (errorMessages) {
+  if (this.form.valid) {
+    const formData = new FormData();
+
+    // Ajouter les champs généraux
+    formData.append('nom', this.form.value.nom);
+    formData.append('prenom', this.form.value.prenom);
+    formData.append('email', this.form.value.email);
+    formData.append('phoneNumber', this.form.value.phoneNumber);
+    formData.append('password', this.form.value.password);
+    formData.append('adresse', this.form.value.adresse);
+    formData.append('confirmPassword', this.form.value.confirmPassword);
+    formData.append('typeClient', this.form.value.typeClient);
+    formData.append('birthDate', this.form.value.birthDate);
+
+    // Champs spécifiques à PersonnePhysique
+    formData.append('numeroPermis', this.form.value.numeroPermis);
+    formData.append('identifiant_national', this.form.value.identifiant_national);
+    formData.append('CIN_Pass', this.form.value.CIN_Pass);
+    formData.append('sex', this.form.value.sex);
+    formData.append('nationalite', this.form.value.nationalite);
+    formData.append('profession', this.form.value.profession);
+
+    // Ajouter le fichier
+    formData.append('image', this.selectedFile);
+
+    console.log('FormData créé, envoi en cours...');
+
+    // Appel du service pour créer un compte
+    this.userService.createAcount(formData).subscribe(
+      res => {
+        this.signUpSuccess.emit();
+        Swal.fire({
+          icon: 'success',
+          title: 'Vous êtes inscrit avec succès',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        window.location.reload();
+      },
+      error => {
+        console.error('Erreur lors de la création du compte:', error);
         Swal.fire({
           icon: 'error',
-          title: 'Erreur de validation',
-          text: errorMessages,
+          title: 'Vérifiez vos données',
+          text: error.message || 'Une erreur est survenue',
           showConfirmButton: true,
         });
       }
+    );
+  } else {
+    // Collecte des champs invalides
+    const invalidFields = Object.keys(this.form.controls)
+      .filter(field => this.form.get(field)?.invalid);
+
+    console.log('Champs invalides:', invalidFields);
+
+    let errorMessages = '';
+    invalidFields.forEach(field => {
+      const errorMessage = this.getErrorMessage(field);
+      if (errorMessage) {
+        errorMessages += `- ${errorMessage}\n`;
+      }
+    });
+
+    if (errorMessages) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur de validation',
+        text: errorMessages,
+        showConfirmButton: true,
+      });
     }
   }
+}
   
   
   getErrorMessage(field: string): string {
@@ -313,12 +339,28 @@ export class SignupComponent {
   }
   
 
-  onFileChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.form.patchValue({ image: file });
-    }
+onFileChange(event: Event) {
+  console.log('onFileChange appelé'); // Test pour voir si la méthode est appelée
+  
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+  
+  console.log('Fichier détecté:', file); // Debug
+  
+  if (file) {
+    this.selectedFile = file;
+    this.selectedFileName = file.name;
+    this.form.patchValue({ image: file });
+    
+    console.log('Fichier sélectionné:', file.name);
+    console.log('Taille du fichier:', file.size);
+    console.log('Type du fichier:', file.type);
+  } else {
+    this.selectedFile = null;
+    this.selectedFileName = '';
+    console.log('Aucun fichier sélectionné');
   }
+}
 
 
 

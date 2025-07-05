@@ -36,7 +36,7 @@
 
                             <th pSortableColumn="status">Statut <p-sortIcon field="status"></p-sortIcon></th>
 
-                            <th >Modifier etat du sinistre <p-sortIcon ></p-sortIcon></th>
+                            <th *ngIf=" getUserRole() === 'admin'">Modifier etat du sinistre <p-sortIcon ></p-sortIcon></th>
 
                         </tr>
                     </ng-template>
@@ -66,7 +66,7 @@
                                 {{sinistre._status}}
                             </span>
                         </td>
-                        <td>
+                        <td *ngIf=" getUserRole() === 'admin'">
                             <span class="p-column-title">Modifier le statut</span>
                             <p-dropdown [options]="statusOptions" [(ngModel)]="selectedStatuses[sinistre._id]" optionLabel="label"
                                         optionValue="value" (onChange)="onStatusChange(sinistre, $event)" appendTo="body"></p-dropdown>

@@ -21,6 +21,10 @@ getExpertsGroupedByRegion(): Observable<any[]> {
   return this.http.get<any[]>(`http://localhost:9090/user/grouped-by-region`);
 }
 
+getDocumentsGroupedByGouvernorat(): Observable<any[]> {
+  return this.http.get<any[]>(`http://localhost:9090/user/sinistre-grouped-by-gouvernorat`);
+}
+
 compterFournitures(): Observable<any> {
   return this.http.get<any>(`http://localhost:9090/user/compter-fournitures`);
 }

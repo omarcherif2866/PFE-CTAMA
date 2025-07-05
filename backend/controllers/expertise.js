@@ -613,6 +613,14 @@ export async function generateRapportPDF(formData, res) {
   
         const { endY: supplyY, totalTTC: fournitureTTC } = addSuppliesSection(doc, formData, config);
         const { endY: laborY, totalTTC: mainOeuvreTTC } = addLaborSection(doc, formData, config, supplyY);
+        doc.addPage(); // ✅ Ajoute une nouvelle page avant le résumé
+
+        const summaryEndY = addSummarySection(doc, formData, config, {
+        endY: 50, // On redéfinit une hauteur de départ sur la nouvelle page
+        totalFournituresTTC: fournitureTTC,
+        totalMainOeuvreTTC: mainOeuvreTTC
+        });
+
         addFraisAnnexesSection(doc, formData, config);
   
         if (formData.images && Array.isArray(formData.images)) {
@@ -754,12 +762,45 @@ function addHeaderSection(doc, formData, config) {
             align: 'center'
         });
     
-    // Exam date
+
+    // REFERENCE DOSSIER EXPERT
     doc.fontSize(12)
-        .font('Helvetica')
-        .text(`Date d'examen : ${formData.dateExamen}`, margin + textPadding, tableStartY + 40, {
+        .font('Helvetica-Bold')
+        .text(`NOS REFERENCES : ${formData.references}`, margin + textPadding, tableStartY + 40, {
             align: 'right'
         });
+    
+    // Exam date
+    doc.fontSize(12)
+        .font('Helvetica-Bold')
+        .text(`DATE DE MISSION : ${formData.dateExamen}`, margin + textPadding, tableStartY + 55, {
+            align: 'right'
+        });
+    
+    // Nom de la societe
+    doc.fontSize(12)
+    .font('Helvetica-Bold')
+    .text(`${formData.nomSocieteExpert}`, margin + textPadding, tableStartY + 20, {
+        align: 'left'
+    });
+    // Nom de l'expert
+    doc.fontSize(12)
+    .font('Helvetica')
+    .text(`${formData.nomExpert}`, margin + textPadding, tableStartY + 35, {
+        align: 'left'
+    });
+    // adresse 
+    doc.fontSize(12)
+    .font('Helvetica')
+    .text(`${formData.adresseSocieteExpert}`, margin + textPadding, tableStartY + 50, {
+        align: 'left'
+    });
+    // mail 
+    doc.fontSize(12)
+    .font('Helvetica')
+    .text(`${formData.emailExpert}`, margin + textPadding, tableStartY + 65, {
+        align: 'left'
+    });
     
     // General information line
     const currentY = tableStartY + tableHeight + 10;
@@ -800,15 +841,15 @@ function addClientInfoTable(doc, formData, config) {
         .font('Helvetica').text(`${formData.assure || ''} `);
     leftY += cellHeight;
     
-    doc.font('Helvetica-Bold').text('Adresse : ', leftX, leftY, { continued: true })
+    doc.font('Helvetica-Bold').text('Contrat : ', leftX, leftY, { continued: true })
         .font('Helvetica').text(`${formData.contratAssure || ''}`);
     leftY += cellHeight;
     
-    doc.font('Helvetica-Bold').text('Téléphone : ', leftX, leftY, { continued: true })
+    doc.font('Helvetica-Bold').text('N° Dossier : ', leftX, leftY, { continued: true })
         .font('Helvetica').text(`${formData.dossier || ''}`);
     leftY += cellHeight;
     
-    doc.font('Helvetica-Bold').text('Véhicule : ', leftX, leftY, { continued: true })
+    doc.font('Helvetica-Bold').text('Immatriculation : ', leftX, leftY, { continued: true })
         .font('Helvetica').text(`${formData.immatriculation || ''}`);
     leftY += cellHeight;
     
@@ -944,104 +985,232 @@ function addDamageDescriptionSection(doc, formData, config) {
 
 
 function addSuppliesSection(doc, formData, config) {
-    const { doubleBoxX, doubleBoxWidth } = config;
-  
-    const fournitureBoxHeight = 40;
-    let titleFournitureY = 50;
-  
-    doc.rect(doubleBoxX, titleFournitureY, doubleBoxWidth, fournitureBoxHeight).stroke();
-    doc.rect(doubleBoxX + 3, titleFournitureY + 3, doubleBoxWidth - 6, fournitureBoxHeight - 6).stroke();
-  
-    doc.fontSize(16)
-      .font('Helvetica-Bold')
-      .text("ESTIMATION DES FRAIS DE REPARATION", doubleBoxX + 10, titleFournitureY + 10, {
-        width: doubleBoxWidth - 20,
-        align: 'center'
-      });
-  
-    doc.font('Helvetica')
-      .fontSize(12)
-      .text('FOURNITURES', doubleBoxX + 170, titleFournitureY + 53, { underline: true });
-  
-    const tableStartY = titleFournitureY + 80;
-    const colWidths = [doubleBoxWidth * 0.6, doubleBoxWidth * 0.2, doubleBoxWidth * 0.2];
-    const rowHeightF = 25;
-    const padding = 8;
-  
-    let currentY = drawTableHeader(doc, doubleBoxX, tableStartY, doubleBoxWidth, colWidths, rowHeightF, padding);
-    let totalTTC = 0;
-  
-    if (formData.fournitures && formData.fournitures.length > 0) {
-      currentY = renderSuppliesTableData(doc, formData.fournitures, doubleBoxX, doubleBoxWidth, colWidths, rowHeightF, padding, currentY);
-      const totalHT = calculateTotalPrice(formData.fournitures);
-      const tva = totalHT * 0.19;
-      totalTTC = totalHT + tva;
-  
-      if (willOverflow(doc, currentY, 80)) {
-        doc.addPage();
-        currentY = 50;
+  // On augmente la largeur du tableau à 550
+  const doubleBoxWidth = 450;
+  // On centre horizontalement le tableau
+  const doubleBoxX = (doc.page.width - doubleBoxWidth) / 2;
+
+  const fournitureBoxHeight = 40;
+  let titleFournitureY = 50;
+
+  // Encadré titre
+  doc.rect(doubleBoxX, titleFournitureY, doubleBoxWidth, fournitureBoxHeight).stroke();
+  doc.rect(doubleBoxX + 3, titleFournitureY + 3, doubleBoxWidth - 6, fournitureBoxHeight - 6).stroke();
+
+  doc.fontSize(16)
+    .font('Helvetica-Bold')
+    .text("ESTIMATION DES FRAIS DE REPARATION", doubleBoxX + 10, titleFournitureY + 10, {
+      width: doubleBoxWidth - 20,
+      align: 'center'
+    });
+
+  doc.font('Helvetica')
+    .fontSize(12)
+    .text('FOURNITURES', doubleBoxX + 220, titleFournitureY + 53, { underline: true });
+
+  const tableStartY = titleFournitureY + 80;
+
+  // Colonnes ajustées à la nouvelle largeur, total = 1
+  const colWidths = [
+    doubleBoxWidth * 0.35, // Nom
+    doubleBoxWidth * 0.18, // Prix
+    doubleBoxWidth * 0.18, // Remise
+    doubleBoxWidth * 0.14, // TVA
+    doubleBoxWidth * 0.15  // VET
+  ];
+  const rowHeightF = 25;
+  const padding = 8;
+
+  // Dessin entête
+  let currentY = drawTableHeader(doc, doubleBoxX, tableStartY, doubleBoxWidth, colWidths, rowHeightF, padding);
+  let totalTTC = 0;
+
+  if (formData.fournitures && formData.fournitures.length > 0) {
+    currentY = renderSuppliesTableData(doc, formData.fournitures, doubleBoxX, doubleBoxWidth, colWidths, rowHeightF, padding, currentY);
+
+    const totalHT = calculateTotalPrice(formData.fournitures);
+    let totalTVA = 0;
+
+    formData.fournitures.forEach(fourniture => {
+      let tauxTVA = 0;
+
+      if (typeof fourniture.tva === 'number' && fourniture.tva > 0) {
+        tauxTVA = fourniture.tva;
+      } else if (fourniture.tva === true) {
+        tauxTVA = 0.19; // taux par défaut
       }
-  
-      currentY += 10;
-      renderTotalsLine(doc, 'TOTAL HT:', totalHT, 'Dt', doubleBoxX, colWidths, padding, currentY);
-      currentY += 20;
-      renderTotalsLine(doc, 'TVA (19%):', tva, 'Dt', doubleBoxX, colWidths, padding, currentY);
-      currentY += 20;
-  
-      doc.moveTo(doubleBoxX, currentY - 7)
-        .lineTo(doubleBoxX + doubleBoxWidth, currentY - 7)
-        .stroke();
-  
-      renderTotalsLine(doc, 'TOTAL TTC:', totalTTC, 'Dt', doubleBoxX, colWidths, padding, currentY);
+
+      totalTVA += fourniture.prix * tauxTVA;
+    });
+
+    const tva = totalTVA;
+    totalTTC = totalHT + tva;
+
+    if (willOverflow(doc, currentY, 80)) {
+      doc.addPage();
+      currentY = 50;
     }
-  
-    return { endY: currentY + 40, totalTTC };
+
+    currentY += 10;
+    renderTotalsLine(doc, 'TOTAL HT:', totalHT, 'Dt', doubleBoxX, colWidths, padding, currentY);
+    currentY += 20;
+    renderTotalsLine(doc, 'TVA (19%):', tva, 'Dt', doubleBoxX, colWidths, padding, currentY);
+    currentY += 20;
+
+    doc.moveTo(doubleBoxX, currentY - 7)
+      .lineTo(doubleBoxX + doubleBoxWidth, currentY - 7)
+      .stroke();
+
+    renderTotalsLine(doc, 'TOTAL TTC:', totalTTC, 'Dt', doubleBoxX, colWidths, padding, currentY);
   }
+
+  return { endY: currentY + 40, totalTTC };
+}
+
   
 
 
-  function addLaborSection(doc, formData, config, startY) {
-    const { doubleBoxX, doubleBoxWidth } = config;
-  
-    doc.font('Helvetica')
-      .fontSize(12)
-      .text("MAIN D'OEUVRE", doubleBoxX + 170, startY + 10, { underline: true });
-  
-    const tableStartY = startY + 40;
-    const colWidths = [doubleBoxWidth * 0.7, doubleBoxWidth * 0.3];
-    const rowHeightM = 25;
-    const padding = 8;
-  
-    let currentY = drawLaborTableHeader(doc, doubleBoxX, tableStartY, doubleBoxWidth, colWidths, rowHeightM, padding);
-    let totalMTTC = 0;
-  
-    if (formData.mainOeuvres && formData.mainOeuvres.length > 0) {
-      currentY = renderLaborTableData(doc, formData.mainOeuvres, doubleBoxX, doubleBoxWidth, colWidths, rowHeightM, padding, currentY);
-      const totalHT = calculateTotalPrice(formData.mainOeuvres);
-      const tva = totalHT * 0.19;
-      totalMTTC = totalHT + tva;
-  
-      if (willOverflow(doc, currentY, 60)) {
-        doc.addPage();
-        currentY = 50;
+function addLaborSection(doc, formData, config, startY) {
+  // On fixe la largeur à 550 (à adapter comme dans addSuppliesSection)
+  const doubleBoxWidth = 450;
+  // On centre le tableau horizontalement
+  const doubleBoxX = (doc.page.width - doubleBoxWidth) / 2;
+
+  doc.font('Helvetica')
+    .fontSize(12)
+    .text("MAIN D'OEUVRE", doubleBoxX + 220, startY + 10, { underline: true });
+
+  const tableStartY = startY + 40;
+
+  // Colonnes ajustées, total 100%
+  const colWidths = [
+    doubleBoxWidth * 0.50, // Nom
+    doubleBoxWidth * 0.20, // Prix
+    doubleBoxWidth * 0.15, // Remise
+    doubleBoxWidth * 0.15  // TVA ou autre
+  ];
+
+  const rowHeightM = 25;
+  const padding = 8;
+
+  let currentY = drawLaborTableHeader(doc, doubleBoxX, tableStartY, doubleBoxWidth, colWidths, rowHeightM, padding);
+  let totalMTTC = 0;
+
+  if (formData.mainOeuvres && formData.mainOeuvres.length > 0) {
+    currentY = renderLaborTableData(doc, formData.mainOeuvres, doubleBoxX, doubleBoxWidth, colWidths, rowHeightM, padding, currentY);
+
+    const totalHT = calculateTotalPrice(formData.mainOeuvres);
+    let totalTVA = 0;
+
+    formData.mainOeuvres.forEach(mainOeuvre => {
+      let tauxTVA = 0;
+
+      if (typeof mainOeuvre.tva === 'number' && mainOeuvre.tva > 0) {
+        tauxTVA = mainOeuvre.tva;
+      } else if (mainOeuvre.tva === true) {
+        tauxTVA = 0.19; // taux par défaut
       }
-  
-      currentY += 10;
-      renderTotalsLine(doc, 'TOTAL MAIN D\'OEUVRE HT :', totalHT, 'Dt', doubleBoxX, colWidths, padding, currentY);
-      currentY += 20;
-      renderTotalsLine(doc, 'TVA (19%):', tva, 'Dt', doubleBoxX, colWidths, padding, currentY);
-      currentY += 20;
-  
-      doc.moveTo(doubleBoxX, currentY - 7)
-        .lineTo(doubleBoxX + doubleBoxWidth, currentY - 7)
-        .stroke();
-  
-      renderTotalsLine(doc, 'TOTAL MAIN D\'OEUVRE TTC:', totalMTTC, 'Dt', doubleBoxX, colWidths, padding, currentY);
+
+      totalTVA += mainOeuvre.prix * tauxTVA;
+    });
+
+    const tva = totalTVA;
+    totalMTTC = totalHT + tva;
+
+    if (willOverflow(doc, currentY, 60)) {
+      doc.addPage();
+      currentY = 50;
     }
-  
-    return { endY: currentY + 40, totalTTC: totalMTTC };
+
+    currentY += 10;
+    renderTotalsLine(doc, 'TOTAL MAIN D\'OEUVRE HT :', totalHT, 'Dt', doubleBoxX, colWidths, padding, currentY);
+    currentY += 20;
+    renderTotalsLine(doc, 'TVA (19%):', tva, 'Dt', doubleBoxX, colWidths, padding, currentY);
+    currentY += 20;
+
+    doc.moveTo(doubleBoxX, currentY - 7)
+      .lineTo(doubleBoxX + doubleBoxWidth, currentY - 7)
+      .stroke();
+
+    renderTotalsLine(doc, 'TOTAL MAIN D\'OEUVRE TTC:', totalMTTC, 'Dt', doubleBoxX, colWidths, padding, currentY);
   }
+
+  return { endY: currentY + 40, totalTTC: totalMTTC };
+}
+
   
+
+  
+function addSummarySection(doc, formData, config, totals) {
+  const { doubleBoxX, doubleBoxWidth } = config;
+  let startY = totals.endY || 0;
+
+  const lineHeight = 20;
+  const labelX = doubleBoxX + 10;
+  const valueX = labelX + 300; // ajustable selon besoin
+
+    const totalDeductionVetuste = (formData.fournitures || []).reduce((total, item) => {
+    const prix = parseFloat(item.prix) || 0;
+    const vet = parseFloat(item.VET) || 0;
+    const montantTTC = prix * 1.19;
+    const deduction = montantTTC * (vet / 100);
+    return total + deduction;
+    }, 0);
+
+  const totalGeneral = totals.totalFournituresTTC + totals.totalMainOeuvreTTC;
+  const totalDeduction = (formData.deductionVetuste || 0) + (formData.deductionParticipation || 0) + (formData.deductionRecuperation || 0);
+  const totalNet = totalGeneral - totalDeduction;
+
+  const lines = [
+    ["TOTAL MAIN D'OEUVRE", totals.totalMainOeuvreTTC],
+    ["TOTAL FOURNITURES", totals.totalFournituresTTC],
+    ["TOTAL GÉNÉRAL", totalGeneral],
+    ["REMISE MAIN D'OEUVRE", formData.remiseMainOeuvre || 0],
+    ["REMISE FOURNITURE", formData.remiseFourniture || 0],
+    ["DÉDUCTION VÉTUSTÉ", totalDeductionVetuste.toFixed(2)],
+    ["DÉDUCTION PARTICIPATION", formData.deductionParticipation || 0],
+    ["DÉDUCTION RÉCUPÉRATION", formData.deductionRecuperation || 0],
+    ["TOTAL DÉDUCTION", totalDeduction],
+    ["TOTAL NET", totalNet],
+  ];
+
+  const boxHeight = lines.length * lineHeight + 10;
+
+  // Encadré
+  doc.rect(doubleBoxX, startY - 5, doubleBoxWidth, boxHeight).stroke();
+
+  doc.font('Helvetica-Bold').fontSize(12);
+
+  lines.forEach((line, i) => {
+    const y = startY + i * lineHeight;
+    doc.text(line[0], labelX, y);
+    doc.text((Number(line[1]) || 0).toFixed(2) + " Dt", valueX - 20, y);
+
+    // Ligne séparatrice après TOTAL DÉDUCTION (index 8)
+    if (i === 8) {
+      const lineY = y + lineHeight / 2; // milieu entre cette ligne et la suivante
+      doc.moveTo(labelX, lineY + 5)
+        .lineTo(valueX + 40, lineY + 5)
+        .stroke();
+    }
+  });
+
+  // Position dynamique juste après le tableau (boxHeight + un petit padding)
+  const montantEnLettres = convertirMontantEnLettres(totalNet);
+  const montantY = startY + boxHeight + 10;
+
+  doc.fontSize(10)
+     .font('Helvetica-Oblique')
+     .text('En foi de quoi nous établissons le présent rapport arrêté à la somme de: ', labelX, montantY, {
+       continued: true
+     })
+     .font('Helvetica-Bold')
+     .text(montantEnLettres);
+
+  return montantY + 20; // on retourne la nouvelle position Y après le texte
+}
+
+
 
 
 
@@ -1058,34 +1227,45 @@ function drawTableHeader(doc, x, y, width, colWidths, rowHeight, padding) {
     doc.fontSize(12).font('Helvetica-Bold');
     doc.rect(x, y, width, rowHeight).stroke();
 
-    // Draw column separators for header
-    doc.moveTo(x + colWidths[0], y)
-       .lineTo(x + colWidths[0], y + rowHeight)
-       .stroke();
-    doc.moveTo(x + colWidths[0] + colWidths[1], y)
-       .lineTo(x + colWidths[0] + colWidths[1], y + rowHeight)
-       .stroke();
-        
-    doc.text('Nom', x + padding, y + 7, { width: colWidths[0] - 2 * padding });
-    doc.text('Prix (Dt)', x + colWidths[0] + padding, y + 7, { width: colWidths[1] - 2 * padding });
-    doc.text('Remise (%)', x + colWidths[0] + colWidths[1] + padding, y + 7, { width: colWidths[2] - 2 * padding });
-    
+    let currentX = x;
+    for (let i = 0; i < colWidths.length - 1; i++) {
+        currentX += colWidths[i];
+        doc.moveTo(currentX, y)
+           .lineTo(currentX, y + rowHeight)
+           .stroke();
+    }
+
+    let colX = x;
+    const headers = ['Nom', 'Prix (Dt)', 'Remise (%)', 'TVA (%)', 'VET (%)'];
+    for (let i = 0; i < headers.length; i++) {
+        doc.text(headers[i], colX + padding, y + 7, { width: colWidths[i] - 2 * padding });
+        colX += colWidths[i];
+    }
+
     return y + rowHeight;
 }
+
 
 
 function drawLaborTableHeader(doc, x, y, width, colWidths, rowHeight, padding) {
     doc.fontSize(12).font('Helvetica-Bold');
     doc.rect(x, y, width, rowHeight).stroke();
-    
-    // Draw column separator for header
-    doc.moveTo(x + colWidths[0], y)
-       .lineTo(x + colWidths[0], y + rowHeight)
-       .stroke();
-       
-    doc.text('Nom', x + padding, y + 7, { width: colWidths[0] - 2 * padding });
-    doc.text('Prix (Dt)', x + colWidths[0] + padding, y + 7, { width: colWidths[1] - 2 * padding });
-    
+
+    let currentX = x;
+    for (let i = 0; i < colWidths.length - 1; i++) {
+        currentX += colWidths[i];
+        doc.moveTo(currentX, y)
+           .lineTo(currentX, y + rowHeight)
+           .stroke();
+    }
+
+    let colX = x;
+    const headers = ['Nom', 'Prix (Dt)', 'R (%)', 'TVA (%)'];
+    for (let i = 0; i < headers.length; i++) {
+        doc.text(headers[i], colX + padding, y + 7, { width: colWidths[i] - 2 * padding });
+        colX += colWidths[i];
+    }
+
     return y + rowHeight;
 }
 
@@ -1102,78 +1282,115 @@ function renderSuppliesTableData(doc, items, x, width, colWidths, rowHeight, pad
 
         doc.rect(x, currentY, width, rowHeight).stroke();
 
-        doc.moveTo(x + colWidths[0], currentY)
-           .lineTo(x + colWidths[0], currentY + rowHeight)
-           .stroke();
-        doc.moveTo(x + colWidths[0] + colWidths[1], currentY)
-           .lineTo(x + colWidths[0] + colWidths[1], currentY + rowHeight)
-           .stroke();
+        let currentX = x;
+        for (let i = 0; i < colWidths.length - 1; i++) {
+            currentX += colWidths[i];
+            doc.moveTo(currentX, currentY)
+               .lineTo(currentX, currentY + rowHeight)
+               .stroke();
+        }
 
         doc.fontSize(11).font('Helvetica');
-        doc.text(item.nom?.trim() || '', x + padding, currentY + 7, { width: colWidths[0] - 2 * padding });
+        let colX = x;
+
+        doc.text(item.nom?.trim() || '', colX + padding, currentY + 7, { width: colWidths[0] - 2 * padding });
+        colX += colWidths[0];
 
         const prix = typeof item.prix === 'number' ? item.prix.toFixed(2) : '0.00';
-        doc.text(prix, x + colWidths[0] + padding, currentY + 7, {
-            width: colWidths[1] - 2 * padding,
-            align: 'right'
-        });
+        doc.text(prix, colX + padding, currentY + 7, { width: colWidths[1] - 2 * padding, align: 'right' });
+        colX += colWidths[1];
 
         const remise = typeof item.remise === 'number' ? item.remise.toFixed(2) : '0.00';
-        doc.text(remise, x + colWidths[0] + colWidths[1] + padding, currentY + 7, {
-            width: colWidths[2] - 2 * padding,
-            align: 'right'
-        });
+        doc.text(remise, colX + padding, currentY + 7, { width: colWidths[2] - 2 * padding, align: 'right' });
+        colX += colWidths[2];
+
+        const tva = typeof item.tva === 'number' ? (item.tva * 100).toFixed(0) : (item.tva === true ? '19%' : '0');
+        doc.text(tva, colX + padding, currentY + 7, { width: colWidths[3] - 2 * padding, align: 'right' });
+        colX += colWidths[3];
+
+        const vet = typeof item.VET === 'number' ? Math.round(item.VET) + '%' : '0%';
+        doc.text(vet, colX + padding, currentY + 7, { width: colWidths[4] - 2 * padding, align: 'right' });
 
         currentY += rowHeight;
     });
 
     return currentY;
 }
+
 
 
 
 function renderLaborTableData(doc, items, x, width, colWidths, rowHeight, padding, startY) {
     let currentY = startY;
     const bottomMargin = 80; // Space reserved for continuation text
-    
-    // Render each row
+
     items.forEach((item, index) => {
-        // Check remaining items to avoid orphaned rows
         const remainingItems = items.length - index;
         const minItemsOnPage = Math.min(2, remainingItems);
-        
+
         if (willOverflow(doc, currentY, (minItemsOnPage * rowHeight) + bottomMargin)) {
             doc.addPage();
             currentY = 70;
-            
-            // Redraw header on new page
             currentY = drawLaborTableHeader(doc, x, currentY, width, colWidths, rowHeight, padding);
         }
-        
+
         // Draw row rectangle
         doc.rect(x, currentY, width, rowHeight).stroke();
-        
-        // Draw column separator
-        doc.moveTo(x + colWidths[0], currentY)
-           .lineTo(x + colWidths[0], currentY + rowHeight)
-           .stroke();
-        
+
+        // Draw vertical lines
+        let colX = x;
+        for (let i = 0; i < colWidths.length - 1; i++) {
+            colX += colWidths[i];
+            doc.moveTo(colX, currentY)
+               .lineTo(colX, currentY + rowHeight)
+               .stroke();
+        }
+
         // Fill data
         doc.fontSize(11).font('Helvetica');
-        doc.text(item.nom.trim(), x + padding, currentY + 7, { width: colWidths[0] - 2 * padding });
-        
-        // Right-align price
-        doc.text(item.prix.toFixed(2), x + colWidths[0] + padding, currentY + 7, { 
+        let textX = x;
+
+        // Nom
+        doc.text(item.nom.trim(), textX + padding, currentY + 7, {
+            width: colWidths[0] - 2 * padding,
+            align: 'left'
+        });
+        textX += colWidths[0];
+
+        // Prix
+        doc.text(item.prix.toFixed(2), textX + padding, currentY + 7, {
             width: colWidths[1] - 2 * padding,
             align: 'right'
         });
-        
+        textX += colWidths[1];
+
+        // Remise
+        const remise = item.remise !== undefined ? item.remise : 0;
+        doc.text(remise.toString(), textX + padding, currentY + 7, {
+            width: colWidths[2] - 2 * padding,
+            align: 'right'
+        });
+        textX += colWidths[2];
+
+        // TVA
+        let tauxTVA = 0;
+        if (typeof item.tva === 'number') {
+            tauxTVA = item.tva;
+        } else if (item.tva === true) {
+            tauxTVA = 0.19;
+        }
+        doc.text((tauxTVA * 100).toFixed(0), textX + padding, currentY + 7, {
+            width: colWidths[3] - 2 * padding,
+            align: 'right'
+        });
+
         // Move to next row
         currentY += rowHeight;
     });
-    
+
     return currentY;
 }
+
 
 
 function renderTotalsLine(doc, label, amount, currency, x, colWidths, padding, y) {
@@ -1195,7 +1412,117 @@ function willOverflow(doc, yPosition, height) {
     return yPosition + height > doc.page.height - 50;
 }
 
+
+function addHeaderExpertSection(doc, formData, config) {
+    const { margin } = config;
+    const tableWidth = doc.page.width - margin * 2;
+    const tableHeight = 80;
+    const tableStartY = 40;
+    const textPadding = 10;
+    
+    // Header rectangle
+    doc.rect(margin, tableStartY, tableWidth, tableHeight).stroke();
+    
+    // Title
+    doc.fontSize(18)
+        .font('Helvetica-Bold')
+        .text("NOTE D'HONORAIRES", margin + textPadding, tableStartY + textPadding, {
+            align: 'center',
+            width: tableWidth - textPadding * 2
+        });
+    
+    const patenteY = tableStartY + textPadding + 25;
+    const patenteHeight = 20;
+    const patenteWidth = 120; // Largeur du rectangle
+
+    // Centrage horizontal du rectangle
+    const patenteX = (doc.page.width - patenteWidth) / 2;
+
+    // Rectangle centré horizontalement
+    doc.rect(patenteX, patenteY, patenteWidth, patenteHeight).stroke();
+
+    // Texte centré à l'intérieur du rectangle
+    doc.fontSize(12)
+        .font('Helvetica')
+        .text(`${formData.patente}`, patenteX, patenteY + 5, {
+            width: patenteWidth,
+            align: 'center'
+        });
+
+    const offsetRight = 250; // Décalage vers la droite
+    const textWidth = 300;  // Largeur du cadre pour le texte
+
+    doc.fontSize(12)
+        .font('Helvetica-Bold')
+        .text(`NOS REFERENCES : ${formData.references}`, margin + textPadding + offsetRight, tableStartY + 40, {
+            width: textWidth,
+            align: 'right'
+        });
+
+    // Exam date
+    doc.fontSize(12)
+        .font('Helvetica-Bold')
+        .text(`DATE DE MISSION : ${formData.dateExamen}`, margin + textPadding + offsetRight, tableStartY + 55, {
+            width: textWidth,
+            align: 'right'
+        });
+    
+    // Section expert (à gauche)
+    const expertSectionWidth = 200; // Largeur de la section expert
+    
+    // Nom de la société - centré dans la partie gauche
+    doc.fontSize(12)
+        .font('Helvetica-Bold')
+        .text(`${formData.nomSocieteExpert}`, margin + textPadding, tableStartY + 10, {
+            width: expertSectionWidth,
+            align: 'center'
+        });
+        
+    // Nom de l'expert - centré dans la partie gauche
+    doc.fontSize(12)
+        .font('Helvetica')
+        .text(`${formData.nomExpert}`, margin + textPadding, tableStartY + 25, {
+            width: expertSectionWidth,
+            align: 'center'
+        });
+    
+    // Adresse - centré dans la partie gauche
+    doc.fontSize(12)
+        .font('Helvetica')
+        .text(`${formData.adresseSocieteExpert}`, margin + textPadding, tableStartY + 40, {
+            width: expertSectionWidth,
+            align: 'center'
+        });
+    
+    // // Téléphone - centré dans la partie gauche (si disponible)
+    // if (formData.telExpert) {
+    //     doc.fontSize(12)
+    //         .font('Helvetica')
+    //         .text(`Tél: ${formData.telExpert}`, margin + textPadding, tableStartY + 55, {
+    //             width: expertSectionWidth,
+    //             align: 'center'
+    //         });
+    // }
+    
+    // Email - centré dans la partie gauche
+    doc.fontSize(12)
+        .font('Helvetica')
+        .text(`${formData.emailExpert}`, margin + textPadding, tableStartY + 65, {
+            width: expertSectionWidth,
+            align: 'center'
+        });
+    
+    // General information line
+    const currentY = tableStartY + tableHeight + 10;
+    
+    doc.y = tableStartY + tableHeight + 60;
+}
+
+
 function addFraisAnnexesSection(doc, formData, config) {
+    doc.addPage();
+    addHeaderExpertSection(doc, formData, config);
+
     const { doubleBoxX, doubleBoxWidth } = config;
     const leftX = 30;
     const rightX = leftX + 320;
@@ -1218,7 +1545,8 @@ function addFraisAnnexesSection(doc, formData, config) {
     const contentHeight = totalLines * lineHeight + 10 + clientBoxHeight + finalTextHeight;
     const boxHeight = titleHeight + contentHeight + boxPadding;
 
-    let startY = doc.y + 40;
+    let startY = doc.y;
+
     const adjustedWidth = doc.page.width - leftX - 30;
 
     if (startY + boxHeight > doc.page.height - 50) {
@@ -1341,7 +1669,7 @@ function convertirMontantEnLettres(montant) {
     const entierEnLettres = numberToWords(entier, { lang: 'fr' });
     const decimalesEnLettres = decimales > 0 ? ` et ${numberToWords(decimales, { lang: 'fr' })}` : '';
 
-    return ` \n${entierEnLettres} \n ${decimalesEnLettres} dinars`;
+    return ` \n${entierEnLettres} dinars \n ${decimalesEnLettres} `;
 }
 
 

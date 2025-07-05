@@ -46,7 +46,7 @@ export class AppTopBarComponent {
         }); 
         
 
-        this.router.navigate(['/signin']);
+        this.router.navigate(['/']);
       }
 
 

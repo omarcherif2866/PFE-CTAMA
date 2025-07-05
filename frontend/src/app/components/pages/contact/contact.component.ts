@@ -41,7 +41,7 @@ export class ContactComponent implements OnInit {
             // Optional: Set headers if needed
             const headers = { 'Content-Type': 'application/json' };
 
-            this.http.post('https://srv667884.hstgr.cloud:9090/mailing/send-email', formData, { headers })
+            this.http.post('http://localhost:9090/mailing/send-email', formData, { headers })
                 .pipe(
                     catchError(this.handleError)
                 )

@@ -18,6 +18,11 @@
 }
 
 
+.pie-size {
+  width: 600px;   /* augmente selon ton besoin */
+  height: 270px;
+}
+
 
 @media (max-width: 768px) {
     .chart-container {
