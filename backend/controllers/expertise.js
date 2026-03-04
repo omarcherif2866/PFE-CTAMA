@@ -583,167 +583,195 @@ function parseExtractedText(text) {
     return result;
 }
 
-export async function generateRapportPDF(formData, res) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const doc = new PDFDocument();
+// export async function generateRapportPDF(formData, res) {
+//     return new Promise(async (resolve, reject) => {
+//       try {
+//         const doc = new PDFDocument();
   
-        const filename = `rapport_expertise_${formData.assure}.pdf`;
-        const outputPath = path.join(process.cwd(), 'public', 'pdfs', filename);
-        const fileStream = fs.createWriteStream(outputPath);
+//         const filename = `rapport_expertise_${formData.assure}.pdf`;
+//         const outputPath = path.join(process.cwd(), 'public', 'pdfs', filename);
+//         const fileStream = fs.createWriteStream(outputPath);
   
-        // Configuration des en-têtes HTTP pour le téléchargement
-        setupResponseHeaders(res, filename);
+//         // Configuration des en-têtes HTTP pour le téléchargement
+//         setupResponseHeaders(res, filename);
   
-        // Gestion des erreurs
-        doc.on('error', (err) => {
-          reject(err);
-        });
+//         // Gestion des erreurs
+//         doc.on('error', (err) => {
+//           reject(err);
+//         });
   
-        // ✅ Pipeline vers la réponse HTTP et vers un fichier local
-        doc.pipe(fileStream);
-        doc.pipe(res);
+//         // ✅ Pipeline vers la réponse HTTP et vers un fichier local
+//         doc.pipe(fileStream);
+//         doc.pipe(res);
   
-        // ➕ Ajout des sections
-        const config = {
-          margin: 20,
-          doubleBoxX: 100,
-          doubleBoxWidth: doc.page.width - 200,
-        };
+//         // ➕ Ajout des sections
+//         const config = {
+//           margin: 20,
+//           doubleBoxX: 100,
+//           doubleBoxWidth: doc.page.width - 200,
+//         };
   
-        addHeaderSection(doc, formData, config);
-        addClientInfoTable(doc, formData, config);
-        addVehicleSpecsTable(doc, formData, config);
-        addDamageDescriptionSection(doc, formData, config);
-        doc.addPage();
+//         addHeaderSection(doc, formData, config);
+//         addClientInfoTable(doc, formData, config);
+//         addVehicleSpecsTable(doc, formData, config);
+//         addDamageDescriptionSection(doc, formData, config);
+//         doc.addPage();
   
-        const { endY: supplyY, totalTTC: fournitureTTC } = addSuppliesSection(doc, formData, config);
-        const { endY: laborY, totalTTC: mainOeuvreTTC } = addLaborSection(doc, formData, config, supplyY);
-        doc.addPage(); // ✅ Ajoute une nouvelle page avant le résumé
+//         const { endY: supplyY, totalTTC: fournitureTTC } = addSuppliesSection(doc, formData, config);
+//         const { endY: laborY, totalTTC: mainOeuvreTTC } = addLaborSection(doc, formData, config, supplyY);
+//         doc.addPage(); // ✅ Ajoute une nouvelle page avant le résumé
 
-        const summaryEndY = addSummarySection(doc, formData, config, {
-        endY: 50, // On redéfinit une hauteur de départ sur la nouvelle page
+//         const summaryEndY = addSummarySection(doc, formData, config, {
+//         endY: 50, // On redéfinit une hauteur de départ sur la nouvelle page
+//         totalFournituresTTC: fournitureTTC,
+//         totalMainOeuvreTTC: mainOeuvreTTC
+//         });
+
+//         addFraisAnnexesSection(doc, formData, config);
+  
+//         if (formData.images && Array.isArray(formData.images)) {
+//           addImagesToPDF(doc, formData.images, config);
+//         }
+  
+//         addSignaturePage(doc);
+//         doc.end();
+  
+//         // 🧠 Attendre que le fichier soit bien écrit
+//         fileStream.on('finish', async () => {
+//           await saveExpertise(formData, filename, fournitureTTC, mainOeuvreTTC);
+//           await deleteImages(formData.images); // Nettoyage des images
+//           resolve();
+
+// // Nouvelle partie à remplacer dans expertise.js
+// const statsPath = path.join(process.cwd(), 'public', 'fourniture_stats.json');
+// let compteur = {};
+
+// try {
+//   if (fs.existsSync(statsPath)) {
+//     const content = fs.readFileSync(statsPath, 'utf-8');
+//     compteur = JSON.parse(content);
+//   }
+// } catch (err) {
+//   console.error("Erreur de lecture du fichier de stats:", err);
+// }
+
+// // Mettre à jour le compteur directement
+// if (Array.isArray(formData.fournitures)) {
+//   formData.fournitures.forEach(item => {
+//     const nom = item.nom?.trim() || 'Inconnu';
+//     compteur[nom] = (compteur[nom] || 0) + 1;
+//   });
+// }
+
+// // Écrire le compteur directement au format demandé
+// fs.writeFileSync(statsPath, JSON.stringify(compteur, null, 2));
+          
+
+//         });
+  
+//         fileStream.on('error', (err) => {
+//           reject(err);
+//         });
+  
+//       } catch (error) {
+//         reject(error);
+//       }
+//     });
+//   }
+  
+export async function generateRapportPDF(formData, res) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const doc = new PDFDocument();
+      const chunks = [];
+
+      // ✅ Collecte en mémoire
+      doc.on('data', chunk => chunks.push(chunk));
+      doc.on('error', reject);
+      doc.on('end', async () => {
+        try {
+          const pdfBuffer = Buffer.concat(chunks);
+
+          // ✅ Nom de fichier sans caractères spéciaux
+          const safeName = (formData.assure || 'rapport')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-zA-Z0-9-_]/g, '_');
+          const filename = `rapport_expertise_${safeName}.pdf`;
+
+          // ✅ Envoie le PDF au client
+          res.setHeader('Content-Type', 'application/pdf');
+          res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+          res.send(pdfBuffer);
+
+          // ✅ Sauvegarde en DB
+          await saveExpertise(formData, filename, fournitureTTC, mainOeuvreTTC);
+
+          // ✅ Supprime les images sur Cloudinary
+          await deleteImages(formData.images);
+
+          // ✅ Stats dans MongoDB au lieu du fichier JSON
+          await updateFournitureStats(formData.fournitures);
+
+          resolve();
+        } catch (err) {
+          reject(err);
+        }
+      });
+
+      // Configuration
+      const config = {
+        margin: 20,
+        doubleBoxX: 100,
+        doubleBoxWidth: doc.page.width - 200,
+      };
+
+      // ➕ Sections
+      addHeaderSection(doc, formData, config);
+      addClientInfoTable(doc, formData, config);
+      addVehicleSpecsTable(doc, formData, config);
+      addDamageDescriptionSection(doc, formData, config);
+      doc.addPage();
+
+      const { endY: supplyY, totalTTC: fournitureTTC } = addSuppliesSection(doc, formData, config);
+      const { endY: laborY, totalTTC: mainOeuvreTTC } = addLaborSection(doc, formData, config, supplyY);
+      doc.addPage();
+
+      addSummarySection(doc, formData, config, {
+        endY: 50,
         totalFournituresTTC: fournitureTTC,
         totalMainOeuvreTTC: mainOeuvreTTC
-        });
+      });
 
-        addFraisAnnexesSection(doc, formData, config);
-  
-        if (formData.images && Array.isArray(formData.images)) {
-          addImagesToPDF(doc, formData.images, config);
-        }
-  
-        addSignaturePage(doc);
-        doc.end();
-  
-        // 🧠 Attendre que le fichier soit bien écrit
-        fileStream.on('finish', async () => {
-          await saveExpertise(formData, filename, fournitureTTC, mainOeuvreTTC);
-          deleteImages(formData.images); // Nettoyage des images
-          resolve();
+      addFraisAnnexesSection(doc, formData, config);
 
-// Nouvelle partie à remplacer dans expertise.js
-const statsPath = path.join(process.cwd(), 'public', 'fourniture_stats.json');
-let compteur = {};
+      // ✅ Images depuis Cloudinary
+      if (formData.images && Array.isArray(formData.images)) {
+        await addImagesToPDF(doc, formData.images, config);
+      }
 
-try {
-  if (fs.existsSync(statsPath)) {
-    const content = fs.readFileSync(statsPath, 'utf-8');
-    compteur = JSON.parse(content);
-  }
-} catch (err) {
-  console.error("Erreur de lecture du fichier de stats:", err);
-}
+      addSignaturePage(doc);
+      doc.end();
 
-// Mettre à jour le compteur directement
-if (Array.isArray(formData.fournitures)) {
-  formData.fournitures.forEach(item => {
-    const nom = item.nom?.trim() || 'Inconnu';
-    compteur[nom] = (compteur[nom] || 0) + 1;
+    } catch (error) {
+      reject(error);
+    }
   });
 }
 
-// Écrire le compteur directement au format demandé
-fs.writeFileSync(statsPath, JSON.stringify(compteur, null, 2));
-          
+// ✅ Stats dans MongoDB
+async function updateFournitureStats(fournitures) {
+  if (!Array.isArray(fournitures)) return;
 
-        });
-  
-        fileStream.on('error', (err) => {
-          reject(err);
-        });
-  
-      } catch (error) {
-        reject(error);
-      }
-    });
+  for (const item of fournitures) {
+    const nom = item.nom?.trim() || 'Inconnu';
+    await Stats.findOneAndUpdate(
+      { nom },
+      { $inc: { count: 1 } },
+      { upsert: true }
+    );
   }
-  
-
-
-
-// export function generateRapportPDF(formData, res) {
-//     return new Promise((resolve, reject) => {
-//         try {
-//             const doc = new PDFDocument();
-            
-//             // Set up response headers
-//             setupResponseHeaders(res);
-            
-//             // Handle stream errors
-//             doc.on('error', (err) => {
-//                 reject(err);
-//             });
-            
-//             // Pipe to response
-//             doc.pipe(res);
-            
-//             // Page configuration
-//             const config = {
-//                 margin: 20,
-//                 doubleBoxX: 100,
-//                 doubleBoxWidth: doc.page.width - 200
-//             };
-            
-//             // Add header section
-//             addHeaderSection(doc, formData, config);
-            
-//             // Add client information table
-//             addClientInfoTable(doc, formData, config);
-            
-//             // Add vehicle specifications table
-//             addVehicleSpecsTable(doc, formData, config);
-            
-//             // Add damage description section
-//             addDamageDescriptionSection(doc, formData, config);
-            
-//             // Add new page for repair costs
-//             doc.addPage();
-            
-//             // Add supplies section
-//             const supplyY = addSuppliesSection(doc, formData, config);
-            
-//             // Add labor section
-//             addLaborSection(doc, formData, config, supplyY);
-            
-//             addFraisAnnexesSection(doc, formData, config);
-
-//             // Add signature page
-//             addSignaturePage(doc);
-            
-//             // Finalize the document
-//             doc.end();
-            
-//             // Resolve the promise when finished
-//             res.on('finish', resolve);
-            
-//         } catch (error) {
-//             // Handle errors before headers are sent
-//             reject(error);
-//         }
-//     });
-// }
-
+}
 
 function setupResponseHeaders(res) {
     res.setHeader('Content-Type', 'application/pdf');
