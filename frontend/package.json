@@ -13,7 +13,7 @@
     "@amcharts/amcharts4": "^4.10.40",
     "@amcharts/amcharts4-geodata": "^4.1.30",
     "@angular/animations": "^17.0.7",
-    "@angular/cdk": "^18.2.14",
+    "@angular/cdk": "^17.0.0",
     "@angular/common": "^17.0.7",
     "@angular/compiler": "^17.0.7",
     "@angular/core": "^17.0.7",
