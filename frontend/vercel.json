@@ -1,5 +1,5 @@
 {
   "buildCommand": "ng build --configuration production",
-  "outputDirectory": "dist/profun-ng",
+  "outputDirectory": "dist/profun-ng/browser",
   "framework": "angular"
 }
