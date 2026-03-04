@@ -172,7 +172,7 @@ import EmailRoutes from './routes/emailRoute.js';
 
 const app = express();
 const port = process.env.PORT || 9090;
-const FRONTEND_URL = 'https://food-wheat-ten.vercel.app';
+const FRONTEND_URL = 'https://ctamaassurance.vercel.app';
 
 
 // =======================
