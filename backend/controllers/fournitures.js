@@ -18,7 +18,7 @@ export async function addOnceFournitures(req, res) {
       type,
     });
 
-    // Enregistrer la Fournitures dans la base de données
+    // Enregistrer la Fournitures dans la base de donnéesdedededede
     await newFournitures.save();
 
     // Réponse après insertion réussie
