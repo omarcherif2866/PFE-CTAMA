@@ -1,32 +1,31 @@
 import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
-const uploadPath = path.join(process.cwd(), 'public', 'images');
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-// Créer le dossier s'il n'existe pas
-if (!fs.existsSync(uploadPath)) {
-  fs.mkdirSync(uploadPath, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadPath),
-  filename: (req, file, cb) => {
-    // Utiliser le nom d'origine du fichier
-    const ext = path.extname(file.originalname); // Obtenir l'extension du fichier
-    const originalName = path.basename(file.originalname, ext); // Obtenir le nom sans extension
-
-    // Générer un nom unique en cas de conflit en ajoutant un timestamp
-    const fileName = `${originalName}-${Date.now()}${ext}`;
-    cb(null, fileName); // Utilisation du nom original + timestamp pour éviter les conflits
-  }
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'images',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+    public_id: (req, file) => {
+      const ext = file.originalname.split('.').pop();
+      const name = file.originalname.replace(/\.[^/.]+$/, '');
+      return `${name}-${Date.now()}`;
+    }
+  },
 });
 
 export default multer({
   storage,
   fileFilter: (req, file, cb) => {
     const allowed = ['image/jpeg', 'image/png', 'image/gif'];
-    cb(null, allowed.includes(file.mimetype)); // Vérification des types de fichiers autorisés
+    cb(null, allowed.includes(file.mimetype));
   },
-  limits: { fileSize: 10 * 1024 * 1024 } // Limite de taille à 5MB
+  limits: { fileSize: 10 * 1024 * 1024 }
 });
