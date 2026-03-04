@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 import { v2 as cloudinary } from 'cloudinary'; // Assurez-vous que c'est bien importé
 
 
-import Experts from '../models/expert.js'; 
 import Employees from '../models/employees.js';
 
 
