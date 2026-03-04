@@ -18,7 +18,13 @@ const __dirname = path.dirname(__filename);
 import numberToWords from 'n2words';
 import axios from 'axios';  
 
+import { v2 as cloudinary } from 'cloudinary';
 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 
 
@@ -633,7 +639,7 @@ export async function generateRapportPDF(formData, res) {
         // 🧠 Attendre que le fichier soit bien écrit
         fileStream.on('finish', async () => {
           await saveExpertise(formData, filename, fournitureTTC, mainOeuvreTTC);
-          deleteImages(); // Nettoyage des images
+          deleteImages(formData.images); // Nettoyage des images
           resolve();
 
 // Nouvelle partie à remplacer dans expertise.js
@@ -1673,51 +1679,118 @@ function convertirMontantEnLettres(montant) {
 }
 
 
-function addImagesToPDF(doc, images, config) {
-    const imageDir = path.resolve(__dirname, '../public/images');
-    const imageWidth = 200; // Largeur des images
-    const imageHeight = 200; // Hauteur estimée des images (ajustable selon ton besoin)
-    const verticalSpacing = 100;
+// function addImagesToPDF(doc, images, config) {
+//     const imageDir = path.resolve(__dirname, '../public/images');
+//     const imageWidth = 200; // Largeur des images
+//     const imageHeight = 200; // Hauteur estimée des images (ajustable selon ton besoin)
+//     const verticalSpacing = 100;
 
-    const pageHeight = doc.page.height;
-    const topMargin = config.margin;
-    const bottomMargin = config.margin;
-    const usableHeight = pageHeight - topMargin - bottomMargin;
+//     const pageHeight = doc.page.height;
+//     const topMargin = config.margin;
+//     const bottomMargin = config.margin;
+//     const usableHeight = pageHeight - topMargin - bottomMargin;
 
-    let currentY = doc.y;
+//     let currentY = doc.y;
 
-    images.forEach((imageFileName, index) => {
-        if (!imageFileName) {
-            console.warn(`Image ${index} non valide, nom de fichier manquant.`);
-            return;
-        }
+//     images.forEach((imageFileName, index) => {
+//         if (!imageFileName) {
+//             console.warn(`Image ${index} non valide, nom de fichier manquant.`);
+//             return;
+//         }
 
-        const imagePath = path.join(imageDir, imageFileName);
+//         const imagePath = path.join(imageDir, imageFileName);
 
-        if (!fs.existsSync(imagePath)) {
-            console.warn(`Image ${imageFileName} introuvable dans ${imageDir}`);
-            return;
-        }
+//         if (!fs.existsSync(imagePath)) {
+//             console.warn(`Image ${imageFileName} introuvable dans ${imageDir}`);
+//             return;
+//         }
 
-        // Si l'image dépasse la hauteur disponible, ajouter une nouvelle page
-        if ((currentY + imageHeight + verticalSpacing) > pageHeight - bottomMargin) {
-            doc.addPage();
-            currentY = topMargin;
-        }
+//         // Si l'image dépasse la hauteur disponible, ajouter une nouvelle page
+//         if ((currentY + imageHeight + verticalSpacing) > pageHeight - bottomMargin) {
+//             doc.addPage();
+//             currentY = topMargin;
+//         }
 
-        const imageX = (doc.page.width - imageWidth) / 2; // Centré horizontalement
+//         const imageX = (doc.page.width - imageWidth) / 2; // Centré horizontalement
 
-        try {
-            doc.image(imagePath, imageX, currentY, { width: imageWidth });
-            currentY += imageHeight + verticalSpacing;
-            doc.y = currentY; // Met à jour la position Y du document
-        } catch (err) {
-            console.error(`Erreur lors de l'ajout de l'image ${imageFileName}:`, err);
-        }
-    });
+//         try {
+//             doc.image(imagePath, imageX, currentY, { width: imageWidth });
+//             currentY += imageHeight + verticalSpacing;
+//             doc.y = currentY; // Met à jour la position Y du document
+//         } catch (err) {
+//             console.error(`Erreur lors de l'ajout de l'image ${imageFileName}:`, err);
+//         }
+//     });
+// }
+
+// ✅ Fetch images depuis URLs Cloudinary
+async function addImagesToPDF(doc, images, config) {
+  const imageWidth = 200;
+  const imageHeight = 200;
+  const verticalSpacing = 100;
+
+  const pageHeight = doc.page.height;
+  const topMargin = config.margin;
+  const bottomMargin = config.margin;
+
+  let currentY = doc.y;
+
+  for (const [index, imageUrl] of images.entries()) {
+    if (!imageUrl) {
+      console.warn(`Image ${index} non valide.`);
+      continue;
+    }
+
+    try {
+      const response = await fetch(imageUrl);
+      if (!response.ok) {
+        console.warn(`Image introuvable: ${imageUrl}`);
+        continue;
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
+      const imageBuffer = Buffer.from(arrayBuffer);
+
+      if ((currentY + imageHeight + verticalSpacing) > pageHeight - bottomMargin) {
+        doc.addPage();
+        currentY = topMargin;
+      }
+
+      const imageX = (doc.page.width - imageWidth) / 2;
+      doc.image(imageBuffer, imageX, currentY, { width: imageWidth });
+      currentY += imageHeight + verticalSpacing;
+      doc.y = currentY;
+
+    } catch (err) {
+      console.error(`Erreur image ${imageUrl}:`, err.message);
+    }
+  }
 }
 
+// ✅ Supprime les images sur Cloudinary au lieu du filesystem
+export async function deleteImages(imageUrls) {
+  try {
+    for (const imageUrl of imageUrls) {
+      if (!imageUrl) continue;
 
+      // Extrait le public_id depuis l'URL Cloudinary
+      // Ex: https://res.cloudinary.com/daxkymr4t/image/upload/v123/images/photo.jpg
+      // → public_id = "images/photo"
+      const matches = imageUrl.match(/\/upload\/(?:v\d+\/)?(.+)\.[a-z]+$/i);
+      if (!matches) {
+        console.warn(`URL invalide: ${imageUrl}`);
+        continue;
+      }
+
+      const publicId = matches[1];
+      await cloudinary.uploader.destroy(publicId);
+      console.log(`Image supprimée: ${publicId}`);
+    }
+    console.log('Images supprimées avec succès.');
+  } catch (err) {
+    console.error('Erreur lors de la suppression des images:', err.message);
+  }
+}
 
 export function uploadImages(req, res) {
     if (!req.files || req.files.length === 0) {
@@ -1739,21 +1812,21 @@ export function uploadImages(req, res) {
   
   
 
-export function deleteImages() {
-    const imageDir = path.join(process.cwd(), 'public', 'images');
-    try {
-        const files = fs.readdirSync(imageDir);
-        files.forEach(file => {
-            const filePath = path.join(imageDir, file);
-            if (/\.(png|jpg|jpeg|gif)$/i.test(file)) {
-                fs.unlinkSync(filePath); // supprimer l'image
-            }
-        });
-        console.log('Images supprimées avec succès.');
-    } catch (err) {
-        console.error('Erreur lors de la suppression des images :', err);
-    }
-}
+// export function deleteImages() {
+//     const imageDir = path.join(process.cwd(), 'public', 'images');
+//     try {
+//         const files = fs.readdirSync(imageDir);
+//         files.forEach(file => {
+//             const filePath = path.join(imageDir, file);
+//             if (/\.(png|jpg|jpeg|gif)$/i.test(file)) {
+//                 fs.unlinkSync(filePath); // supprimer l'image
+//             }
+//         });
+//         console.log('Images supprimées avec succès.');
+//     } catch (err) {
+//         console.error('Erreur lors de la suppression des images :', err);
+//     }
+// }
 
 
 
