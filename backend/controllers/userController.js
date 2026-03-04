@@ -1,12 +1,12 @@
 import nodemailer from 'nodemailer';
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import Client from '../models/Client.js';
-import Expert from '../models/Expert.js';
-import Employee from '../models/Employees.js';
+import Client from '../models/client.js';
+import Expert from '../models/expert.js';
+import Employee from '../models/employees.js';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
-import Documents from '../models/Document.js';
+import Documents from '../models/document.js';
 
 import path from 'path'; // Manquant dans ton extrait
 import fs from 'fs';

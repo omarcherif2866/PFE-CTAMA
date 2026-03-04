@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 const { Schema, model } = mongoose;
-import Clients from "./Client.js"
+import Clients from "./client.js"
 
 const personneMoraleSchema = new Schema({
     raisonSociale: { type: String, required: true },

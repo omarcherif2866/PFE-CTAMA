@@ -1,4 +1,4 @@
-import Voitures from "../models/Voiture.js";
+import Voitures from "../models/voiture.js";
 
 
 export async function addOnceVoiture(req, res) {

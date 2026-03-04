@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import Documents from '../models/Document.js'; // Assurez-vous que le chemin est correct
-import Clients from '../models/Client.js';
+import Documents from '../models/document.js'; // Assurez-vous que le chemin est correct
+import Clients from '../models/client.js';
 import { sendEmail, sendSMS } from './utils/mailing.js';
 
 export const createDoc = async (req, res) => {

@@ -2,9 +2,9 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { v2 as cloudinary } from 'cloudinary'; // Assurez-vous que c'est bien importé
 
-import Experts from '../models/Expert.js'; 
-import Client from '../models/Client.js'; 
-import Documents from '../models/Document.js'; 
+import Experts from '../models/expert.js'; 
+import Client from '../models/client.js'; 
+import Documents from '../models/document.js'; 
 import ImageSinistres from '../models/imageSinistre.js'; 
 import { validationResult } from "express-validator";
 import DevisSinistres from '../models/devisSinistre.js';

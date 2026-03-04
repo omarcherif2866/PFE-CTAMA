@@ -1,4 +1,4 @@
-import Fournitures from "../models/Fournitures.js";
+import Fournitures from "../models/fournitures.js";
 
 
 export async function addOnceFournitures(req, res) {

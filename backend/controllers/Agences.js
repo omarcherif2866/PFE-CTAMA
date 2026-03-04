@@ -1,4 +1,4 @@
-import Agences from "../models/Agences.js";
+import Agences from "../models/agences.js";
 
 export  function addOnceAgence (req, res){
     Agences.create({

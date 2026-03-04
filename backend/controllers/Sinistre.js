@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
-import Sinistres from '../models/Sinistre.js'; // Assurez-vous que le chemin est correct
+import Sinistres from '../models/sinistre.js'; // Assurez-vous que le chemin est correct
 import  {generateUniqueReference}  from './utils/reference.js'; // Importez la fonction
-import Clients from '../models/Client.js'; // Import des discriminators
-import Documents from '../models/Document.js';
+import Clients from '../models/client.js'; // Import des discriminators
+import Documents from '../models/document.js';
 import { sendEmail, sendSMS } from './utils/mailing.js';
 
 export async function addOnceSinistres(req, res) {

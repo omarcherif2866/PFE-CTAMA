@@ -2,16 +2,16 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { v2 as cloudinary } from 'cloudinary'; 
 
-import Clients from '../models/Client.js'; // Import des discriminators
-import PersonneMorale  from '../models/PersonneMorale.js'; // Importez le modèle PersonneMorale
-import PersonnePhysique from '../models/PersonnePhysique.js'; // Importez le modèle PersonnePhysique
-import Experts from '../models/Expert.js';
-import Documents from '../models/Document.js';
+import Clients from '../models/client.js'; // Import des discriminators
+import PersonneMorale  from '../models/personneMorale.js'; // Importez le modèle PersonneMorale
+import PersonnePhysique from '../models/personnePhysique.js'; // Importez le modèle PersonnePhysique
+import Experts from '../models/expert.js';
+import Documents from '../models/document.js';
 import DevisSinistres from '../models/devisSinistre.js';
 import ImageSinistres from '../models/imageSinistre.js';
 
 import { validationResult } from 'express-validator';
-import Employees from '../models/Employees.js';
+import Employees from '../models/employees.js';
 import { sendEmail, sendSMS } from './utils/mailing.js';
 
 const jwtsecret = "mysecret";
@@ -417,10 +417,10 @@ export async function DeleteUser(req, res) {
     switch (userModel) {
 
       case 'Expert':
-        Model = require('../models/Expert.js'); // Chemin vers votre modèle Expert
+        Model = require('../models/expert.js'); // Chemin vers votre modèle Expert
         break;
       case 'Employee':
-        Model = require('../models/Employees.js'); // Chemin vers votre modèle Employee
+        Model = require('../models/employees.js'); // Chemin vers votre modèle Employee
         break;
       default:
         return res.status(400).json({ message: "Modèle utilisateur invalide." });

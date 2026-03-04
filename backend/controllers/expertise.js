@@ -1,9 +1,9 @@
 
-import Documents from '../models/Document.js';
+import Documents from '../models/document.js';
 import RDV from '../models/RDV.js';  // Importation du modèle RDV
 
-import Experts from '../models/Expert.js'; 
-import Expertises from '../models/Expertise.js'; 
+import Experts from '../models/expert.js'; 
+import Expertises from '../models/expertise.js'; 
 import ImageSinistres from '../models/imageSinistre.js';
 import DevisSinistres from '../models/devisSinistre.js';
 import PDFDocument from 'pdfkit';

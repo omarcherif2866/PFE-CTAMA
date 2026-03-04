@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 const { Schema, model } = mongoose;
-import Clients from "./Client.js"
+import Clients from "./client.js"
 
 const personnePhysiqueSchema = new Schema({
     nom: { type: String, required: true },
