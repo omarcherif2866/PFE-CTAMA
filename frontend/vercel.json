@@ -1,0 +1,5 @@
+{
+  "buildCommand": "ng build",
+  "outputDirectory": "dist/profun-ng",
+  "framework": "angular"
+}
