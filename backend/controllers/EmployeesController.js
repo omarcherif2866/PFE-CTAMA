@@ -2,8 +2,9 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { v2 as cloudinary } from 'cloudinary'; // Assurez-vous que c'est bien importé
 
-import Employees from '../models/employees.js'; 
+
 import Experts from '../models/expert.js'; 
+import Employees from '../models/employees.js';
 
 
 const jwtsecret = "mysecret";
