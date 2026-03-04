@@ -3,23 +3,26 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { Agence, Gouvernorat } from '../models/agence';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AgenceService {
+    private apiUrl = environment.apiUrl;
+
  constructor(private http: HttpClient, private router: Router) { }
 
   getAgenceById(id: any): Observable<Agence> {
-    return this.http.get<Agence>('http://localhost:9090/agence/' + id);
+    return this.http.get<Agence>(`${this.apiUrl}/agence/${id}`);
   } 
 
   getAgence() {
-    return this.http.get<Agence[]>("http://localhost:9090/agence/");
+    return this.http.get<Agence[]>(`${this.apiUrl}/agence/`);
   }
 
   getAgenceByGouvernorat(gouvernorat: Gouvernorat): Observable<Agence[]>  {
-    return this.http.get<Agence[]>("http://localhost:9090/agence/gouvernorat/" + gouvernorat);
+    return this.http.get<Agence[]>(`${this.apiUrl}/agence/gouvernorat/${gouvernorat}`);
   }
 
   geocode(adresse: string): Observable<any[]> {
@@ -49,7 +52,7 @@ export class AgenceService {
 
 
   addAgence(data: any): Observable<Agence> {
-    return this.http.post<Agence>("http://localhost:9090/agence/", data)
+    return this.http.post<Agence>(`${this.apiUrl}/agence/`, data)
       .pipe(
         catchError((error: any) => {
           console.error('Erreur lors de l\'ajout du Agence:', error);
@@ -59,7 +62,7 @@ export class AgenceService {
   }
 
   putAgence(id: string, formData: any): Observable<Agence> {
-  return this.http.put<Agence | HttpErrorResponse>(`http://localhost:9090/agence/${id}`, formData)
+  return this.http.put<Agence | HttpErrorResponse>(`${this.apiUrl}/agence/${id}`, formData)
     .pipe(
       map((response: any) => {
         // Vérifier si la réponse est une instance de HttpErrorResponse
@@ -83,11 +86,11 @@ export class AgenceService {
 
   deleteAgence(id:any):Observable<Agence>{
    
-    return this.http.delete<Agence>("http://localhost:9090/agence/"+id)
+    return this.http.delete<Agence>(`${this.apiUrl}/agence/${id}`)
 
   }
 
   getAgencesCount(): Observable<any> {
-    return this.http.get<any>(`http://localhost:9090/agence/count`);
+    return this.http.get<any>(`${this.apiUrl}/agence/count`);
   }
 }

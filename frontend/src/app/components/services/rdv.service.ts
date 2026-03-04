@@ -3,24 +3,27 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { RDV } from '../models/rdv';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RDVService {
 
+  private apiUrl = environment.apiUrl;
+
   constructor(private http: HttpClient, private router: Router) { }
 
   getRDVById(id: any): Observable<RDV> {
-    return this.http.get<RDV>('http://localhost:9090/rendez-vous/' + id);
+    return this.http.get<RDV>(`${this.apiUrl}/rendez-vous/${id}`);
   } 
 
   getRDV() {
-    return this.http.get<RDV[]>("http://localhost:9090/rendez-vous/");
+    return this.http.get<RDV[]>(`${this.apiUrl}/rendez-vous/`);
   }
 
   addRDV(ownedBy: string, data: any): Observable<HttpResponse<RDV>> {
-    const url = `http://localhost:9090/rendez-vous/addRDV/${ownedBy}`;
+    const url = `${this.apiUrl}/rendez-vous/addRDV/${ownedBy}`;
     
     return this.http.post<RDV>(url, data, {
       observe: 'response' // Observe the full response
@@ -33,7 +36,7 @@ export class RDVService {
   }
 
   putRDV(id: string, formData: any): Observable<RDV> {
-    return this.http.put<RDV | HttpErrorResponse>(`http://localhost:9090/rendez-vous/${id}`, formData)
+    return this.http.put<RDV | HttpErrorResponse>(`${this.apiUrl}/rendez-vous/${id}`, formData)
       .pipe(
         map((response: any) => {
           // Vérifier si la réponse est une instance de HttpErrorResponse
@@ -56,7 +59,7 @@ export class RDVService {
 
   deleteRDV(id:any):Observable<RDV>{
     console.log('deleteProduct called with id:', id);
-    return this.http.delete<RDV>("http://localhost:9090/rendez-vous/"+id)
+    return this.http.delete<RDV>(`${this.apiUrl}/rendez-vous/${id}`)
 
   }
 
@@ -65,7 +68,7 @@ export class RDVService {
     const withUser = localStorage.getItem('user_id') || '';
 
     // Construct the URL with query parameters
-    const url = `http://localhost:9090/rendez-vous/filter?ownedBy=${encodeURIComponent(ownedBy)}&receiver=${encodeURIComponent(withUser)}`;
+    const url = `${this.apiUrl}/rendez-vous/filter?ownedBy=${encodeURIComponent(ownedBy)}&receiver=${encodeURIComponent(withUser)}`;
 
     return this.http.get<RDV[]>(url);
   }

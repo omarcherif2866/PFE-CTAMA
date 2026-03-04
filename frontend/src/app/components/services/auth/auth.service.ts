@@ -6,8 +6,8 @@ import Swal from 'sweetalert2';
 import { Clients } from '../../models/clients';
 import { ImageSinistre } from '../../models/image-sinistre';
 import { DevisSinistre } from '../../models/devis-sinistre';
+import { environment } from 'src/environments/environment';
 
-const AUTH_API = 'http://localhost:8075/api/v1/auth/';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -17,6 +17,8 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class AuthService {
+    private apiUrl = environment.apiUrl;
+
   private loggedInSubject: BehaviorSubject<boolean>;
 
   constructor(private http: HttpClient, private router: Router) {
@@ -30,15 +32,15 @@ export class AuthService {
 
 
   createAcount(data:any){
-    return this.http.post<Clients>("http://localhost:9090/clients/signup",data)
+    return this.http.post<Clients>(`${this.apiUrl}/clients/signup`, data);
   }
 
   getUser() {
-    return this.http.get<Clients[]>("http://localhost:9090/clients/user");
+    return this.http.get<Clients[]>(`${this.apiUrl}/clients/user`);
   }
 
   getUserProfile(id: any): Observable<Clients> {
-    return this.http.get<Clients>(`http://localhost:9090/clients/user/${id}`);
+    return this.http.get<Clients>(`${this.apiUrl}/clients/user/${id}`);
 }
 
   updateUserPassword(id: any, motdepasse: string, newPassword: string): Observable<any> {
@@ -47,13 +49,13 @@ export class AuthService {
       newpassword: newPassword
     };
   
-    return this.http.put<any>(`http://localhost:9090/clients/api/user/password/${id}`, data);
+    return this.http.put<any>(`${this.apiUrl}/clients/api/user/password/${id}`, data);
   }
 
 
 
   signIn(credentials: any): Observable<any> {
-    return this.http.post<any>("http://localhost:9090/clients/signin", credentials).pipe(
+    return this.http.post<any>(`${this.apiUrl}/clients/signin`, credentials).pipe(
       tap((user: any) => {
         console.log('User data:', user);
         
@@ -133,25 +135,25 @@ export class AuthService {
   }
 
   updateUserProfile(id: string, formData: FormData ): Observable<Clients> {
-    return this.http.put<Clients>(`http://localhost:9090/clients/user/profile/${id}`, formData);
+    return this.http.put<Clients>(`${this.apiUrl}/clients/user/profile/${id}`, formData);
   }
 
 
 
   deleteUser(id:any):Observable<Clients>{
-    return this.http.delete<Clients>("http://localhost:9090/clients/user/delete/"+id)
+    return this.http.delete<Clients>(`${this.apiUrl}/clients/user/delete/${id}`);
 
   }
 
 
   forget(email: string): Observable<any> {
     const credentials = { email };
-    return this.http.post<any>('http://localhost:9090/user/forgotPassword', credentials);
+    return this.http.post<any>(`${this.apiUrl}/user/forgotPassword`, credentials);
   }
 
 resetPassword(userId: string, password: string): Observable<any> {
   return this.http.put<any>(
-    `http://localhost:9090/user/reset-password/${userId}`,
+    `${this.apiUrl}/user/reset-password/${userId}`,
     { password }, // corps avec clé `password`
     { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
   );
@@ -160,20 +162,20 @@ resetPassword(userId: string, password: string): Observable<any> {
 
 
   verifyCode(userId: string, code: string) {
-    return this.http.post('http://localhost:9090/user/verify-code', { userId, code });
+    return this.http.post(`${this.apiUrl}/user/verify-code`, { userId, code });
   }
   
 
   getClientsCount(): Observable<any> {
-    return this.http.get<any>(`http://localhost:9090/clients/count`);
+    return this.http.get<any>(`${this.apiUrl}/clients/count`);
   }
 
   addDevisSinistre(formData: FormData) {
-    return this.http.post(`http://localhost:9090/clients/deposerDevis`, formData);
+    return this.http.post(`${this.apiUrl}/clients/deposerDevis`, formData);
   }
 
     getImagesByClient(clientId: string): Observable<ImageSinistre[]> {
-      return this.http.get<any[]>(`http://localhost:9090/clients/image/${clientId}`).pipe(
+      return this.http.get<any[]>(`${this.apiUrl}/clients/image/${clientId}`).pipe(
         map(response => response.map(data => 
           new ImageSinistre(data.image, data.expert, data.client, data.dateAjout, data.documents, data._id)
         ))
@@ -182,7 +184,7 @@ resetPassword(userId: string, password: string): Observable<any> {
     }
   
     getDevisByClient(clientId: string): Observable<DevisSinistre[]> {
-      return this.http.get<any[]>(`http://localhost:9090/clients/devis/${clientId}`).pipe(
+      return this.http.get<any[]>(`${this.apiUrl}/clients/devis/${clientId}`).pipe(
         map(response => response.map(data => 
           new DevisSinistre(data.devis, data.expert, data.client, data.dateAjout, data.documents, data._id)
         ))

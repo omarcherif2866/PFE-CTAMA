@@ -3,25 +3,28 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Emloyees } from '../models/emloyees';
 import { catchError, map, Observable, throwError } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GestionnaireService {
+    private apiUrl = environment.apiUrl;
+
 constructor(private http: HttpClient, private router: Router) { }
 
   getEmloyeesById(id: any): Observable<Emloyees> {
-    return this.http.get<Emloyees>('http://localhost:9090/employees/' + id);
+    return this.http.get<Emloyees>(`${this.apiUrl}/employees/${id}`);
   } 
 
   getEmloyees(): Observable<Emloyees[]> {
-    return this.http.get<Emloyees[]>("http://localhost:9090/employees/user/");
+    return this.http.get<Emloyees[]>(`${this.apiUrl}/employees/user/`);
   }
 
 
 
   addEmloyees(data: any): Observable<Emloyees> {
-    return this.http.post<Emloyees>("http://localhost:9090/employees/", data)
+    return this.http.post<Emloyees>(`${this.apiUrl}/employees/`, data)
       .pipe(
       catchError((error: HttpErrorResponse) => {
         console.error('Erreur lors de l\'ajout du Emloyees:', error);
@@ -32,7 +35,7 @@ constructor(private http: HttpClient, private router: Router) { }
   }
 
   putEmloyees(id: string, formData: any): Observable<Emloyees> {
-  return this.http.put<Emloyees | HttpErrorResponse>(`http://localhost:9090/employees/${id}`, formData)
+  return this.http.put<Emloyees | HttpErrorResponse>(`${this.apiUrl}/employees/${id}`, formData)
     .pipe(
       map((response: any) => {
         // Vérifier si la réponse est une instance de HttpErrorResponse
@@ -56,7 +59,7 @@ constructor(private http: HttpClient, private router: Router) { }
 
   deleteEmloyees(id:any):Observable<Emloyees>{
    
-    return this.http.delete<Emloyees>("http://localhost:9090/employees/delete/"+id)
+    return this.http.delete<Emloyees>(`${this.apiUrl}/employees/delete/${id}`)
 
   }
 }

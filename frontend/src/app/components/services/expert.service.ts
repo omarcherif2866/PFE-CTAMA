@@ -5,25 +5,28 @@ import { catchError, map, Observable, throwError } from 'rxjs';
 import { Expert } from '../models/expert';
 import { ImageSinistre } from '../models/image-sinistre';
 import { DevisSinistre } from '../models/devis-sinistre';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExpertService {
+    private apiUrl = environment.apiUrl;
+
  constructor(private http: HttpClient, private router: Router) { }
 
   getExpertById(id: any): Observable<Expert> {
-    return this.http.get<Expert>('http://localhost:9090/expert/' + id);
+    return this.http.get<Expert>(`${this.apiUrl}/expert/${id}`);
   } 
 
   getExpert(): Observable<Expert[]> {
-    return this.http.get<Expert[]>("http://localhost:9090/expert/user/");
+    return this.http.get<Expert[]>(`${this.apiUrl}/expert/user/`);
   }
 
 
 
   addExpert(data: any): Observable<Expert> {
-    return this.http.post<Expert>("http://localhost:9090/expert/", data)
+    return this.http.post<Expert>(`${this.apiUrl}/expert/`, data)
       .pipe(
       catchError((error: HttpErrorResponse) => {
         console.error('Erreur lors de l\'ajout du Expert:', error);
@@ -34,7 +37,7 @@ export class ExpertService {
   }
 
   putExpert(id: string, formData: any): Observable<Expert> {
-  return this.http.put<Expert | HttpErrorResponse>(`http://localhost:9090/expert/${id}`, formData)
+  return this.http.put<Expert | HttpErrorResponse>(`${this.apiUrl}/expert/${id}`, formData)
     .pipe(
       map((response: any) => {
         // Vérifier si la réponse est une instance de HttpErrorResponse
@@ -58,12 +61,12 @@ export class ExpertService {
 
   deleteExpert(id:any):Observable<Expert>{
    
-    return this.http.delete<Expert>("http://localhost:9090/expert/delete/"+id)
+    return this.http.delete<Expert>(`${this.apiUrl}/expert/delete/${id}`)
 
   }
 
   affecterExpert(expertId: string, clientId: string, documentId: string): Observable<any> {
-    const url = `http://localhost:9090/expert/affecter-expert`; // Endpoint de l'API
+    const url = `${this.apiUrl}/expert/affecter-expert`; // Endpoint de l'API
     const body = {
       expertId: expertId,
       clientId: clientId,
@@ -74,7 +77,7 @@ export class ExpertService {
   }
 
   addImageSinistre(formData: FormData) {
-    return this.http.post(`http://localhost:9090/expert/add`, formData);
+    return this.http.post(`${this.apiUrl}/expert/add`, formData);
   }
   
 

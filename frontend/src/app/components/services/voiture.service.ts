@@ -3,25 +3,28 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { Voiture } from '../models/voiture';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VoitureService {
+    private apiUrl = environment.apiUrl;
+
  constructor(private http: HttpClient, private router: Router) { }
 
   getVoitureById(id: any): Observable<Voiture> {
-    return this.http.get<Voiture>('http://localhost:9090/voiture/' + id);
+    return this.http.get<Voiture>(`${this.apiUrl}/voiture/${id}`);
   } 
 
   getVoiture() {
-    return this.http.get<Voiture[]>("http://localhost:9090/voiture/");
+    return this.http.get<Voiture[]>(`${this.apiUrl}/voiture/`);
   }
 
 
 
   addVoiture(data: any): Observable<Voiture> {
-    return this.http.post<Voiture>("http://localhost:9090/voiture/", data)
+    return this.http.post<Voiture>(`${this.apiUrl}/voiture/`, data)
       .pipe(
         catchError((error: any) => {
           console.error('Erreur lors de l\'ajout du Voiture:', error);
@@ -31,7 +34,7 @@ export class VoitureService {
   }
 
   putVoiture(id: string, formData: any): Observable<Voiture> {
-  return this.http.put<Voiture | HttpErrorResponse>(`http://localhost:9090/voiture/${id}`, formData)
+  return this.http.put<Voiture | HttpErrorResponse>(`${this.apiUrl}/voiture/${id}`, formData)
     .pipe(
       map((response: any) => {
         // Vérifier si la réponse est une instance de HttpErrorResponse
@@ -55,7 +58,7 @@ export class VoitureService {
 
   deleteVoiture(id:any):Observable<Voiture>{
    
-    return this.http.delete<Voiture>("http://localhost:9090/voiture/"+id)
+    return this.http.delete<Voiture>(`${this.apiUrl}/voiture/${id}`)
 
   }
 }

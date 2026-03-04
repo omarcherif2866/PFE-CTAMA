@@ -4,25 +4,28 @@ import { Router } from '@angular/router';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { Fournitures } from '../models/fournitures';
 import { FournitureEval } from '../models/fourniture-eval';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FournituresService {
+    private apiUrl = environment.apiUrl;
+
  constructor(private http: HttpClient, private router: Router) { }
 
   getFournituresById(id: any): Observable<Fournitures> {
-    return this.http.get<Fournitures>('http://localhost:9090/fourniture/' + id);
+    return this.http.get<Fournitures>(`${this.apiUrl}/fourniture/${id}`);
   } 
 
   getFournitures() {
-    return this.http.get<Fournitures[]>("http://localhost:9090/fourniture/");
+    return this.http.get<Fournitures[]>(`${this.apiUrl}/fourniture/`);
   }
 
 
 
   addFournitures(data: any): Observable<Fournitures> {
-    return this.http.post<Fournitures>("http://localhost:9090/fourniture/", data)
+    return this.http.post<Fournitures>(`${this.apiUrl}/fourniture/`, data)
       .pipe(
         catchError((error: any) => {
           console.error('Erreur lors de l\'ajout du Fournitures:', error);
@@ -32,7 +35,7 @@ export class FournituresService {
   }
 
   putFournitures(id: string, formData: any): Observable<Fournitures> {
-  return this.http.put<Fournitures | HttpErrorResponse>(`http://localhost:9090/fourniture/${id}`, formData)
+  return this.http.put<Fournitures | HttpErrorResponse>(`${this.apiUrl}/fourniture/${id}`, formData)
     .pipe(
       map((response: any) => {
         // Vérifier si la réponse est une instance de HttpErrorResponse
@@ -56,20 +59,20 @@ export class FournituresService {
 
   deleteFournitures(id:any):Observable<Fournitures>{
    
-    return this.http.delete<Fournitures>("http://localhost:9090/fourniture/"+id)
+    return this.http.delete<Fournitures>(`${this.apiUrl}/fourniture/${id}`)
 
   }
 
 
 
   getFournituresEval() {
-    return this.http.get<FournitureEval[]>("http://localhost:9090/fournitureEval/");
+    return this.http.get<FournitureEval[]>(`${this.apiUrl}/fournitureEval/`);
   }
 
 
 
   addFournituresEval(data: any): Observable<FournitureEval> {
-    return this.http.post<FournitureEval>("http://localhost:9090/fournitureEval/", data)
+    return this.http.post<FournitureEval>(`${this.apiUrl}/fournitureEval/`, data)
       .pipe(
         catchError((error: any) => {
           console.error('Erreur lors de l\'ajout du Fournitures:', error);

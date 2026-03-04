@@ -3,20 +3,23 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { Actualite } from '../models/actualite';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActualiteService {
+    private apiUrl = environment.apiUrl;
+
   constructor(private http: HttpClient, private router: Router) { }
 
   getActualiteById(id: any): Observable<Actualite> {
-    return this.http.get<Actualite>('http://localhost:9090/Actualite/' + id);
+    return this.http.get<Actualite>(`${this.apiUrl}/Actualite/${id}`);
   } 
 
 // actualite.service.ts
 getActualite(): Observable<Actualite[]> {
-  return this.http.get<any[]>('http://localhost:9090/Actualite/').pipe(
+  return this.http.get<any[]>(`${this.apiUrl}/Actualite/`).pipe(
     map(actualites => actualites.map(act => new Actualite(
       act._id,       // Assurez-vous que c'est le bon nom de la propriété ID de votre API
       act.nom,
@@ -27,12 +30,12 @@ getActualite(): Observable<Actualite[]> {
 }
 
   getLastThreeActualites(): Observable<any> {
-    return this.http.get<any>("http://localhost:9090/Actualite/lastThree");
+    return this.http.get<any>(`${this.apiUrl}/Actualite/lastThree`);
   }
 
 
   addActualite(data: any): Observable<Actualite> {
-    return this.http.post<Actualite>("http://localhost:9090/Actualite", data)
+    return this.http.post<Actualite>(`${this.apiUrl}/Actualite`, data)
       .pipe(
         catchError((error: any) => {
           console.error('Erreur lors de l\'ajout du Actualite:', error);
@@ -42,7 +45,7 @@ getActualite(): Observable<Actualite[]> {
   }
 
   putActualite(id: string, formData: any): Observable<Actualite> {
-  return this.http.put<Actualite | HttpErrorResponse>(`http://localhost:9090/Actualite/${id}`, formData)
+  return this.http.put<Actualite | HttpErrorResponse>(`${this.apiUrl}/Actualite/${id}`, formData)
     .pipe(
       map((response: any) => {
         // Vérifier si la réponse est une instance de HttpErrorResponse
@@ -66,7 +69,7 @@ getActualite(): Observable<Actualite[]> {
 
   deleteActualite(id:any):Observable<Actualite>{
     console.log('deleteActualite called with id:', id);
-    return this.http.delete<Actualite>("http://localhost:9090/Actualite/"+id)
+    return this.http.delete<Actualite>(`${this.apiUrl}/Actualite/${id}`)
 
   }
 
