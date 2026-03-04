@@ -152,7 +152,7 @@ import { config as dotenvConfig } from 'dotenv';
 
 dotenvConfig();
 
-import { notFoundError, errorHandler } from './Middelware/error-handler.js';
+import { notFoundError, errorHandler } from './middlewares/error-handler.js';
 import EmployeesRoutes from './routes/Employees.js';
 import FournitureRoutes from './routes/fournitures.js';
 import ExpertRoutes from './routes/ExpertRoute.js';
